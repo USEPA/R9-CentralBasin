@@ -6,6 +6,7 @@ import TimeSlider from '@arcgis/core/widgets/TimeSlider';
 import Expand from '@arcgis/core/widgets/Expand';
 import Home from '@arcgis/core/widgets/Home';
 import SceneView from '@arcgis/core/views/SceneView';
+import Slice from '@arcgis/core/widgets/Slice';
 
 export function initWidgets(view: SceneView) {
     const legend = new Legend({view});
@@ -26,7 +27,12 @@ export function initWidgets(view: SceneView) {
         }
     });
 
+    const slice = new Slice({
+        view: view
+    });
 
+// Add widget to the bottom left corner of the view
+    view.ui.add(slice, "bottom-right");
     // view.ui.add(legend, 'bottom-left');
     view.ui.add(layerList, 'top-right');
     view.ui.add(homeButton, "top-left");
@@ -53,5 +59,5 @@ export function initTimeSlider(view: SceneView) {
     });
 
     view.ui.add(timeSliderExpand, "bottom-left");
-	return {timeSlider, timeSliderExpand};
+    return {timeSlider, timeSliderExpand};
 }
