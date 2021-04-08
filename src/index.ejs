@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title><%= htmlWebpackPlugin.options.title %></title>
+  <% if (htmlWebpackPlugin.options.mode === 'production') { %>
+  <script>
+    // Check that service workers are registered
+    if ('serviceWorker' in navigator) {
+      // Use the window load event to keep the page load performant
+      window.addEventListener("load", function() {
+        navigator.serviceWorker.register("./service-worker.js")
+          .catch(function() {
+            console.log("Service Worker not loaded");
+          });
+      });
+    }
+  </script>
+  <% } %>
+</head>
+<body>
+  <noscript> JavaScript is required in order to use this app </noscript>
+  <div class="app-container">
+    <header class="header">
+      <h2 class="heading">Central Basin Map</h2>
+    </header>
+    <div id="viewDiv">
+      <div id="timeSlider" style="width: 80vw;"></div>
+    </div>
+    <div id="featureSearchDiv">
+    <input type="text" id="featureSearch" placeholder="Press Enter to Search by WRDID" style="width: 300px;"/>
+</div>
+  </div>
+</body>
+</html>
+
