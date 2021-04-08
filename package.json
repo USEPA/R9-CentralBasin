@@ -1,5 +1,5 @@
 {
-  "name": "C:\\Data\\EPA R9\\R9-CentralBasin",
+  "name": "R9-CentralBasin",
   "version": "0.0.1",
   "devDependencies": {
     "@arcgis/webpack-plugin": "~4.18.0",
