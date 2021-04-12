@@ -123,7 +123,7 @@ export async function loadWellsView(view: SceneView) {
     return view.whenLayerView(justWells).then(justWellsView => {
         let featureSearch = document.getElementById("featureSearchDiv");
         // @ts-ignore
-        view.ui.add(featureSearch, "top-right");
+        view.ui.add(featureSearch, "top-right", 0);
         let featureSearchInput = document.getElementById("featureSearch");
         // @ts-ignore
         featureSearchInput.onkeyup = (event: any) => {
