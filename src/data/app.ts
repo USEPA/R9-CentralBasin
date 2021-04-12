@@ -18,7 +18,7 @@ import Expand from '@arcgis/core/widgets/Expand';
 
 export const wellsLayer = new SceneLayer({
     portalItem: {
-        id: "4b467b707e9b4f55aee417ab8bdf8809"
+        id: "71e28039832f4ba3b02b997a59230c08"
     },
     outFields: ["*"]
 });
