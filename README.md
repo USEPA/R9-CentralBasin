@@ -1,4 +1,4 @@
-# ArcGIS API for JavaScript Template Application
+# Central Basin 3D Map
 
 ## Usage
 
