@@ -117,7 +117,7 @@ export function setupWellSlider(view: SceneView, timeSlider: TimeSlider, timeSli
 
 export async function loadWellsView(view: SceneView) {
     // @ts-ignore
-    let justWells = view.map.layers.find(x => x.portalItem && x.portalItem.id === "43e5eed34cc9442fb381f1d490099a1e") as SceneLayer;
+    let justWells = view.map.layers.find(x => x.portalItem && x.portalItem.id === "71e28039832f4ba3b02b997a59230c08") as SceneLayer;
     justWells.outFields = ["*"];
     let highlight: any;
     return view.whenLayerView(justWells).then(justWellsView => {
