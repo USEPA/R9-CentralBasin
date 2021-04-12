@@ -1,5 +1,5 @@
 on: push
-name: Build Angular
+name: Build App
 jobs:
   build:
     runs-on: ubuntu-latest

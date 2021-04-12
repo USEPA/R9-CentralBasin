@@ -15,7 +15,7 @@ export function initWidgets(view: SceneView) {
 
     let layerList = new LayerList({
         view,
-        listItemCreatedFunction: function (event) {
+        listItemCreatedFunction: function (event: any) {
             const item = event.item;
             if (item.layer.type !== "group") {
                 // don't show legend twice
