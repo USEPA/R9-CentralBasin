@@ -32,17 +32,18 @@ export function initWidgets(view: SceneView) {
         container: "sliceContainer"
     });
 
-    // slice.viewModel.watch("state", function (value) {
-    //     if (value === "ready") {
-    //         clearPlaneBtn.style.display = "none";
-    //     } else {
-    //         clearPlaneBtn.style.display = "inherit";
-    //     }
-    // });
+    slice.viewModel.watch("state", function (value) {
+        console.log(value);
+        if (value === "ready") {
+            document.getElementById("clearPlaneBtn").style.display = "none";
+        } else {
+            document.getElementById("clearPlaneBtn").style.display = "inherit";
+        }
+    });
 
-    // clearPlaneBtn.addEventListener("click", function () {
-    //     sliceWidget.viewModel.clear();
-    // });
+    document.getElementById("clearPlaneBtn").addEventListener("click", evt => {
+        slice.viewModel.clear();
+    });
 
 
 
@@ -51,7 +52,7 @@ export function initWidgets(view: SceneView) {
     // Add widget to the bottom left corner of the view
     // view.ui.add(legend, 'bottom-left');
     view.ui.add(layerList, 'top-right');
-    view.ui.add("menu", "top-right");
+    view.ui.add("sliceDiv", "top-right");
 
     // view.ui.add(sliceExpand, "top-right");
     view.ui.add(homeButton, "top-left");

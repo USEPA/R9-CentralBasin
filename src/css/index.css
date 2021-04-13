@@ -44,21 +44,22 @@ body {
 
 #menu {
   padding: 0.8em;
-  max-width: 250px;
+  width:300px;
 }
 
 #sliceContainer {
-  width: inherit;
+  width: 300px;
+  margin-left: -10px;
 }
 
-#sliceOptions {
-  margin: 0 15px;
+#clearPlaneBtn {
+  width: 270px;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  display: none;
 }
 
-#sliceOptions>button {
-  margin-bottom: 15px;
-}
-
-#sliceContainer {
-  max-width: 228px;
+#featureSearch {
+  width: 270px;
+  margin: 10px 15px;
 }

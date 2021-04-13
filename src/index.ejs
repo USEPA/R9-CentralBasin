@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,9 +12,9 @@
     // Check that service workers are registered
     if ('serviceWorker' in navigator) {
       // Use the window load event to keep the page load performant
-      window.addEventListener("load", function() {
+      window.addEventListener("load", function () {
         navigator.serviceWorker.register("./service-worker.js")
-          .catch(function() {
+          .catch(function () {
             console.log("Service Worker not loaded");
           });
       });
@@ -21,6 +22,7 @@
   </script>
   <% } %>
 </head>
+
 <body>
   <noscript> JavaScript is required in order to use this app </noscript>
   <div class="app-container">
@@ -30,20 +32,17 @@
     <div id="viewDiv">
       <div id="timeSlider" style="width: 80vw;"></div>
     </div>
-    <div id="menu" class="esri-widget">
+    <div id="sliceDiv" class="esri-widget">
       <div id="sliceContainer"></div>
-      <button
-          class="esri-button esri-button--secondary"
-          id="clearPlaneBtn"
-          type="button"
-          title="Clear slice plane">
-          Clear slice
-        </button>
+      <button class="esri-button esri-button--secondary" id="clearPlaneBtn" type="button" title="Clear slice plane">
+        Clear slice
+      </button>
     </div>
-    <div id="featureSearchDiv">
-    <input type="text" id="featureSearch" placeholder="Press Enter to Search by WRDID" style="width: 300px;"/>
-</div>
+    <div id="featureSearchDiv" class="esri-widget">
+      <input type="text" id="featureSearch" class="esri-input esri-feature-form__input"
+        placeholder="Press Enter to Search by WRDID"/>
+    </div>
   </div>
 </body>
-</html>
 
+</html>
