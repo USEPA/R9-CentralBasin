@@ -7,6 +7,8 @@ import Expand from '@arcgis/core/widgets/Expand';
 import Home from '@arcgis/core/widgets/Home';
 import SceneView from '@arcgis/core/views/SceneView';
 import Slice from '@arcgis/core/widgets/Slice';
+import AreaMeasurement3D from '@arcgis/core/widgets/AreaMeasurement3D';
+import DirectLineMeasurement3D from '@arcgis/core/widgets/DirectLineMeasurement3D';
 
 export function initWidgets(view: SceneView) {
     const legend = new Legend({ view });
@@ -27,9 +29,30 @@ export function initWidgets(view: SceneView) {
         }
     });
 
+    let lineMeasurement = new DirectLineMeasurement3D({
+        view: view
+    });    
+    
+    let areaMeasurement = new AreaMeasurement3D({
+        view: view
+    });
+
+    const lineMeasurementExpand = new Expand({
+        view,
+        content: lineMeasurement,
+        expandIconClass: 'esri-icon-measure-line'
+    });
+
+    const areaMeasurementExpand = new Expand({
+        view,
+        content: areaMeasurement,
+        expandIconClass: 'esri-icon-measure-area'
+    });
+
     const slice = new Slice({
         view: view,
-        container: "sliceContainer"
+        container: "sliceContainer",
+
     });
 
     slice.viewModel.watch("state", function (value) {
@@ -54,8 +77,9 @@ export function initWidgets(view: SceneView) {
     view.ui.add(layerList, 'top-right');
     view.ui.add("sliceDiv", "top-right");
 
-    // view.ui.add(sliceExpand, "top-right");
     view.ui.add(homeButton, "top-left");
+    view.ui.add(lineMeasurementExpand, "top-left");
+    view.ui.add(areaMeasurementExpand, "top-left");
     return view;
 }
 
@@ -75,7 +99,8 @@ export function initTimeSlider(view: SceneView) {
     });
     const timeSliderExpand = new Expand({
         view,
-        content: timeSlider.container
+        content: timeSlider.container,
+        expandIconClass: 'esri-icon-time-clock'
     });
 
     view.ui.add(timeSliderExpand, "bottom-left");
