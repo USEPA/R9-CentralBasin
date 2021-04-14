@@ -16,4 +16,4 @@ coverage-final.*
 *.env
 coverage/*
 .idea
-package-lock.json
+
