@@ -9,9 +9,9 @@ import SceneView from '@arcgis/core/views/SceneView';
 import Slice from '@arcgis/core/widgets/Slice';
 
 export function initWidgets(view: SceneView) {
-    const legend = new Legend({view});
+    const legend = new Legend({ view });
 
-    let homeButton = new Home({view});
+    let homeButton = new Home({ view });
 
     let layerList = new LayerList({
         view,
@@ -28,19 +28,39 @@ export function initWidgets(view: SceneView) {
     });
 
     const slice = new Slice({
-        view: view
+        view: view,
+        container: "sliceContainer"
     });
 
-// Add widget to the bottom left corner of the view
-    view.ui.add(slice, "bottom-right");
+    slice.viewModel.watch("state", function (value) {
+        console.log(value);
+        if (value === "ready") {
+            document.getElementById("clearPlaneBtn").style.display = "none";
+        } else {
+            document.getElementById("clearPlaneBtn").style.display = "inherit";
+        }
+    });
+
+    document.getElementById("clearPlaneBtn").addEventListener("click", evt => {
+        slice.viewModel.clear();
+    });
+
+
+
+
+
+    // Add widget to the bottom left corner of the view
     // view.ui.add(legend, 'bottom-left');
     view.ui.add(layerList, 'top-right');
+    view.ui.add("sliceDiv", "top-right");
+
+    // view.ui.add(sliceExpand, "top-right");
     view.ui.add(homeButton, "top-left");
     return view;
 }
 
 export function initTimeSlider(view: SceneView) {
-    const timeInterval = new TimeInterval({value: 1, unit: "months"});
+    const timeInterval = new TimeInterval({ value: 1, unit: "months" });
     const timeSlider = new TimeSlider({
         container: "timeSlider",
         view,
@@ -59,5 +79,5 @@ export function initTimeSlider(view: SceneView) {
     });
 
     view.ui.add(timeSliderExpand, "bottom-left");
-    return {timeSlider, timeSliderExpand};
+    return { timeSlider, timeSliderExpand };
 }

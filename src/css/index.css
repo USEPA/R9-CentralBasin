@@ -41,3 +41,25 @@ body {
   height: 100%;
   width: 100%;
 }
+
+#menu {
+  padding: 0.8em;
+  width:300px;
+}
+
+#sliceContainer {
+  width: 300px;
+  margin-left: -10px;
+}
+
+#clearPlaneBtn {
+  width: 270px;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  display: none;
+}
+
+#featureSearch {
+  width: 270px;
+  margin: 10px 15px;
+}
