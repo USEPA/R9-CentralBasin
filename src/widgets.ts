@@ -9,6 +9,7 @@ import SceneView from '@arcgis/core/views/SceneView';
 import Slice from '@arcgis/core/widgets/Slice';
 import AreaMeasurement3D from '@arcgis/core/widgets/AreaMeasurement3D';
 import DirectLineMeasurement3D from '@arcgis/core/widgets/DirectLineMeasurement3D';
+import BasemapGallery from '@arcgis/core/widgets/BasemapGallery';
 
 export function initWidgets(view: SceneView) {
     const legend = new Legend({ view });
@@ -29,30 +30,45 @@ export function initWidgets(view: SceneView) {
         }
     });
 
+    let basemapGallery = new BasemapGallery({
+        view: view
+    });
+
     let lineMeasurement = new DirectLineMeasurement3D({
         view: view
-    });    
-    
+    });
+
     let areaMeasurement = new AreaMeasurement3D({
         view: view
+    });
+
+    const basemapExpand = new Expand({
+        view,
+        content: basemapGallery,
+        expandIconClass: 'esri-icon-basemap',
+        autoCollapse: true,
+        group: 'top-left'
     });
 
     const lineMeasurementExpand = new Expand({
         view,
         content: lineMeasurement,
-        expandIconClass: 'esri-icon-measure-line'
+        expandIconClass: 'esri-icon-measure-line',
+        autoCollapse: true,
+        group: 'top-left'
     });
 
     const areaMeasurementExpand = new Expand({
         view,
         content: areaMeasurement,
-        expandIconClass: 'esri-icon-measure-area'
+        expandIconClass: 'esri-icon-measure-area',
+        autoCollapse: true,
+        group: 'top-left'
     });
 
     const slice = new Slice({
         view: view,
-        container: "sliceContainer",
-
+        container: "sliceContainer"
     });
 
     slice.viewModel.watch("state", function (value) {
@@ -68,16 +84,14 @@ export function initWidgets(view: SceneView) {
         slice.viewModel.clear();
     });
 
-
-
-
-
     // Add widget to the bottom left corner of the view
     // view.ui.add(legend, 'bottom-left');
     view.ui.add(layerList, 'top-right');
     view.ui.add("sliceDiv", "top-right");
 
     view.ui.add(homeButton, "top-left");
+    view.ui.add(basemapExpand, "top-left");
+
     view.ui.add(lineMeasurementExpand, "top-left");
     view.ui.add(areaMeasurementExpand, "top-left");
     return view;
