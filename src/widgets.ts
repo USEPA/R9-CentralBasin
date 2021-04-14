@@ -72,7 +72,6 @@ export function initWidgets(view: SceneView) {
     });
 
     slice.viewModel.watch("state", function (value) {
-        console.log(value);
         if (value === "ready") {
             document.getElementById("clearPlaneBtn").style.display = "none";
         } else {
