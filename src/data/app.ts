@@ -41,7 +41,8 @@ export const map = new WebScene({
 
 export const info = new OAuthInfo({
     // Swap this ID out with registered application ID
-    appId: "ZtlpDht9ywRCA4Iq",
+    // appId: "ZtlpDht9ywRCA4Iq",
+    appId: "RjgBsWrJbfY8hMGY",
     // Uncomment the next line and update if using your own portal
     portalUrl: "https://epa.maps.arcgis.com",
     // Uncomment the next line to prevent the user's signed in state from being shared with other apps on the same domain with the same authNamespace value.
@@ -80,7 +81,7 @@ export function setupWellSlider(view: SceneView, timeSlider: TimeSlider, timeSli
 
 
                 layerView.filter = new FeatureFilter({
-                    where: `WellsRanThroughDEM_EPA_WQ_DDW_1 BETWEEN DATE '${start}' AND DATE '${end}'`
+                    where: `WellsRanThroughDEM_EPA_WQ_DDW_3 BETWEEN DATE '${start}' AND DATE '${end}'`
                     // where: `WellsRanThroughDEM_EPA_WQ_DDW_1 = DATE '${start}'`
 
                 });
@@ -132,12 +133,12 @@ export async function loadWellsView(view: SceneView) {
                     highlight.remove();
                 }
                 justWellsView.queryExtent({
-                    where: `WRDID = ${parseInt(event.currentTarget.value, 10)}`
+                    where: `WellsRanThroughDEM_WRD_CB_Wells = ${parseInt(event.currentTarget.value, 10)}`
                 }).then((response: any) => {
                     view.goTo({target: response.extent, scale: 2000});
                 });
                 justWellsView.queryFeatures({
-                    where: `WRDID = ${parseInt(event.currentTarget.value, 10)}`
+                    where: `WellsRanThroughDEM_WRD_CB_Wells = ${parseInt(event.currentTarget.value, 10)}`
                 }).then((response: any) => {
                     highlight = justWellsView.highlight(response.features);
                 });
