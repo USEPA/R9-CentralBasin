@@ -42,24 +42,45 @@ body {
   width: 100%;
 }
 
-#menu {
-  padding: 0.8em;
-  width:300px;
-}
-
-#sliceContainer {
-  width: 300px;
-  margin-left: -10px;
-}
-
-#clearPlaneBtn {
-  width: 270px;
-  margin-left: 5px;
-  margin-bottom: 10px;
-  display: none;
-}
-
 #featureSearch {
   width: 270px;
   margin: 10px 15px;
+}
+
+#featureSearchDiv {
+  visibility: hidden;
+}
+
+#slidesDiv {
+  background-color: white;
+  opacity: 0.9;
+  color: black;
+  padding: 10px;
+  visibility: hidden;
+  bottom: 20px;
+  overflow-x: auto;
+  text-align: center;
+  height: 170px;
+  display: flex;
+}
+
+#slidesDiv .slide {
+  /* Show cursor as pointer when on a slide */
+  cursor: pointer;
+  margin: 0px 20px 10px 20px;
+}
+
+#slidesDiv .slide .title {
+  /* Center the title text */
+  text-align: center;
+  height: 40px;
+  max-width: 130px;
+}
+/* Draw active slide with a nice border around the thumbnail */
+
+#slidesDiv .slide.active img {
+  box-shadow: 0px 0px 12px black;
+  border-style: solid;
+  border-width: thin;
+  border-color: black;
 }
