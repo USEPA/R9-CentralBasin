@@ -1,8 +1,8 @@
 // Map data
-import {wellsLayer, info, map, elevLyr, loadWellsView, setupWellSlider} from './data/app';
+import { wellsLayer, info, map, elevLyr, loadWellsView, setupWellSlider } from './data/app';
 
 // widget utils
-import {initTimeSlider, initWidgets} from './widgets';
+import { initTimeSlider, initWidgets, initSlidesWidget } from './widgets';
 import IdentityManager from '@arcgis/core/identity/IdentityManager';
 import SceneView from '@arcgis/core/views/SceneView';
 
@@ -43,7 +43,7 @@ map.layers.splice(0, 0, wellsLayer);
 map.ground.layers.add(elevLyr);
 
 view.popup.defaultPopupTemplateEnabled = true;
-view.on("drag", () => console.log(view.camera));
+// view.on("drag", () => console.log(view.camera));
 
 wellsLayer.when(() => {
     view.goTo(wellsLayer.fullExtent);
@@ -51,6 +51,16 @@ wellsLayer.when(() => {
 
 view.when(initWidgets);
 view.when(loadWellsView)
+view.when(() => {
+    document.getElementById("slidesDiv").style.visibility = "visible";
+    document.getElementById("featureSearchDiv").style.visibility = "visible";
+    view.on("click", function(event) {
+        console.log("click");
+    });
+})
+
+view.when(initSlidesWidget);
+
 // @ts-ignore
 view.when(initTimeSlider).then(timePieces => {
     setupWellSlider(view, timePieces.timeSlider, timePieces.timeSliderExpand)

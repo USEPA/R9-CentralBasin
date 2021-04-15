@@ -11,6 +11,10 @@ import AreaMeasurement3D from '@arcgis/core/widgets/AreaMeasurement3D';
 import DirectLineMeasurement3D from '@arcgis/core/widgets/DirectLineMeasurement3D';
 import BasemapGallery from '@arcgis/core/widgets/BasemapGallery';
 import Search from '@arcgis/core/widgets/Search';
+import WebScene from '@arcgis/core/WebScene';
+import Basemap from '@arcgis/core/Basemap';
+import { info } from './data/app';
+
 
 export function initWidgets(view: SceneView) {
     const legend = new Legend({ view });
@@ -33,10 +37,25 @@ export function initWidgets(view: SceneView) {
 
     const searchWidget = new Search({
         view: view
-      });
+    });
 
-    let basemapGallery = new BasemapGallery({
-        view: view
+    var basemapGallery = new BasemapGallery({
+        view: view,
+        source: {
+            portal: "https://epa.maps.arcgis.com", //info.portalUrl,
+            updateBasemapsCallback: function (items) {
+                // create custom basemap to be added to the array of portal basemaps
+                var bm = new Basemap({
+                    portalItem: {
+                        id: "c0af3abd0d60427ba659e38d457fbe07"
+                    }
+                });
+                // add basemap to the array
+                items.unshift(bm);
+                // return the array of basemaps
+                return items;
+            }
+        }
     });
 
     let lineMeasurement = new DirectLineMeasurement3D({
@@ -47,12 +66,17 @@ export function initWidgets(view: SceneView) {
         view: view
     });
 
+    const slice = new Slice({
+        view: view
+    });
+
     const basemapExpand = new Expand({
         view,
         content: basemapGallery,
         expandIconClass: 'esri-icon-basemap',
         autoCollapse: true,
-        group: 'top-left'
+        group: 'top-left',
+        expandTooltip: 'Basemaps'
     });
 
     const lineMeasurementExpand = new Expand({
@@ -60,7 +84,8 @@ export function initWidgets(view: SceneView) {
         content: lineMeasurement,
         expandIconClass: 'esri-icon-measure-line',
         autoCollapse: true,
-        group: 'top-left'
+        group: 'top-left',
+        expandTooltip: 'Distance Measurement'
     });
 
     const areaMeasurementExpand = new Expand({
@@ -68,38 +93,36 @@ export function initWidgets(view: SceneView) {
         content: areaMeasurement,
         expandIconClass: 'esri-icon-measure-area',
         autoCollapse: true,
-        group: 'top-left'
+        group: 'top-left',
+        expandTooltip: 'Area Measurement'
     });
 
-    const slice = new Slice({
-        view: view,
-        container: "sliceContainer"
+    const sliceExpand = new Expand({
+        view,
+        content: slice,
+        expandIconClass: 'esri-icon-cursor-marquee',
+        group: 'top-left',
+        autoCollapse: false,
+        expandTooltip: 'Slice'
     });
 
-    slice.viewModel.watch("state", function (value) {
-        console.log(value);
-        if (value === "ready") {
-            document.getElementById("clearPlaneBtn").style.display = "none";
-        } else {
-            document.getElementById("clearPlaneBtn").style.display = "inherit";
-        }
-    });
-
-    document.getElementById("clearPlaneBtn").addEventListener("click", evt => {
-        slice.viewModel.clear();
+    sliceExpand.viewModel.watch("expanded", function (value) {
+        // console.log(value);
+        if (!value) { slice.viewModel.clear() }
     });
 
     // Add widget to the bottom left corner of the view
     // view.ui.add(legend, 'bottom-left');
-    view.ui.add(searchWidget, 'top-right');
     view.ui.add(layerList, 'top-right');
-    view.ui.add("sliceDiv", "top-right");
+    view.ui.add(searchWidget, 'top-right');
 
     view.ui.add(homeButton, "top-left");
     view.ui.add(basemapExpand, "top-left");
 
     view.ui.add(lineMeasurementExpand, "top-left");
     view.ui.add(areaMeasurementExpand, "top-left");
+    view.ui.add(sliceExpand, "top-left");
+
     return view;
 }
 
@@ -120,9 +143,49 @@ export function initTimeSlider(view: SceneView) {
     const timeSliderExpand = new Expand({
         view,
         content: timeSlider.container,
-        expandIconClass: 'esri-icon-time-clock'
+        expandIconClass: 'esri-icon-time-clock',
+        expandTooltip: 'Time Slider'
     });
 
     view.ui.add(timeSliderExpand, "bottom-left");
     return { timeSlider, timeSliderExpand };
 }
+
+
+export function initSlidesWidget(view: SceneView) {
+    const slidesDiv: any = document.getElementById("slidesDiv");
+    const slides = view.map.presentation.slides;
+    slides.forEach(function (slide: any, placement: number) {
+
+        var slideElement = document.createElement("div");
+        slideElement.id = slide.id;
+        slideElement.classList.add("slide");
+
+        if (placement === "first") {
+            slidesDiv.insertBefore(slideElement, slidesDiv.firstChild);
+        } else {
+            slidesDiv.appendChild(slideElement);
+        }
+
+        var title = document.createElement("div");
+        title.innerText = slide.title.text;
+        slideElement.appendChild(title);
+
+        var img = new Image();
+        img.src = slide.thumbnail.url;
+        img.title = slide.title.text;
+        slideElement.appendChild(img);
+
+        slideElement.addEventListener("click", function () {
+            var slides = document.querySelectorAll(".slide");
+            Array.from(slides).forEach(function (node) {
+                node.classList.remove("active");
+            });
+            slideElement.classList.add("active");
+            slide.applyTo(view);
+        });
+    });
+    view.ui.add(slidesDiv, "top-left");
+}
+
+
