@@ -43,7 +43,6 @@ map.layers.splice(0, 0, wellsLayer);
 map.ground.layers.add(elevLyr);
 
 view.popup.defaultPopupTemplateEnabled = true;
-// view.on("drag", () => console.log(view.camera));
 
 wellsLayer.when(() => {
     view.goTo(wellsLayer.fullExtent);

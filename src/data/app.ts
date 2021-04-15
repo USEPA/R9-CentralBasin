@@ -15,6 +15,9 @@ import TimeInterval from '@arcgis/core/TimeInterval';
 import Home from '@arcgis/core/widgets/Home';
 import LayerList from '@arcgis/core/widgets/LayerList';
 import Expand from '@arcgis/core/widgets/Expand';
+import TimeExtent from '@arcgis/core/TimeExtent';
+import LayerView from '@arcgis/core/views/layers/LayerView';
+import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
 
 export const wellsLayer = new SceneLayer({
     portalItem: {
@@ -41,7 +44,7 @@ export const map = new WebScene({
 
 export const info = new OAuthInfo({
     // Swap this ID out with registered application ID
-    appId: "ZtlpDht9ywRCA4Iq",
+    appId: (process.env.NODE_ENV === "production" ? "RjgBsWrJbfY8hMGY" : "ZtlpDht9ywRCA4Iq"),
     // Uncomment the next line and update if using your own portal
     portalUrl: "https://epa.maps.arcgis.com",
     // Uncomment the next line to prevent the user's signed in state from being shared with other apps on the same domain with the same authNamespace value.
@@ -57,6 +60,18 @@ export const elevLyr = new ElevationLayer({
 // let minHeight = 2485;
 // let maxHeight = 44070;
 
+function applyTimeExtent(timeExtent: TimeExtent, layerView: SceneLayerView) {
+    const start = moment(timeExtent.start).format("YYYY-MM-DD");
+    const end = moment(timeExtent.end).format("YYYY-MM-DD");
+
+
+    layerView.filter = new FeatureFilter({
+        where: `WellsRanThroughDEM_EPA_WQ_DDW_3 BETWEEN DATE '${start}' AND DATE '${end}'`
+        // where: `WellsRanThroughDEM_EPA_WQ_DDW_1 = DATE '${start}'`
+
+    });
+}
+
 export function setupWellSlider(view: SceneView, timeSlider: TimeSlider, timeSliderExpand: Expand) {
     // function loadLayerView(wellsLayer: SceneLayer) {
     wellsLayer.outFields = ["*"];
@@ -70,20 +85,9 @@ export function setupWellSlider(view: SceneView, timeSlider: TimeSlider, timeSli
         //
         // const minOpacity = 0;
         // const maxOpacity = 0.8;
-
-
         timeSlider.watch("timeExtent", () => {
             if (timeSliderExpand.expanded) {
-                const timeExtent = timeSlider.timeExtent;
-                const start = moment(timeExtent.start).format("YYYY-MM-DD");
-                const end = moment(timeExtent.end).format("YYYY-MM-DD");
-
-
-                layerView.filter = new FeatureFilter({
-                    where: `Sample_Dat BETWEEN DATE '${start}' AND DATE '${end}'`
-                    // where: `WellsRanThroughDEM_EPA_WQ_DDW_1 = DATE '${start}'`
-
-                });
+                applyTimeExtent(timeSlider.timeExtent, layerView);
             }
             // layerView.queryFeatures({where: layerView.filter.where, outFields: ["*"]}).then(r => console.log(r));
         });
@@ -95,6 +99,8 @@ export function setupWellSlider(view: SceneView, timeSlider: TimeSlider, timeSli
             if (!timeSliderExpand.expanded) {
                 // @ts-ignore
                 layerView.filter = null;
+            } else if (timeSlider.timeExtent) {
+                applyTimeExtent(timeSlider.timeExtent, layerView);
             }
         });
 
@@ -109,8 +115,6 @@ export function setupWellSlider(view: SceneView, timeSlider: TimeSlider, timeSli
     //     layer: plumes,
     //     container: "tableDiv"
     // });
-
-
 
 
 }
@@ -132,12 +136,12 @@ export async function loadWellsView(view: SceneView) {
                     highlight.remove();
                 }
                 justWellsView.queryExtent({
-                    where: `WRDID = ${parseInt(event.currentTarget.value, 10)}`
+                    where: `WellsRanThroughDEM_WRD_CB_Wells = ${parseInt(event.currentTarget.value, 10)}`
                 }).then((response: any) => {
                     view.goTo({target: response.extent, scale: 2000});
                 });
                 justWellsView.queryFeatures({
-                    where: `WRDID = ${parseInt(event.currentTarget.value, 10)}`
+                    where: `WellsRanThroughDEM_WRD_CB_Wells = ${parseInt(event.currentTarget.value, 10)}`
                 }).then((response: any) => {
                     highlight = justWellsView.highlight(response.features);
                 });
