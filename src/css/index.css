@@ -58,20 +58,23 @@ body {
   padding: 10px;
   visibility: hidden;
   bottom: 20px;
-  overflow-y: auto;
+  overflow-x: auto;
   text-align: center;
-  height: 260px;
+  height: 170px;
+  display: flex;
 }
 
 #slidesDiv .slide {
   /* Show cursor as pointer when on a slide */
   cursor: pointer;
-  margin-bottom: 6px;
+  margin: 0px 20px 10px 20px;
 }
 
 #slidesDiv .slide .title {
   /* Center the title text */
   text-align: center;
+  height: 40px;
+  max-width: 130px;
 }
 /* Draw active slide with a nice border around the thumbnail */
 

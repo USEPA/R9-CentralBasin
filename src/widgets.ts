@@ -169,6 +169,7 @@ export function initSlidesWidget(view: SceneView) {
 
         var title = document.createElement("div");
         title.innerText = slide.title.text;
+        title.classList.add("title");
         slideElement.appendChild(title);
 
         var img = new Image();
@@ -185,7 +186,7 @@ export function initSlidesWidget(view: SceneView) {
             slide.applyTo(view);
         });
     });
-    view.ui.add(slidesDiv, "top-left");
+    // view.ui.add(slidesDiv, "top-left");
 }
 
 
