@@ -10,6 +10,7 @@ import Slice from '@arcgis/core/widgets/Slice';
 import AreaMeasurement3D from '@arcgis/core/widgets/AreaMeasurement3D';
 import DirectLineMeasurement3D from '@arcgis/core/widgets/DirectLineMeasurement3D';
 import BasemapGallery from '@arcgis/core/widgets/BasemapGallery';
+import Search from '@arcgis/core/widgets/Search';
 
 export function initWidgets(view: SceneView) {
     const legend = new Legend({ view });
@@ -29,6 +30,10 @@ export function initWidgets(view: SceneView) {
             }
         }
     });
+
+    const searchWidget = new Search({
+        view: view
+      });
 
     let basemapGallery = new BasemapGallery({
         view: view
@@ -86,6 +91,7 @@ export function initWidgets(view: SceneView) {
 
     // Add widget to the bottom left corner of the view
     // view.ui.add(legend, 'bottom-left');
+    view.ui.add(searchWidget, 'top-right');
     view.ui.add(layerList, 'top-right');
     view.ui.add("sliceDiv", "top-right");
 

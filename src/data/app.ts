@@ -80,7 +80,7 @@ export function setupWellSlider(view: SceneView, timeSlider: TimeSlider, timeSli
 
 
                 layerView.filter = new FeatureFilter({
-                    where: `WellsRanThroughDEM_EPA_WQ_DDW_1 BETWEEN DATE '${start}' AND DATE '${end}'`
+                    where: `Sample_Dat BETWEEN DATE '${start}' AND DATE '${end}'`
                     // where: `WellsRanThroughDEM_EPA_WQ_DDW_1 = DATE '${start}'`
 
                 });
