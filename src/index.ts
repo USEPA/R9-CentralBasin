@@ -1,4 +1,4 @@
-import { SceneLayerView } from '@arcgis/core/views/layers/SceneLayerView';
+import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 // Map data
 import { mapProperties, info, map, elevLyr, loadWellsView, setupWellSlider, initTableWidget } from './data/app';

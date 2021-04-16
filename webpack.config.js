@@ -89,7 +89,9 @@ module.exports = function build(env, arg) {
         chunkFilename: '[id].css',
       }),
 
-      new ArcGISPlugin(),
+      new ArcGISPlugin({
+        locales: ['en']
+      }),
 
       new HtmlWebPackPlugin({
         title: 'ArcGIS Template Application',
