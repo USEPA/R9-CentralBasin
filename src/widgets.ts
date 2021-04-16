@@ -125,6 +125,10 @@ export function initWidgets(view: SceneView) {
     view.ui.add(areaMeasurementExpand, "top-left");
     view.ui.add(sliceExpand, "top-left");
 
+    let featureSearch = document.getElementById("featureSearchDiv");
+    // @ts-ignore
+    view.ui.add(featureSearch, "top-right", 0);
+
     return view;
 }
 

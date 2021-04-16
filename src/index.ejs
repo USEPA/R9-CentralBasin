@@ -28,6 +28,13 @@
   <div class="app-container">
     <header class="header">
       <h2 class="heading">Central Basin Map</h2>
+      <div id="toggleDiv" class="esri-widget">
+      <label class="switch">
+        <input id="checkboxId" type="checkbox" checked="yes">
+        <span class="slider round"></span>
+      </label>
+      <label class="labelText" id="labelText">Hide feature table</label>
+    </div>
     </header>
     <div id="viewDiv">
       <div id="timeSlider" style="width: 80vw;"></div>
@@ -39,13 +46,6 @@
     <div id="slidesDiv" class="esri-widget"></div>
     <div id="tableContainer" class="tableContainer">
       <div id="tableDiv"></div>
-    </div>
-    <div id="toggleDiv" class="esri-widget">
-      <label class="switch">
-        <input id="checkboxId" type="checkbox" checked="yes">
-        <span class="slider round"></span>
-      </label>
-      <label class="labelText" id="labelText">Hide feature table</label>
     </div>
   </div>
 </body>

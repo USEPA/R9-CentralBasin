@@ -9,7 +9,7 @@ import ElevationLayer from '@arcgis/core/layers/ElevationLayer';
 import SceneView from '@arcgis/core/views/SceneView';
 import FeatureFilter from '@arcgis/core/views/layers/support/FeatureFilter';
 import moment from 'moment';
-import {whenNotOnce} from "@arcgis/core/core/watchUtils";
+import { whenNotOnce } from "@arcgis/core/core/watchUtils";
 import TimeSlider from '@arcgis/core/widgets/TimeSlider';
 import TimeInterval from '@arcgis/core/TimeInterval';
 import Home from '@arcgis/core/widgets/Home';
@@ -19,24 +19,7 @@ import TimeExtent from '@arcgis/core/TimeExtent';
 import LayerView from '@arcgis/core/views/layers/LayerView';
 import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
 import FeatureTable from '@arcgis/core/widgets/FeatureTable';
-
-export const map = new WebScene({
-    portalItem: {
-        id: "dd983ac69154460fb75f5ce193b5344d"
-    },
-    ground: {
-        navigationConstraint: {
-            type: "none"
-        }
-    }
-});
-
-export const wellsLayer = new SceneLayer({
-    portalItem: {
-        id: "71e28039832f4ba3b02b997a59230c08"
-    },
-    outFields: ["*"]
-});
+import PointCloudLayerView from '@arcgis/core/views/layers/PointCloudLayerView';
 
 export const info = new OAuthInfo({
     appId: (process.env.NODE_ENV === "production" ? "RjgBsWrJbfY8hMGY" : "ZtlpDht9ywRCA4Iq"),
@@ -44,6 +27,21 @@ export const info = new OAuthInfo({
     // Uncomment the next line to prevent the user's signed in state from being shared with other apps on the same domain with the same authNamespace value.
     // authNamespace: "portal_oauth_inline",
     popup: false
+});
+
+export const mapProperties: any = {
+    wellsLayerId: "71e28039832f4ba3b02b997a59230c08"
+}
+
+export const map = new WebScene({
+    portalItem: {
+        id: "01fd566336584b81b1da25e061c81fbc"
+    },
+    ground: {
+        navigationConstraint: {
+            type: "none"
+        }
+    }
 });
 
 export const elevLyr = new ElevationLayer({
@@ -60,46 +58,45 @@ function applyTimeExtent(timeExtent: TimeExtent, layerView: SceneLayerView) {
     });
 }
 
-export function setupWellSlider(view: SceneView, timeSlider: TimeSlider, timeSliderExpand: Expand) {
-    wellsLayer.outFields = ["*"];
+export async function setupWellSlider(justWells: SceneLayerView, timeSlider: TimeSlider, timeSliderExpand: Expand, view: SceneView) {
     // @ts-ignore
-    let justWells = view.map.layers.find(x => x.portalItem && x.portalItem.id === "71e28039832f4ba3b02b997a59230c08") as SceneLayer;
+    // let justWells = view.map.layers.find(x => x.portalItem && x.portalItem.id === "71e28039832f4ba3b02b997a59230c08") as SceneLayer;
 
-    view.whenLayerView(justWells).then(async layerView => {
+    // view.whenLayerView(justWells).then(async layerView => {
 
-        // layerView.maximumNumberOfFeatures = 500_000;
-        //
-        // const field = "Value_";
-        // const min = minHeight;
-        // const max = maxHeight;
-        //
-        // const minOpacity = 0;
-        // const maxOpacity = 0.8;
-        timeSlider.watch("timeExtent", () => {
-            if (timeSliderExpand.expanded) {
-                applyTimeExtent(timeSlider.timeExtent, layerView);
-            }
-            // layerView.queryFeatures({where: layerView.filter.where, outFields: ["*"]}).then(r => console.log(r));
-        });
-
-
-        // @ts-ignore
-        layerView.filter = null;
-        timeSliderExpand.watch("expanded", () => {
-            if (!timeSliderExpand.expanded) {
-                // @ts-ignore
-                layerView.filter = null;
-            } else if (timeSlider.timeExtent) {
-                applyTimeExtent(timeSlider.timeExtent, layerView);
-            }
-        });
-
-
-        // query loaded features
-
-
-        await whenNotOnce(view, "updating");
+    // layerView.maximumNumberOfFeatures = 500_000;
+    //
+    // const field = "Value_";
+    // const min = minHeight;
+    // const max = maxHeight;
+    //
+    // const minOpacity = 0;
+    // const maxOpacity = 0.8;
+    timeSlider.watch("timeExtent", () => {
+        if (timeSliderExpand.expanded) {
+            applyTimeExtent(timeSlider.timeExtent, justWells);
+        }
+        // layerView.queryFeatures({where: layerView.filter.where, outFields: ["*"]}).then(r => console.log(r));
     });
+
+
+    // @ts-ignore
+    justWells.filter = null;
+    timeSliderExpand.watch("expanded", () => {
+        if (!timeSliderExpand.expanded) {
+            // @ts-ignore
+            justWells.filter = null;
+        } else if (timeSlider.timeExtent) {
+            applyTimeExtent(timeSlider.timeExtent, justWells);
+        }
+    });
+
+
+    // query loaded features
+
+
+    await whenNotOnce(view, "updating");
+    //});
     // const featureTable = new FeatureTable({
     //     view: view, // The view property must be set for the select/highlight to work
     //     layer: plumes,
@@ -109,35 +106,28 @@ export function setupWellSlider(view: SceneView, timeSlider: TimeSlider, timeSli
 
 }
 
-export async function loadWellsView(view: SceneView) {
-    // @ts-ignore
-    let justWells = view.map.layers.find(x => x.portalItem && x.portalItem.id === "71e28039832f4ba3b02b997a59230c08") as SceneLayer;
-    justWells.outFields = ["*"];
+export async function loadWellsView(justWellsView: SceneLayerView, view: SceneView) {
     let highlight: any;
-    return view.whenLayerView(justWells).then(justWellsView => {
-        let featureSearch = document.getElementById("featureSearchDiv");
-        // @ts-ignore
-        view.ui.add(featureSearch, "top-right", 0);
-        let featureSearchInput = document.getElementById("featureSearch");
-        // @ts-ignore
-        featureSearchInput.onkeyup = (event: any) => {
-            if (event.keyCode === 13) {
-                if (highlight) {
-                    highlight.remove();
-                }
-                justWellsView.queryExtent({
-                    where: `WellsRanThroughDEM_WRD_CB_Wells = ${parseInt(event.currentTarget.value, 10)}`
-                }).then((response: any) => {
-                    view.goTo({target: response.extent, scale: 2000});
-                });
-                justWellsView.queryFeatures({
-                    where: `WellsRanThroughDEM_WRD_CB_Wells = ${parseInt(event.currentTarget.value, 10)}`
-                }).then((response: any) => {
-                    highlight = justWellsView.highlight(response.features);
-                });
+    
+    let featureSearchInput = document.getElementById("featureSearch");
+    // @ts-ignore
+    featureSearchInput.onkeyup = (event: any) => {
+        if (event.keyCode === 13) {
+            if (highlight) {
+                highlight.remove();
             }
-        };
-    });
+            justWellsView.queryExtent({
+                where: `WellsRanThroughDEM_WRD_CB_Wells = ${parseInt(event.currentTarget.value, 10)}`
+            }).then((response: any) => {
+                view.goTo({ target: response.extent, scale: 2000 });
+            });
+            justWellsView.queryFeatures({
+                where: `WellsRanThroughDEM_WRD_CB_Wells = ${parseInt(event.currentTarget.value, 10)}`
+            }).then((response: any) => {
+                highlight = justWellsView.highlight(response.features);
+            });
+        }
+    };
 }
 
 export function initTableWidget(view: SceneView) {
@@ -149,23 +139,23 @@ export function initTableWidget(view: SceneView) {
 
     // Create FeatureTable
     const featureTable = new FeatureTable({
-    view: view, // make sure to pass in view in order for selection to work
-    layer: featureLayer,
-    fieldConfigs: [{
-        name: "state_name",
-        label: "State",
-        direction: "asc"
+        view: view, // make sure to pass in view in order for selection to work
+        layer: featureLayer,
+        fieldConfigs: [{
+            name: "state_name",
+            label: "State",
+            direction: "asc"
         },
         {
-        name: "PercentagePrivate",
-        label: "Private school percentage"
+            name: "PercentagePrivate",
+            label: "Private school percentage"
         },
         {
-        name: "PercentagePublic",
-        label: "Public school percentage"
+            name: "PercentagePublic",
+            label: "Public school percentage"
         }
-    ],
-    container: tableDiv
+        ],
+        container: tableDiv
     });
 
     // Add toggle visibility slider

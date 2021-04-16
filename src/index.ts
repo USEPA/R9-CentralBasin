@@ -1,10 +1,14 @@
+import { SceneLayerView } from '@arcgis/core/views/layers/SceneLayerView';
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 // Map data
-import { wellsLayer, info, map, elevLyr, loadWellsView, setupWellSlider, initTableWidget } from './data/app';
+import { mapProperties, info, map, elevLyr, loadWellsView, setupWellSlider, initTableWidget } from './data/app';
 
 // widget utils
 import { initTimeSlider, initWidgets, initSlidesWidget } from './widgets';
 import IdentityManager from '@arcgis/core/identity/IdentityManager';
 import SceneView from '@arcgis/core/views/SceneView';
+
+let wellsLayer = new FeatureLayer;
 
 /**
  * Initialize application
@@ -44,28 +48,30 @@ map.ground.layers.add(elevLyr);
 
 view.popup.defaultPopupTemplateEnabled = true;
 
-wellsLayer.when(() => {
-    view.goTo(wellsLayer.fullExtent);
-});
-
-wellsLayer.when(initTableWidget);
-
-// view.when(initTableWidget);
 view.when(initWidgets);
-view.when(loadWellsView);
-view.when(() => {
+// view.when(loadWellsView);
+view.when(initTimeSlider).then(timePieces => {
     // @ts-ignore
     document.getElementById("slidesDiv").style.visibility = "visible";
     // @ts-ignore
     document.getElementById("featureSearchDiv").style.visibility = "visible";
-    view.on("click", function(event) {
+    view.on("click", function (event) {
         console.log("click");
     });
+
+    // @ts-ignore
+    const wellsLayer = view.map.layers.find(x => x.portalItem && x.portalItem.id === mapProperties.wellsLayerId) as SceneLayer;
+    wellsLayer.when(() => {
+        view.goTo(wellsLayer.fullExtent);
+        
+    });
+    
+    wellsLayer.when(initTableWidget);
+    wellsLayer.outFields = ["*"];
+    view.whenLayerView(wellsLayer).then(wellsLayerView => {
+        loadWellsView(wellsLayerView as SceneLayerView, view);
+        setupWellSlider(wellsLayerView as SceneLayerView, timePieces.timeSlider, timePieces.timeSliderExpand, view)
+    })
 });
 
 view.when(initSlidesWidget);
-
-// @ts-ignore
-view.when(initTimeSlider).then(timePieces => {
-    setupWellSlider(view, timePieces.timeSlider, timePieces.timeSliderExpand)
-});

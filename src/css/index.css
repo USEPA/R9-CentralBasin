@@ -20,6 +20,8 @@ body {
 .header {
   background-color: var(--blue);
   color: var(--white);
+  display: flex;
+  justify-content: space-between;
 }
 
 .heading {
@@ -91,7 +93,6 @@ body {
 } 
 
 #toggleDiv {
-  display: none;
   padding: 8px;
 }
 
