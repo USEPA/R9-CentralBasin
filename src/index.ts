@@ -1,10 +1,13 @@
 import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
+import FeatureLayerView from '@arcgis/core/views/layers/FeatureLayerView';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+
+
 // Map data
-import { mapProperties, info, map, elevLyr, loadWellsView, setupWellSlider, initTableWidget } from './data/app';
+import { mapProperties, info, map, elevLyr, loadWellsView, setupWellSlider } from './data/app';
 
 // widget utils
-import { initTimeSlider, initWidgets, initSlidesWidget } from './widgets';
+import { initTimeSlider, initWidgets, initSlidesWidget, initTableWidget } from './widgets';
 import IdentityManager from '@arcgis/core/identity/IdentityManager';
 import SceneView from '@arcgis/core/views/SceneView';
 
@@ -49,7 +52,7 @@ map.ground.layers.add(elevLyr);
 view.popup.defaultPopupTemplateEnabled = true;
 
 view.when(initWidgets);
-// view.when(loadWellsView);
+view.when(initSlidesWidget);
 view.when(initTimeSlider).then(timePieces => {
     // @ts-ignore
     document.getElementById("slidesDiv").style.visibility = "visible";
@@ -61,13 +64,19 @@ view.when(initTimeSlider).then(timePieces => {
 
     // @ts-ignore
     const wellsLayer = view.map.layers.find(x => x.portalItem && x.portalItem.id === mapProperties.wellsLayerId) as SceneLayer;
+    // @ts-ignore
+    const wellsLayer2D = view.map.layers.find(x => x.portalItem && x.portalItem.id === mapProperties.wellsLayer2dId) as FeatureLayer;
 
-    wellsLayer.when(initTableWidget);
     wellsLayer.outFields = ["*"];
     view.whenLayerView(wellsLayer).then(wellsLayerView => {
         loadWellsView(wellsLayerView as SceneLayerView, view);
         setupWellSlider(wellsLayerView as SceneLayerView, timePieces.timeSlider, timePieces.timeSliderExpand, view)
     })
-});
 
-view.when(initSlidesWidget);
+    wellsLayer2D.outFields = ["*"];
+
+    // view.whenLayerView(wellsLayer2D).then(wellsLayerView => {
+        initTableWidget(view, wellsLayer2D as FeatureLayer);
+    // })
+
+});

@@ -1,3 +1,4 @@
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 // Widgets
 import LayerList from '@arcgis/core/widgets/LayerList';
 import Legend from '@arcgis/core/widgets/Legend';
@@ -15,6 +16,8 @@ import WebScene from '@arcgis/core/WebScene';
 import Basemap from '@arcgis/core/Basemap';
 import FeatureTable from '@arcgis/core/widgets/FeatureTable';
 import { info } from './data/app';
+
+import FeatureLayerView from '@arcgis/core/views/layers/FeatureLayerView';
 
 
 export function initWidgets(view: SceneView) {
@@ -129,6 +132,38 @@ export function initWidgets(view: SceneView) {
     // @ts-ignore
     view.ui.add(featureSearch, "top-right", 0);
 
+
+    // Get references to div elements for toggling table visibility
+    const appContainer = document.getElementById("appContainer");
+    const tableContainer = document.getElementById("tableContainer");
+    const tableDiv = document.getElementById("tableDiv");
+
+    // Get reference to div elements
+    const checkboxEle = document.getElementById("checkboxId");
+    const labelText = document.getElementById("labelText");
+
+    // Listen for when toggle is changed, call toggleFeatureTable function
+    // @ts-ignore
+    checkboxEle.onchange = function () {
+        toggleFeatureTable();
+    };
+
+    function toggleFeatureTable() {
+        // Check if the table is displayed, if so, toggle off. If not, display.
+        // @ts-ignore
+        if (!checkboxEle.checked) {
+            // @ts-ignore
+            appContainer.removeChild(tableContainer);
+            // @ts-ignore
+            labelText.innerHTML = "Show Feature Table";
+        } else {
+            // @ts-ignore
+            appContainer.appendChild(tableContainer);
+            // @ts-ignore
+            labelText.innerHTML = "Hide Feature Table";
+        }
+    }
+
     return view;
 }
 
@@ -198,4 +233,49 @@ export function initSlidesWidget(view: SceneView) {
         expandTooltip: 'Slides'
     });
     view.ui.add(slidesExpand, "top-left");
+}
+
+export function initTableWidget(view: SceneView, wellsLayer: FeatureLayer) {
+
+    // Get references to div elements for toggling table visibility
+    // const appContainer = document.getElementById("appContainer");
+    // const tableContainer = document.getElementById("tableContainer");
+    const tableDiv = document.getElementById("tableDiv");
+
+    // Create FeatureTable
+    const featureTable = new FeatureTable({
+        view: view, // make sure to pass in view in order for selection to work
+        layer: wellsLayer,
+        fieldConfigs: [{
+            name: "WellsRanThroughDEM2_WRDID",
+            label: "WRDID",
+            direction: "asc"
+        },
+        {
+            name: "WellsRanThroughDEM2_DPW_ID",
+            label: "DPW_ID"
+        },
+        {
+            name: "WellsRanThroughDEM2_Common_Nam ",
+            label: "Common_Nam"
+        },
+        {
+            name: "WellsRanThroughDEM2_Owner_No",
+            label: "Owner_No"
+        },
+        {
+            name: "WellsRanThroughDEM2_Type",
+            label: "Type"
+        }
+        ],
+        // @ts-ignore
+        container: tableDiv
+    });
+
+    // Add toggle visibility slider
+    // view.ui.add(document.getElementById("sliderDiv"), "top-right");
+
+    // Get reference to div elements
+    const checkboxEle = document.getElementById("checkboxId");
+    const labelText = document.getElementById("labelText");
 }

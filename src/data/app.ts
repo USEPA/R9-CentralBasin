@@ -30,7 +30,8 @@ export const info = new OAuthInfo({
 });
 
 export const mapProperties: any = {
-    wellsLayerId: "71e28039832f4ba3b02b997a59230c08"
+    wellsLayerId: "71e28039832f4ba3b02b997a59230c08",
+    wellsLayer2dId: "31fc5e6367da49c8b5bdbabdc0aef40d"
 }
 
 export const map = new WebScene({
@@ -77,9 +78,7 @@ export async function setupWellSlider(justWells: SceneLayerView, timeSlider: Tim
         if (timeSliderExpand.expanded) {
             applyTimeExtent(timeSlider.timeExtent, justWells);
         }
-        // layerView.queryFeatures({where: layerView.filter.where, outFields: ["*"]}).then(r => console.log(r));
     });
-
 
     // @ts-ignore
     justWells.filter = null;
@@ -92,19 +91,7 @@ export async function setupWellSlider(justWells: SceneLayerView, timeSlider: Tim
         }
     });
 
-
-    // query loaded features
-
-
     await whenNotOnce(view, "updating");
-    //});
-    // const featureTable = new FeatureTable({
-    //     view: view, // The view property must be set for the select/highlight to work
-    //     layer: plumes,
-    //     container: "tableDiv"
-    // });
-
-
 }
 
 export async function loadWellsView(justWellsView: SceneLayerView, view: SceneView) {
@@ -131,41 +118,3 @@ export async function loadWellsView(justWellsView: SceneLayerView, view: SceneVi
     };
 }
 
-export function initTableWidget(view: SceneView) {
-
-    // Get references to div elements for toggling table visibility
-    const appContainer = document.getElementById("appContainer");
-    const tableContainer = document.getElementById("tableContainer");
-    const tableDiv = document.getElementById("tableDiv");
-
-    // Create FeatureTable
-    const featureTable = new FeatureTable({
-        view: view, // make sure to pass in view in order for selection to work
-        layer: featureLayer,
-        fieldConfigs: [{
-            name: "state_name",
-            label: "State",
-            direction: "asc"
-        },
-        {
-            name: "PercentagePrivate",
-            label: "Private school percentage"
-        },
-        {
-            name: "PercentagePublic",
-            label: "Public school percentage"
-        }
-        ],
-        container: tableDiv
-    });
-
-    // Add toggle visibility slider
-    view.ui.add(document.getElementById("sliderDiv"), "top-right");
-
-    // Get reference to div elements
-    const checkboxEle = document.getElementById("checkboxId");
-    const labelText = document.getElementById("labelText");
-
-}
-
-    // esri-icon-table
