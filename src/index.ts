@@ -61,11 +61,7 @@ view.when(initTimeSlider).then(timePieces => {
 
     // @ts-ignore
     const wellsLayer = view.map.layers.find(x => x.portalItem && x.portalItem.id === mapProperties.wellsLayerId) as SceneLayer;
-    wellsLayer.when(() => {
-        view.goTo(wellsLayer.fullExtent);
-        
-    });
-    
+
     wellsLayer.when(initTableWidget);
     wellsLayer.outFields = ["*"];
     view.whenLayerView(wellsLayer).then(wellsLayerView => {
