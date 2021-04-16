@@ -94,6 +94,7 @@ body {
 
 #toggleDiv {
   padding: 8px;
+  display: none;
 }
 
 .switch {
