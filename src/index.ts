@@ -1,5 +1,5 @@
 // Map data
-import { wellsLayer, info, map, elevLyr, loadWellsView, setupWellSlider } from './data/app';
+import { wellsLayer, info, map, elevLyr, loadWellsView, setupWellSlider, initTableWidget } from './data/app';
 
 // widget utils
 import { initTimeSlider, initWidgets, initSlidesWidget } from './widgets';
@@ -48,15 +48,20 @@ wellsLayer.when(() => {
     view.goTo(wellsLayer.fullExtent);
 });
 
+wellsLayer.when(initTableWidget);
+
+// view.when(initTableWidget);
 view.when(initWidgets);
-view.when(loadWellsView)
+view.when(loadWellsView);
 view.when(() => {
+    // @ts-ignore
     document.getElementById("slidesDiv").style.visibility = "visible";
+    // @ts-ignore
     document.getElementById("featureSearchDiv").style.visibility = "visible";
     view.on("click", function(event) {
         console.log("click");
     });
-})
+});
 
 view.when(initSlidesWidget);
 

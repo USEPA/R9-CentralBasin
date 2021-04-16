@@ -13,6 +13,7 @@ import BasemapGallery from '@arcgis/core/widgets/BasemapGallery';
 import Search from '@arcgis/core/widgets/Search';
 import WebScene from '@arcgis/core/WebScene';
 import Basemap from '@arcgis/core/Basemap';
+import FeatureTable from '@arcgis/core/widgets/FeatureTable';
 import { info } from './data/app';
 
 
@@ -41,8 +42,9 @@ export function initWidgets(view: SceneView) {
 
     var basemapGallery = new BasemapGallery({
         view: view,
+        // @ts-ignore
         source: {
-            portal: "https://epa.maps.arcgis.com", //info.portalUrl,
+            portal: info.portalUrl,
             updateBasemapsCallback: function (items) {
                 // create custom basemap to be added to the array of portal basemaps
                 var bm = new Basemap({
@@ -154,31 +156,29 @@ export function initTimeSlider(view: SceneView) {
 
 export function initSlidesWidget(view: SceneView) {
     const slidesDiv: any = document.getElementById("slidesDiv");
+    // @ts-ignore
     const slides = view.map.presentation.slides;
     slides.forEach(function (slide: any, placement: number) {
 
-        var slideElement = document.createElement("div");
+        let slideElement = document.createElement("div");
         slideElement.id = slide.id;
         slideElement.classList.add("slide");
 
-        if (placement === "first") {
-            slidesDiv.insertBefore(slideElement, slidesDiv.firstChild);
-        } else {
-            slidesDiv.appendChild(slideElement);
-        }
+        slidesDiv.insertBefore(slideElement, slidesDiv.firstChild);
+        slidesDiv.appendChild(slideElement);
 
-        var title = document.createElement("div");
+        let title = document.createElement("div");
         title.innerText = slide.title.text;
         title.classList.add("title");
         slideElement.appendChild(title);
 
-        var img = new Image();
+        let img = new Image();
         img.src = slide.thumbnail.url;
         img.title = slide.title.text;
         slideElement.appendChild(img);
 
         slideElement.addEventListener("click", function () {
-            var slides = document.querySelectorAll(".slide");
+            let slides = document.querySelectorAll(".slide");
             Array.from(slides).forEach(function (node) {
                 node.classList.remove("active");
             });
@@ -186,7 +186,12 @@ export function initSlidesWidget(view: SceneView) {
             slide.applyTo(view);
         });
     });
-    // view.ui.add(slidesDiv, "top-left");
+    const slidesExpand = new Expand({
+        view,
+        content: slidesDiv,
+        expandIconClass: 'esri-icon-collection',
+        group: 'top-left',
+        expandTooltip: 'Slides'
+    });
+    view.ui.add(slidesExpand, "top-left");
 }
-
-
