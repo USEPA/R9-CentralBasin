@@ -102,7 +102,7 @@ export async function setupWellSlider(
 	await whenNotOnce(view, 'updating');
 }
 
-export async function loadWellsView(justWellsView: SceneLayerView, view: SceneView) {
+export async function loadWellsView(wellsSceneView: SceneLayerView, view: SceneView) {
 	let highlight: any;
 
 	const featureSearchInput = document.getElementById('featureSearch');
@@ -112,19 +112,13 @@ export async function loadWellsView(justWellsView: SceneLayerView, view: SceneVi
 			if (highlight) {
 				highlight.remove();
 			}
-			justWellsView
+			wellsSceneView
 				.queryExtent({
 					where: `WellsRanThroughDEM_WRD_CB_Wells = ${parseInt(event.currentTarget.value, 10)}`,
 				})
 				.then((response: any) => {
 					view.goTo({ target: response.extent, scale: 2000 });
-				});
-			justWellsView
-				.queryFeatures({
-					where: `WellsRanThroughDEM_WRD_CB_Wells = ${parseInt(event.currentTarget.value, 10)}`,
-				})
-				.then((response: any) => {
-					highlight = justWellsView.highlight(response.features);
+					highlight = wellsSceneView.highlight(response.features);
 				});
 		}
 	};

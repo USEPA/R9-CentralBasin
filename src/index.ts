@@ -10,6 +10,7 @@ import { initTimeSlider, initWidgets, initSlidesWidget, initTableWidget } from '
 import IdentityManager from '@arcgis/core/identity/IdentityManager';
 import SceneView from '@arcgis/core/views/SceneView';
 import SceneLayer from '@arcgis/core/layers/SceneLayer';
+import { whenFalse, whenTrue,  } from '@arcgis/core/core/watchUtils';
 
 const wellsLayer = new FeatureLayer();
 
@@ -49,6 +50,14 @@ map.layers.splice(0, 0, wellsLayer);
 map.ground.layers.add(elevLyr);
 
 view.popup.defaultPopupTemplateEnabled = true;
+
+whenTrue(view, 'updating', function (evt) {
+	document.getElementById('lds-roller').style.visibility = 'visible';
+});
+
+whenFalse(view, 'updating', function (evt) {
+	document.getElementById('lds-roller').style.visibility = 'hidden';
+});
 
 view.when(initWidgets);
 view.when(initSlidesWidget);
