@@ -119,7 +119,6 @@ export function initWidgets(view: SceneView) {
     // Add widget to the bottom left corner of the view
     // view.ui.add(legend, 'bottom-left');
     view.ui.add(layerList, 'top-right');
-    view.ui.add(searchWidget, 'top-right');
 
     view.ui.add(homeButton, "top-left");
     view.ui.add(basemapExpand, "top-left");
@@ -131,6 +130,8 @@ export function initWidgets(view: SceneView) {
     let featureSearch = document.getElementById("featureSearchDiv");
     // @ts-ignore
     view.ui.add(featureSearch, "top-right", 0);
+    view.ui.add(searchWidget, 'top-right');
+
 
 
     // Get references to div elements for toggling table visibility
