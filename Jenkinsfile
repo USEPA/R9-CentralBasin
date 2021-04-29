@@ -1,7 +1,10 @@
 node {
     stage('build') {
         checkout scm
-        sh "npm run build"
+        docker.image('node:lts').inside {
+            sh "npm install"
+            sh "npm run build"
+        }
     }
     stage('deploy') {
         sh "rm -rf /var/r9centralbasin/html/${env.BRANCH_NAME}"
