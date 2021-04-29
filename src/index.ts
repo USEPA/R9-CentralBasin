@@ -10,7 +10,7 @@ import { initTimeSlider, initWidgets, initSlidesWidget, initTableWidget } from '
 import IdentityManager from '@arcgis/core/identity/IdentityManager';
 import SceneView from '@arcgis/core/views/SceneView';
 import SceneLayer from '@arcgis/core/layers/SceneLayer';
-import { whenFalse, whenTrue,  } from '@arcgis/core/core/watchUtils';
+import { whenFalse, whenTrue } from '@arcgis/core/core/watchUtils';
 
 const wellsLayer = new FeatureLayer();
 
@@ -51,11 +51,13 @@ map.ground.layers.add(elevLyr);
 
 view.popup.defaultPopupTemplateEnabled = true;
 
-whenTrue(view, 'updating', function (evt) {
+whenTrue(view, 'updating', function () {
+	// @ts-ignore
 	document.getElementById('lds-roller').style.visibility = 'visible';
 });
 
-whenFalse(view, 'updating', function (evt) {
+whenFalse(view, 'updating', function () {
+	// @ts-ignore
 	document.getElementById('lds-roller').style.visibility = 'hidden';
 });
 
@@ -66,12 +68,13 @@ view.when(initTimeSlider).then((timePieces) => {
 	document.getElementById('slidesDiv').style.visibility = 'visible';
 	// @ts-ignore
 	document.getElementById('featureSearchDiv').style.visibility = 'visible';
-	view.on('click', function (event) {
+	view.on('click', function () {
 		console.log('click');
 	});
 
 	// @ts-ignore
 	const wellsLayer = view.map.layers.find(
+		// @ts-ignore
 		(x) => x.portalItem && x.portalItem.id === mapProperties.wellsLayerId,
 	) as SceneLayer;
 	// @ts-ignore

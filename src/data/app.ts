@@ -1,12 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
-import TileLayer from '@arcgis/core/layers/TileLayer';
-import VectorTileLayer from '@arcgis/core/layers/VectorTileLayer';
-import ArcGISMap from '@arcgis/core/Map';
+
 import OAuthInfo from '@arcgis/core/identity/OAuthInfo';
-import SceneLayer from '@arcgis/core/layers/SceneLayer';
 import WebScene from '@arcgis/core/WebScene';
 import ElevationLayer from '@arcgis/core/layers/ElevationLayer';
 import SceneView from '@arcgis/core/views/SceneView';
@@ -14,15 +10,11 @@ import FeatureFilter from '@arcgis/core/views/layers/support/FeatureFilter';
 import moment from 'moment';
 import { whenNotOnce } from '@arcgis/core/core/watchUtils';
 import TimeSlider from '@arcgis/core/widgets/TimeSlider';
-import TimeInterval from '@arcgis/core/TimeInterval';
-import Home from '@arcgis/core/widgets/Home';
-import LayerList from '@arcgis/core/widgets/LayerList';
 import Expand from '@arcgis/core/widgets/Expand';
 import TimeExtent from '@arcgis/core/TimeExtent';
-import LayerView from '@arcgis/core/views/layers/LayerView';
 import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
-import FeatureTable from '@arcgis/core/widgets/FeatureTable';
-import PointCloudLayerView from '@arcgis/core/views/layers/PointCloudLayerView';
+// import FeatureTable from '@arcgis/core/widgets/FeatureTable';
+// import LayerView from '@arcgis/core/views/layers/LayerView';
 
 export const info = new OAuthInfo({
 	appId: process.env.NODE_ENV === 'production' ? 'RjgBsWrJbfY8hMGY' : 'ZtlpDht9ywRCA4Iq',
