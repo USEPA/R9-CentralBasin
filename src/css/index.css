@@ -171,7 +171,7 @@ input:checked+.slider:before {
   font-size: 15px;
 }
 
-/* loader */
+/* loader from https://loading.io/css/ */
 
 .lds-roller {
   position: absolute;

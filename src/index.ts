@@ -75,9 +75,11 @@ view.when(initTimeSlider).then((timePieces) => {
 		(x) => x.portalItem && x.portalItem.id === mapProperties.wellsLayerId,
 	) as SceneLayer;
 	// @ts-ignore
-	const wellsLayer2D = view.map.layers.find(
-		(x) => x.portalItem && x.portalItem.id === mapProperties.wellsLayer2dId,
-	) as FeatureLayer;
+	const wellsLayer2D = view.map.findLayerById('178d1c0f46d-layer-87') as FeatureLayer;
+
+	// const wellsLayer2D = view.map.layers.find(
+	// 	(x) => !x.portalItem && x.layers && x.layers.items[6].portalItem.id === mapProperties.wellsLayer2dId,
+	// ) as FeatureLayer;
 
 	wellsLayer.outFields = ['*'];
 	view.whenLayerView(wellsLayer).then((wellsLayerView) => {
@@ -88,6 +90,6 @@ view.when(initTimeSlider).then((timePieces) => {
 	wellsLayer2D.outFields = ['*'];
 
 	// view.whenLayerView(wellsLayer2D).then(wellsLayerView => {
-	initTableWidget(view, wellsLayer2D as FeatureLayer);
+	// initTableWidget(view, wellsLayer2D as FeatureLayer);
 	// })
 });

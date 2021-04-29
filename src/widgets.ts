@@ -1,3 +1,4 @@
+import { mapProperties } from './data/app';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -55,7 +56,7 @@ export function initWidgets(view: SceneView) {
 				// create custom basemap to be added to the array of portal basemaps
 				const bm = new Basemap({
 					portalItem: {
-						id: 'c0af3abd0d60427ba659e38d457fbe07',
+						id: mapProperties.blankBasemapId,
 					},
 				});
 				// add basemap to the array
@@ -244,35 +245,35 @@ export function initTableWidget(view: SceneView, wellsLayer: FeatureLayer) {
 	const tableDiv = document.getElementById('tableDiv');
 
 	// Create FeatureTable
-	const featureTable = new FeatureTable({
-		view: view, // make sure to pass in view in order for selection to work
-		layer: wellsLayer,
-		fieldConfigs: [
-			{
-				name: 'WellsRanThroughDEM2_WRDID',
-				label: 'WRDID',
-				direction: 'asc',
-			},
-			{
-				name: 'WellsRanThroughDEM2_DPW_ID',
-				label: 'DPW_ID',
-			},
-			{
-				name: 'WellsRanThroughDEM2_Common_Nam ',
-				label: 'Common_Nam',
-			},
-			{
-				name: 'WellsRanThroughDEM2_Owner_No',
-				label: 'Owner_No',
-			},
-			{
-				name: 'WellsRanThroughDEM2_Type',
-				label: 'Type',
-			},
-		],
-		// @ts-ignore
-		container: tableDiv,
-	});
+	// const featureTable = new FeatureTable({
+	// 	view: view, // make sure to pass in view in order for selection to work
+	// 	layer: wellsLayer,
+	// 	fieldConfigs: [
+	// 		{
+	// 			name: 'WellsRanThroughDEM2_WRDID',
+	// 			label: 'WRDID',
+	// 			direction: 'asc',
+	// 		},
+	// 		{
+	// 			name: 'WellsRanThroughDEM2_DPW_ID',
+	// 			label: 'DPW_ID',
+	// 		},
+	// 		{
+	// 			name: 'WellsRanThroughDEM2_Common_Nam ',
+	// 			label: 'Common_Nam',
+	// 		},
+	// 		{
+	// 			name: 'WellsRanThroughDEM2_Owner_No',
+	// 			label: 'Owner_No',
+	// 		},
+	// 		{
+	// 			name: 'WellsRanThroughDEM2_Type',
+	// 			label: 'Type',
+	// 		},
+	// 	],
+	// 	// @ts-ignore
+	// 	container: tableDiv,
+	// });
 
 	// Add toggle visibility slider
 	// view.ui.add(document.getElementById("sliderDiv"), "top-right");

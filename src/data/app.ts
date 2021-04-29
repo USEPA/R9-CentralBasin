@@ -34,7 +34,8 @@ export const info = new OAuthInfo({
 
 export const mapProperties: any = {
 	wellsLayerId: '71e28039832f4ba3b02b997a59230c08',
-	wellsLayer2dId: '31fc5e6367da49c8b5bdbabdc0aef40d',
+	wellsLayer2dId: '2c09c3e1b2a24feeb2da8d45cd514d24',
+	blankBasemapId: 'c0af3abd0d60427ba659e38d457fbe07',
 };
 
 export const map = new WebScene({
