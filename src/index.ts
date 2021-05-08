@@ -72,25 +72,44 @@ view.when(initTimeSlider).then((timePieces) => {
 		console.log('click');
 	});
 
-	// @ts-ignore
-	const wellsLayer = view.map.layers.find(
-		// @ts-ignore
-		(x) => x.portalItem && x.portalItem.id === mapProperties.wellsLayerId,
-	) as SceneLayer;
-	// @ts-ignore
-	const wellsLayer2D = view.map.findLayerById('178d1c0f46d-layer-87') as FeatureLayer;
 
-	// const wellsLayer2D = view.map.layers.find(
-	// 	(x) => !x.portalItem && x.layers && x.layers.items[6].portalItem.id === mapProperties.wellsLayer2dId,
-	// ) as FeatureLayer;
+	// @ts-ignore
+	let layer2dId;
+	let layer3dId;
+	view.map.layers.items.forEach((parentLayer) => {
+		if (parentLayer.title === 'Wells 2D') {
+			parentLayer.layers.items.forEach((layer: any) => {
+				if (layer.title === 'All Wells With Labels') {
+					console.log(layer);
+					layer2dId = layer.id;
+				}
+			});
+		}
+		if (parentLayer.title === 'Wells 3D') {
+			parentLayer.layers.items.forEach((layer: any) => {
+				if (layer.title === 'All Wells - Gray V2') {
+					console.log(layer);
+					layer3dId = layer.id;
+				}
+			});
+		}
+	});
+	const wellsLayer2D = view.map.findLayerById(layer2dId) as FeatureLayer;
+	wellsLayer2D.outFields = ['*'];
 
-	wellsLayer.outFields = ['*'];
-	view.whenLayerView(wellsLayer).then((wellsLayerView) => {
+	// // @ts-ignore
+	// const wellsLayer3D = view.map.layers.find(
+	// 	// @ts-ignore
+	// 	(x) => x.portalItem && x.portalItem.id === mapProperties.wellsLayerId,
+	// ) as SceneLayer;
+
+	const wellsLayer3D = view.map.findLayerById(layer3dId) as SceneLayer;
+
+	wellsLayer3D.outFields = ['*'];
+	view.whenLayerView(wellsLayer3D).then((wellsLayerView) => {
 		loadWellsView(wellsLayerView as SceneLayerView, view);
 		setupWellSlider(wellsLayerView as SceneLayerView, timePieces.timeSlider, timePieces.timeSliderExpand, view);
 	});
-
-	wellsLayer2D.outFields = ['*'];
 
 	// view.whenLayerView(wellsLayer2D).then(wellsLayerView => {
 	// initTableWidget(view, wellsLayer2D as FeatureLayer);

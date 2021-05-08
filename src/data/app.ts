@@ -107,7 +107,8 @@ export async function loadWellsView(wellsSceneView: SceneLayerView, view: SceneV
 			}
 			wellsSceneView
 				.queryExtent({
-					where: `WellsRanThroughDEM_WRD_CB_Wells = ${parseInt(event.currentTarget.value, 10)}`,
+					// where: `WellsRanThroughDEM2_WRDID = ${parseInt(event.currentTarget.value, 10)}`,
+					where: `1=1`,
 				})
 				.then((response: any) => {
 					view.goTo({ target: response.extent, scale: 2000 });
