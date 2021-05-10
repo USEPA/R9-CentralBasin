@@ -49,8 +49,8 @@ body {
 }
 
 
-.container {
-  display: flex;
+.tableContainer {
+  display: none;
   flex: 1;
   width: 100%;
 }
@@ -173,6 +173,8 @@ input:checked+.slider:before {
   padding-left: 5px;
   font-size: 15px;
 }
+
+
 
 /* loader from https://loading.io/css/ */
 

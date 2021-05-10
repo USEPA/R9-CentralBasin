@@ -97,12 +97,6 @@ view.when(initTimeSlider).then((timePieces) => {
 	const wellsLayer2D = view.map.findLayerById(layer2dId) as FeatureLayer;
 	wellsLayer2D.outFields = ['*'];
 
-	// // @ts-ignore
-	// const wellsLayer3D = view.map.layers.find(
-	// 	// @ts-ignore
-	// 	(x) => x.portalItem && x.portalItem.id === mapProperties.wellsLayerId,
-	// ) as SceneLayer;
-
 	const wellsLayer3D = view.map.findLayerById(layer3dId) as SceneLayer;
 
 	wellsLayer3D.outFields = ['*'];
@@ -111,7 +105,7 @@ view.when(initTimeSlider).then((timePieces) => {
 		setupWellSlider(wellsLayerView as SceneLayerView, timePieces.timeSlider, timePieces.timeSliderExpand, view);
 	});
 
-	// view.whenLayerView(wellsLayer2D).then(wellsLayerView => {
-	// initTableWidget(view, wellsLayer2D as FeatureLayer);
-	// })
+	view.whenLayerView(wellsLayer2D).then(wellsLayerView => {
+		initTableWidget(view, wellsLayer2D as FeatureLayer);
+	});
 });
