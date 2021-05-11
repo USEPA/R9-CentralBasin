@@ -101,7 +101,7 @@ view.when(initTimeSlider).then((timePieces) => {
 
 	wellsLayer3D.outFields = ['*'];
 	view.whenLayerView(wellsLayer3D).then((wellsLayerView) => {
-		loadWellsView(wellsLayerView as SceneLayerView, view);
+		loadWellsView(wellsLayer3D, wellsLayerView as SceneLayerView, view);
 		setupWellSlider(wellsLayerView as SceneLayerView, timePieces.timeSlider, timePieces.timeSliderExpand, view);
 	});
 

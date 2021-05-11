@@ -13,6 +13,8 @@ import TimeSlider from '@arcgis/core/widgets/TimeSlider';
 import Expand from '@arcgis/core/widgets/Expand';
 import TimeExtent from '@arcgis/core/TimeExtent';
 import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
+import SceneLayer from '@arcgis/core/layers/SceneLayer';
+import Camera from '@arcgis/core/Camera';
 // import FeatureTable from '@arcgis/core/widgets/FeatureTable';
 // import LayerView from '@arcgis/core/views/layers/LayerView';
 
@@ -25,15 +27,13 @@ export const info = new OAuthInfo({
 });
 
 export const mapProperties: any = {
-	wellsLayerId: '71e28039832f4ba3b02b997a59230c08',
-	wellsLayer2dId: '2c09c3e1b2a24feeb2da8d45cd514d24',
 	blankBasemapId: 'c0af3abd0d60427ba659e38d457fbe07',
 };
 
 export const map = new WebScene({
 	portalItem: {
-		// id: "dd983ac69154460fb75f5ce193b5344d", // travis's webscene
-		id: 'dd983ac69154460fb75f5ce193b5344d', // frank's webscene
+		id: 'b8eab523b28b453cb9cff1d90569cd43', // dev webscene
+		// id: 'dd983ac69154460fb75f5ce193b5344d', // production webscene
 	},
 	ground: {
 		navigationConstraint: {
@@ -95,24 +95,41 @@ export async function setupWellSlider(
 	await whenNotOnce(view, 'updating');
 }
 
-export async function loadWellsView(wellsSceneView: SceneLayerView, view: SceneView) {
+export async function loadWellsView(wellsSceneLayer: SceneLayer, wellsSceneLayerView: SceneLayerView, view: SceneView) {
 	let highlight: any;
 
 	const featureSearchInput = document.getElementById('featureSearch');
 	// @ts-ignore
 	featureSearchInput.onkeyup = (event: any) => {
 		if (event.keyCode === 13) {
+			const value = event.currentTarget.value;
 			if (highlight) {
 				highlight.remove();
 			}
-			wellsSceneView
+			wellsSceneLayer
 				.queryExtent({
-					// where: `WellsRanThroughDEM2_WRDID = ${parseInt(event.currentTarget.value, 10)}`,
-					where: `1=1`,
+					where: `WellsRanThroughDEM2_WRDID = ${parseInt(value, 10)}`,
+					// where: `1=1`,
 				})
 				.then((response: any) => {
-					view.goTo({ target: response.extent, scale: 2000 });
-					highlight = wellsSceneView.highlight(response.features);
+					wellsSceneLayerView
+						.queryExtent({
+							where: `WellsRanThroughDEM2_WRDID = ${parseInt(value, 10)}`,
+							// where: `1=1`,
+						})
+						.then((response1: any) => {
+							wellsSceneLayer.visible = true;
+							view.goTo({
+								center: response1.extent.center,
+								tilt: 102,
+								zoom: 17,
+							});
+
+							// view.goTo({ target: response.extent, scale: 2000 }).then(evt => {
+							// 	view.goTo({ tilt: -45 });
+							// });
+							highlight = wellsSceneLayerView.highlight(response.features);
+						});
 				});
 		}
 	};
