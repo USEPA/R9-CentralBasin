@@ -42,22 +42,24 @@ export const map = new WebScene({
 	},
 });
 
+
+
 export const elevLyr = new ElevationLayer({
 	url: '//elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer',
 });
 
-function applyTimeExtent(timeExtent: TimeExtent, layerView: SceneLayerView) {
+function applyTimeExtent(timeExtent: TimeExtent, layerView: SceneLayerView, timeField: string) {
 	const start = moment(timeExtent.start).format('YYYY-MM-DD');
 	const end = moment(timeExtent.end).format('YYYY-MM-DD');
 
 	layerView.filter = new FeatureFilter({
-		where: `WellsRanThroughDEM_EPA_WQ_DDW_3 BETWEEN DATE '${start}' AND DATE '${end}'`,
+		where: `${timeField} BETWEEN DATE '${start}' AND DATE '${end}'`,
 		// where: `WellsRanThroughDEM_EPA_WQ_DDW_1 = DATE '${start}'`
 	});
 }
 
 export async function setupWellSlider(
-	justWells: SceneLayerView,
+	layerViews: any[] | SceneLayerView,
 	timeSlider: TimeSlider,
 	timeSliderExpand: Expand,
 	view: SceneView,
@@ -77,18 +79,36 @@ export async function setupWellSlider(
 	// const maxOpacity = 0.8;
 	timeSlider.watch('timeExtent', () => {
 		if (timeSliderExpand.expanded) {
-			applyTimeExtent(timeSlider.timeExtent, justWells);
+			layerViews.forEach(layerView => {
+				applyTimeExtent(timeSlider.timeExtent, layerView.layerView, layerView.fieldName);
+			});
 		}
 	});
 
-	// @ts-ignore
-	justWells.filter = null;
+	// // @ts-ignore
+	// justWells.filter = null;
+	// timeSliderExpand.watch('expanded', () => {
+	// 	if (!timeSliderExpand.expanded) {
+	// 		// @ts-ignore
+	// 		justWells.filter = null;
+	// 	} else if (timeSlider.timeExtent) {
+	// 		applyTimeExtent(timeSlider.timeExtent, justWells);
+	// 	}
+	// });
+
+	layerViews.forEach(layerView => {
+		layerView.layerView.filter = null;
+	});
 	timeSliderExpand.watch('expanded', () => {
 		if (!timeSliderExpand.expanded) {
 			// @ts-ignore
-			justWells.filter = null;
+			layerViews.forEach(layerView => {
+				layerView.layerView.filter = null;
+			});
 		} else if (timeSlider.timeExtent) {
-			applyTimeExtent(timeSlider.timeExtent, justWells);
+			layerViews.forEach(layerView => {
+				applyTimeExtent(timeSlider.timeExtent, layerView.layerView, layerView.fieldName);
+			});
 		}
 	});
 
