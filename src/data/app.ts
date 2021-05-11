@@ -32,7 +32,7 @@ export const mapProperties: any = {
 
 export const map = new WebScene({
 	portalItem: {
-		id: "b8eab523b28b453cb9cff1d90569cd43", // dev webscene
+		id: 'b8eab523b28b453cb9cff1d90569cd43', // dev webscene
 		// id: 'dd983ac69154460fb75f5ce193b5344d', // production webscene
 	},
 	ground: {
@@ -95,33 +95,41 @@ export async function setupWellSlider(
 	await whenNotOnce(view, 'updating');
 }
 
-export async function loadWellsView(wellsSceneLayer: SceneLayer, view: SceneView) {
+export async function loadWellsView(wellsSceneLayer: SceneLayer, wellsSceneLayerView: SceneLayerView, view: SceneView) {
 	let highlight: any;
 
 	const featureSearchInput = document.getElementById('featureSearch');
 	// @ts-ignore
 	featureSearchInput.onkeyup = (event: any) => {
 		if (event.keyCode === 13) {
+			const value = event.currentTarget.value;
 			if (highlight) {
 				highlight.remove();
 			}
 			wellsSceneLayer
 				.queryExtent({
-					where: `WellsRanThroughDEM2_WRDID = ${parseInt(event.currentTarget.value, 10)}`,
+					where: `WellsRanThroughDEM2_WRDID = ${parseInt(value, 10)}`,
 					// where: `1=1`,
 				})
 				.then((response: any) => {
-					wellsSceneLayer.visible = true;
-					view.goTo({
-						center: response.extent.center,
-						tilt: 102,
-						zoom: 17,
-					});
+					wellsSceneLayerView
+						.queryExtent({
+							where: `WellsRanThroughDEM2_WRDID = ${parseInt(value, 10)}`,
+							// where: `1=1`,
+						})
+						.then((response1: any) => {
+							wellsSceneLayer.visible = true;
+							view.goTo({
+								center: response1.extent.center,
+								tilt: 102,
+								zoom: 17,
+							});
 
-					// view.goTo({ target: response.extent, scale: 2000 }).then(evt => {
-					// 	view.goTo({ tilt: -45 });
-					// });
-					highlight = wellsSceneLayer.highlight(response.features);
+							// view.goTo({ target: response.extent, scale: 2000 }).then(evt => {
+							// 	view.goTo({ tilt: -45 });
+							// });
+							highlight = wellsSceneLayerView.highlight(response.features);
+						});
 				});
 		}
 	};
