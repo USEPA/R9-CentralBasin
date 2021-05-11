@@ -1,3 +1,5 @@
+@import '~@arcgis/core/assets/esri/themes/light/main.css';
+
 :root {
   --blue: #2196F3;
   --gray: #efefef;
@@ -5,7 +7,6 @@
   --orange: #f97d1a
 }
 
-@import '~@arcgis/core/assets/esri/themes/light/main.css';
 html, body {
   height: 100%;
   width: 100%;

@@ -17,6 +17,7 @@ import SceneLayer from '@arcgis/core/layers/SceneLayer';
 import Camera from '@arcgis/core/Camera';
 // import FeatureTable from '@arcgis/core/widgets/FeatureTable';
 // import LayerView from '@arcgis/core/views/layers/LayerView';
+let highlight: any;
 
 export const info = new OAuthInfo({
 	appId: process.env.NODE_ENV === 'production' ? 'RjgBsWrJbfY8hMGY' : 'ZtlpDht9ywRCA4Iq',
@@ -116,41 +117,43 @@ export async function setupWellSlider(
 }
 
 export async function loadWellsView(wellsSceneLayer: SceneLayer, wellsSceneLayerView: SceneLayerView, view: SceneView) {
-	let highlight: any;
+
 
 	const featureSearchInput = document.getElementById('featureSearch');
 	// @ts-ignore
 	featureSearchInput.onkeyup = (event: any) => {
 		if (event.keyCode === 13) {
 			const value = event.currentTarget.value;
-			if (highlight) {
-				highlight.remove();
-			}
+
 			wellsSceneLayer
 				.queryExtent({
 					where: `WellsRanThroughDEM2_WRDID = ${parseInt(value, 10)}`,
-					// where: `1=1`,
 				})
 				.then((response: any) => {
-					wellsSceneLayerView
-						.queryExtent({
-							where: `WellsRanThroughDEM2_WRDID = ${parseInt(value, 10)}`,
-							// where: `1=1`,
-						})
-						.then((response1: any) => {
-							wellsSceneLayer.visible = true;
-							view.goTo({
-								center: response1.extent.center,
-								tilt: 102,
-								zoom: 17,
-							});
+					view.goTo({
+						center: response.extent,
+						tilt: 102,
+						zoom: 17,
+					})
+						.then(() => highlightFeature(wellsSceneLayerView, view, value));
 
-							// view.goTo({ target: response.extent, scale: 2000 }).then(evt => {
-							// 	view.goTo({ tilt: -45 });
-							// });
-							highlight = wellsSceneLayerView.highlight(response.features);
-						});
 				});
 		}
 	};
+}
+
+async function highlightFeature(wellsSceneLayerView: SceneLayerView, view: SceneView, value: string) {
+	if (highlight) {
+		highlight.remove();
+	}
+
+	return whenNotOnce(wellsSceneLayerView, 'updating', updating => {
+		wellsSceneLayerView
+			.queryFeatures({
+				where: `WellsRanThroughDEM2_WRDID = ${parseInt(value, 10)}`,
+			})
+			.then(response => {
+				highlight = wellsSceneLayerView.highlight(response.features)
+			})
+	})
 }

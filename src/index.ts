@@ -4,14 +4,14 @@ import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 
 // Map data
-import { mapProperties, info, map, elevLyr, loadWellsView, setupWellSlider } from './data/app';
+import {mapProperties, info, map, elevLyr, loadWellsView, setupWellSlider} from './data/app';
 
 // widget utils
-import { initTimeSlider, initWidgets, initSlidesWidget, initTableWidget } from './widgets';
+import {initTimeSlider, initWidgets, initSlidesWidget, initTableWidget} from './widgets';
 import IdentityManager from '@arcgis/core/identity/IdentityManager';
 import SceneView from '@arcgis/core/views/SceneView';
 import SceneLayer from '@arcgis/core/layers/SceneLayer';
-import { whenFalse, whenTrue } from '@arcgis/core/core/watchUtils';
+import {whenFalse, whenTrue} from '@arcgis/core/core/watchUtils';
 
 const wellsLayer = new FeatureLayer();
 
@@ -36,13 +36,13 @@ map.ground.layers.add(elevLyr);
 view.popup.defaultPopupTemplateEnabled = true;
 
 whenTrue(view, 'updating', function () {
-	// @ts-ignore
-	document.getElementById('lds-roller').style.visibility = 'visible';
+    // @ts-ignore
+    document.getElementById('lds-roller').style.visibility = 'visible';
 });
 
 whenFalse(view, 'updating', function () {
-	// @ts-ignore
-	document.getElementById('lds-roller').style.visibility = 'hidden';
+    // @ts-ignore
+    document.getElementById('lds-roller').style.visibility = 'hidden';
 });
 
 view.when(initWidgets);
