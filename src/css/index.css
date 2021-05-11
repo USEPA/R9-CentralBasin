@@ -1,3 +1,5 @@
+@import '~@arcgis/core/assets/esri/themes/light/main.css';
+
 :root {
   --blue: #2196F3;
   --gray: #efefef;
@@ -5,7 +7,6 @@
   --orange: #f97d1a
 }
 
-@import '~@arcgis/core/assets/esri/themes/light/main.css';
 html, body {
   height: 100%;
   width: 100%;
@@ -48,8 +49,9 @@ body {
   position: relative;
 }
 
-.container {
-  display: flex;
+
+.tableContainer {
+  display: none;
   flex: 1;
   width: 100%;
 }
@@ -172,6 +174,8 @@ input:checked+.slider:before {
   padding-left: 5px;
   font-size: 15px;
 }
+
+
 
 /* loader from https://loading.io/css/ */
 

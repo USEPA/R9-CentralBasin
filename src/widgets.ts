@@ -166,6 +166,7 @@ export function initWidgets(view: SceneView) {
 			appContainer.appendChild(tableContainer);
 			// @ts-ignore
 			labelText.innerHTML = 'Hide Feature Table';
+			tableContainer.style.display = 'flex';
 		}
 	}
 
@@ -245,40 +246,33 @@ export function initTableWidget(view: SceneView, wellsLayer: FeatureLayer) {
 	const tableDiv = document.getElementById('tableDiv');
 
 	// Create FeatureTable
-	// const featureTable = new FeatureTable({
-	// 	view: view, // make sure to pass in view in order for selection to work
-	// 	layer: wellsLayer,
-	// 	fieldConfigs: [
-	// 		{
-	// 			name: 'WellsRanThroughDEM2_WRDID',
-	// 			label: 'WRDID',
-	// 			direction: 'asc',
-	// 		},
-	// 		{
-	// 			name: 'WellsRanThroughDEM2_DPW_ID',
-	// 			label: 'DPW_ID',
-	// 		},
-	// 		{
-	// 			name: 'WellsRanThroughDEM2_Common_Nam ',
-	// 			label: 'Common_Nam',
-	// 		},
-	// 		{
-	// 			name: 'WellsRanThroughDEM2_Owner_No',
-	// 			label: 'Owner_No',
-	// 		},
-	// 		{
-	// 			name: 'WellsRanThroughDEM2_Type',
-	// 			label: 'Type',
-	// 		},
-	// 	],
-	// 	// @ts-ignore
-	// 	container: tableDiv,
-	// });
-
-	// Add toggle visibility slider
-	// view.ui.add(document.getElementById("sliderDiv"), "top-right");
-
-	// Get reference to div elements
-	const checkboxEle = document.getElementById('checkboxId');
-	const labelText = document.getElementById('labelText');
+	const featureTable = new FeatureTable({
+		view: view, // make sure to pass in view in order for selection to work
+		layer: wellsLayer,
+		fieldConfigs: [
+			{
+				name: 'WellsRanThroughDEM2_WRDID',
+				label: 'WRDID',
+				direction: 'asc',
+			},
+			{
+				name: 'WellsRanThroughDEM2_DPW_ID',
+				label: 'DPW ID',
+			},
+			// {
+			// 	name: 'WellsRanThroughDEM2_Common_Nam ',
+			// 	label: 'Common_Nam',
+			// },
+			{
+				name: 'WellsRanThroughDEM2_Owner_No',
+				label: 'Owner No',
+			},
+			{
+				name: 'WellsRanThroughDEM2_Type',
+				label: 'Type',
+			},
+		],
+		// @ts-ignore
+		container: tableDiv,
+	});
 }
