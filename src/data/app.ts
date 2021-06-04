@@ -65,19 +65,6 @@ export async function setupWellSlider(
 	timeSliderExpand: Expand,
 	view: SceneView,
 ) {
-	// @ts-ignore
-	// let justWells = view.map.layers.find(x => x.portalItem && x.portalItem.id === "71e28039832f4ba3b02b997a59230c08") as SceneLayer;
-
-	// view.whenLayerView(justWells).then(async layerView => {
-
-	// layerView.maximumNumberOfFeatures = 500_000;
-	//
-	// const field = "Value_";
-	// const min = minHeight;
-	// const max = maxHeight;
-	//
-	// const minOpacity = 0;
-	// const maxOpacity = 0.8;
 	timeSlider.watch('timeExtent', () => {
 		if (timeSliderExpand.expanded) {
 			layerViews.forEach(layerView => {
@@ -85,17 +72,6 @@ export async function setupWellSlider(
 			});
 		}
 	});
-
-	// // @ts-ignore
-	// justWells.filter = null;
-	// timeSliderExpand.watch('expanded', () => {
-	// 	if (!timeSliderExpand.expanded) {
-	// 		// @ts-ignore
-	// 		justWells.filter = null;
-	// 	} else if (timeSlider.timeExtent) {
-	// 		applyTimeExtent(timeSlider.timeExtent, justWells);
-	// 	}
-	// });
 
 	layerViews.forEach(layerView => {
 		layerView.layerView.filter = null;
@@ -117,8 +93,6 @@ export async function setupWellSlider(
 }
 
 export async function loadWellsView(wellsSceneLayer: SceneLayer, wellsSceneLayerView: SceneLayerView, view: SceneView) {
-
-
 	const featureSearchInput = document.getElementById('featureSearch');
 	// @ts-ignore
 	featureSearchInput.onkeyup = (event: any) => {
@@ -134,9 +108,7 @@ export async function loadWellsView(wellsSceneLayer: SceneLayer, wellsSceneLayer
 						center: response.extent,
 						tilt: 102,
 						zoom: 17,
-					})
-						.then(() => highlightFeature(wellsSceneLayerView, view, value));
-
+					}).then(() => highlightFeature(wellsSceneLayerView, view, value));
 				});
 		}
 	};
@@ -153,7 +125,7 @@ async function highlightFeature(wellsSceneLayerView: SceneLayerView, view: Scene
 				where: `WellsRanThroughDEM2_WRDID = ${parseInt(value, 10)}`,
 			})
 			.then(response => {
-				highlight = wellsSceneLayerView.highlight(response.features)
-			})
-	})
+				highlight = wellsSceneLayerView.highlight(response.features);
+			});
+	});
 }

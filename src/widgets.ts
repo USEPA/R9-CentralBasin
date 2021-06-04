@@ -239,17 +239,16 @@ export function initSlidesWidget(view: SceneView) {
 	view.ui.add(slidesExpand, 'top-left');
 }
 
-export function initTableWidget(view: SceneView, wellsLayer: FeatureLayer) {
+export function initTableWidget(view: SceneView, layer: FeatureLayer) {
 	// Get references to div elements for toggling table visibility
 	// const appContainer = document.getElementById("appContainer");
 	// const tableContainer = document.getElementById("tableContainer");
-	const tableDiv = document.getElementById('tableDiv');
+	const tableDiv1 = document.getElementById('tableDiv1');
 
-	// Create FeatureTable
-	const featureTable = new FeatureTable({
-		view: view, // make sure to pass in view in order for selection to work
-		layer: wellsLayer,
-		fieldConfigs: [
+	let fields: ({ name: string; label: string; direction: string; } | { name: string; label: string; direction?: undefined; })[] = [];
+
+	if (layer.title === 'All Wells - Gray V3') {
+		fields = [
 			{
 				name: 'WellsRanThroughDEM2_WRDID',
 				label: 'WRDID',
@@ -271,8 +270,89 @@ export function initTableWidget(view: SceneView, wellsLayer: FeatureLayer) {
 				name: 'WellsRanThroughDEM2_Type',
 				label: 'Type',
 			},
-		],
+		];
+	} else if (layer.title === 'GAMA TCE 2D') {
+		fields = [
+			{
+				name: 'Well ID',
+				label: 'WELL_ID',
+				direction: 'asc',
+			},
+			{
+				name: 'RESULTS',
+				label: 'Results',
+			},
+			{
+				name: 'DATE',
+				label: 'Date',
+			},
+			{
+				name: 'TOP_OF_SCREEN__FT_',
+				label: 'Top of Screen (ft)',
+			},
+			{
+				name: 'SCREEN_LENGTH__FT_',
+				label: 'Screen Length (ft)',
+			},
+			{
+				name: 'SOURCE_NAME',
+				label: 'Source Name',
+			},
+			{
+				name: 'OTHER_NAMES',
+				label: 'Other Names',
+			},
+		];
+	} else if (layer.title === 'GAMA PCE 2D') {
+		fields = [
+			{
+				name: 'Well ID',
+				label: 'WELL_ID',
+				direction: 'asc',
+			},
+			{
+				name: 'RESULTS',
+				label: 'Results',
+			},
+			{
+				name: 'DATE',
+				label: 'Date',
+			},
+			{
+				name: 'TOP_OF_SCREEN__FT_',
+				label: 'Top of Screen (ft)',
+			},
+			{
+				name: 'SCREEN_LENGTH__FT_',
+				label: 'Screen Length (ft)',
+			},
+			{
+				name: 'SOURCE_NAME',
+				label: 'Source Name',
+			},
+			{
+				name: 'OTHER_NAMES',
+				label: 'Other Names',
+			},
+		];
+	}
+
+	// Create FeatureTable
+	const featureTable = new FeatureTable({
+		view: view, // make sure to pass in view in order for selection to work
+		layer: layer,
+		fieldConfigs: fields,
 		// @ts-ignore
-		container: tableDiv,
+		container: tableDiv1,
+		highlightOnRowSelectEnabled: true,
+		visibleElements: {
+			header: true,
+			menu: true,
+			menuItems: {
+				clearSelection: true,
+				refreshData: false,
+				toggleColumns: false,
+			},
+		},
 	});
 }

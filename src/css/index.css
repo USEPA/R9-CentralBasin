@@ -284,3 +284,19 @@ input:checked+.slider:before {
     transform: rotate(360deg);
   }
 }
+
+#calcite-tabs {
+  display: flex;
+  align-content: stretch;
+  flex-direction: row;
+}
+
+#calcite-tab {
+  padding: 10px;
+}
+
+.custom-tab {
+  margin: 10px;
+  width: 100px;
+  padding: 10px;
+}
