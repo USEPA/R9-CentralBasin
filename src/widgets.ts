@@ -239,120 +239,129 @@ export function initSlidesWidget(view: SceneView) {
 	view.ui.add(slidesExpand, 'top-left');
 }
 
-export function initTableWidget(view: SceneView, layer: FeatureLayer) {
+export function initTableWidget(view: SceneView, layersInfo: any[]) {
 	// Get references to div elements for toggling table visibility
 	// const appContainer = document.getElementById("appContainer");
 	// const tableContainer = document.getElementById("tableContainer");
-	const tableDiv1 = document.getElementById('tableDiv1');
+	layersInfo.forEach((layerInfo) => {
+		const tableDiv = layerInfo.div;
 
-	let fields: ({ name: string; label: string; direction: string; } | { name: string; label: string; direction?: undefined; })[] = [];
+		tableDiv.onclick = function (evt) {
+			console.log(evt);
+		};
 
-	if (layer.title === 'All Wells - Gray V3') {
-		fields = [
-			{
-				name: 'WellsRanThroughDEM2_WRDID',
-				label: 'WRDID',
-				direction: 'asc',
-			},
-			{
-				name: 'WellsRanThroughDEM2_DPW_ID',
-				label: 'DPW ID',
-			},
-			// {
-			// 	name: 'WellsRanThroughDEM2_Common_Nam ',
-			// 	label: 'Common_Nam',
-			// },
-			{
-				name: 'WellsRanThroughDEM2_Owner_No',
-				label: 'Owner No',
-			},
-			{
-				name: 'WellsRanThroughDEM2_Type',
-				label: 'Type',
-			},
-		];
-	} else if (layer.title === 'GAMA TCE 2D') {
-		fields = [
-			{
-				name: 'Well ID',
-				label: 'WELL_ID',
-				direction: 'asc',
-			},
-			{
-				name: 'RESULTS',
-				label: 'Results',
-			},
-			{
-				name: 'DATE',
-				label: 'Date',
-			},
-			{
-				name: 'TOP_OF_SCREEN__FT_',
-				label: 'Top of Screen (ft)',
-			},
-			{
-				name: 'SCREEN_LENGTH__FT_',
-				label: 'Screen Length (ft)',
-			},
-			{
-				name: 'SOURCE_NAME',
-				label: 'Source Name',
-			},
-			{
-				name: 'OTHER_NAMES',
-				label: 'Other Names',
-			},
-		];
-	} else if (layer.title === 'GAMA PCE 2D') {
-		fields = [
-			{
-				name: 'Well ID',
-				label: 'WELL_ID',
-				direction: 'asc',
-			},
-			{
-				name: 'RESULTS',
-				label: 'Results',
-			},
-			{
-				name: 'DATE',
-				label: 'Date',
-			},
-			{
-				name: 'TOP_OF_SCREEN__FT_',
-				label: 'Top of Screen (ft)',
-			},
-			{
-				name: 'SCREEN_LENGTH__FT_',
-				label: 'Screen Length (ft)',
-			},
-			{
-				name: 'SOURCE_NAME',
-				label: 'Source Name',
-			},
-			{
-				name: 'OTHER_NAMES',
-				label: 'Other Names',
-			},
-		];
-	}
+		let fields: (
+			| { name: string; label: string; direction: string }
+			| { name: string; label: string; direction?: undefined }
+		)[] = [];
 
-	// Create FeatureTable
-	const featureTable = new FeatureTable({
-		view: view, // make sure to pass in view in order for selection to work
-		layer: layer,
-		fieldConfigs: fields,
-		// @ts-ignore
-		container: tableDiv1,
-		highlightOnRowSelectEnabled: true,
-		visibleElements: {
-			header: true,
-			menu: true,
-			menuItems: {
-				clearSelection: true,
-				refreshData: false,
-				toggleColumns: false,
+		if (layerInfo.layer.title === 'All Wells - Gray V3') {
+			fields = [
+				{
+					name: 'WellsRanThroughDEM2_WRDID',
+					label: 'WRDID',
+					direction: 'asc',
+				},
+				{
+					name: 'WellsRanThroughDEM2_DPW_ID',
+					label: 'DPW ID',
+				},
+				// {
+				// 	name: 'WellsRanThroughDEM2_Common_Nam ',
+				// 	label: 'Common_Nam',
+				// },
+				{
+					name: 'WellsRanThroughDEM2_Owner_No',
+					label: 'Owner No',
+				},
+				{
+					name: 'WellsRanThroughDEM2_Type',
+					label: 'Type',
+				},
+			];
+		} else if (layerInfo.layer.title === 'GAMA TCE 2D') {
+			fields = [
+				{
+					name: 'Well ID',
+					label: 'WELL_ID',
+					direction: 'asc',
+				},
+				{
+					name: 'RESULTS',
+					label: 'Results',
+				},
+				{
+					name: 'DATE',
+					label: 'Date',
+				},
+				{
+					name: 'TOP_OF_SCREEN__FT_',
+					label: 'Top of Screen (ft)',
+				},
+				{
+					name: 'SCREEN_LENGTH__FT_',
+					label: 'Screen Length (ft)',
+				},
+				{
+					name: 'SOURCE_NAME',
+					label: 'Source Name',
+				},
+				{
+					name: 'OTHER_NAMES',
+					label: 'Other Names',
+				},
+			];
+		} else if (layerInfo.layer.title === 'GAMA PCE 2D') {
+			fields = [
+				{
+					name: 'Well ID',
+					label: 'WELL_ID',
+					direction: 'asc',
+				},
+				{
+					name: 'RESULTS',
+					label: 'Results',
+				},
+				{
+					name: 'DATE',
+					label: 'Date',
+				},
+				{
+					name: 'TOP_OF_SCREEN__FT_',
+					label: 'Top of Screen (ft)',
+				},
+				{
+					name: 'SCREEN_LENGTH__FT_',
+					label: 'Screen Length (ft)',
+				},
+				{
+					name: 'SOURCE_NAME',
+					label: 'Source Name',
+				},
+				{
+					name: 'OTHER_NAMES',
+					label: 'Other Names',
+				},
+			];
+		}
+
+		// Create FeatureTable
+		const featureTable = new FeatureTable({
+			view: view, // make sure to pass in view in order for selection to work
+			layer: layerInfo.layer,
+			fieldConfigs: fields,
+			// @ts-ignore
+			container: tableDiv,
+			highlightOnRowSelectEnabled: true,
+			visibleElements: {
+				header: true,
+				menu: true,
+				menuItems: {
+					clearSelection: true,
+					refreshData: false,
+					toggleColumns: false,
+				},
 			},
-		},
+		});
 	});
 }

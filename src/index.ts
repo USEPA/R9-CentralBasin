@@ -4,14 +4,15 @@ import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 
 // Map data
-import {info, map, elevLyr, loadWellsView, setupWellSlider} from './data/app';
+import { info, map, elevLyr, loadWellsView, setupWellSlider } from './data/app';
 
 // widget utils
-import {initTimeSlider, initWidgets, initSlidesWidget, initTableWidget} from './widgets';
+import { initTimeSlider, initWidgets, initSlidesWidget, initTableWidget } from './widgets';
 import IdentityManager from '@arcgis/core/identity/IdentityManager';
 import SceneView from '@arcgis/core/views/SceneView';
 import SceneLayer from '@arcgis/core/layers/SceneLayer';
-import {whenFalse, whenTrue} from '@arcgis/core/core/watchUtils';
+import { whenFalse, whenTrue } from '@arcgis/core/core/watchUtils';
+import FeatureLayerView from '@arcgis/core/views/layers/FeatureLayerView';
 
 // add calcite components
 // import '@esri/calcite-components/dist/calcite.js';
@@ -39,14 +40,18 @@ map.ground.layers.add(elevLyr);
 view.popup.defaultPopupTemplateEnabled = true;
 
 whenTrue(view, 'updating', function () {
-    // @ts-ignore
-    document.getElementById('lds-roller').style.visibility = 'visible';
+	// @ts-ignore
+	document.getElementById('lds-roller').style.visibility = 'visible';
 });
 
 whenFalse(view, 'updating', function () {
-    // @ts-ignore
-    document.getElementById('lds-roller').style.visibility = 'hidden';
+	// @ts-ignore
+	document.getElementById('lds-roller').style.visibility = 'hidden';
 });
+
+function changeTab(layer: string){
+	console.log(layer);
+}
 
 view.when(initWidgets);
 view.when(initSlidesWidget);
@@ -101,7 +106,7 @@ view.when(initTimeSlider).then((timePieces) => {
 					wrdTce3dId = layer.id;
 				}
 			});
-		} else if (parentLayer.title === 'PCE  Sampling Results') {
+		} else if (parentLayer.title === 'PCE Sampling Results') {
 			parentLayer.layers.items.forEach((layer: any) => {
 				if (layer.title === 'GAMA PCE 2D') {
 					console.log(layer);
@@ -115,12 +120,12 @@ view.when(initTimeSlider).then((timePieces) => {
 					wrdPce3dId = layer.id;
 				}
 			});
-		} else if (parentLayer.title === 'CR6  Sampling Results') {
+		} else if (parentLayer.title === 'CR6 Sampling Results') {
 			parentLayer.layers.items.forEach((layer: any) => {
 				if (layer.title === 'GAMA CR6 2D') {
 					console.log(layer);
 					gamaCr62dId = layer.id;
-				} else if (layer.title === 'GAMA CR6') {
+				} else if (layer.title === 'GAMA CR6 3D') {
 					console.log(layer);
 					gamaCr63dId = layer.id;
 				}
@@ -156,7 +161,7 @@ view.when(initTimeSlider).then((timePieces) => {
 	gamaTce3DLayer.outFields = ['*'];
 	gamaPce3DLayer.outFields = ['*'];
 	gamaCr63DLayer.outFields = ['*'];
-	
+
 	const promise1 = view.whenLayerView(timeLayersArr[0]);
 	const promise2 = view.whenLayerView(timeLayersArr[1]);
 	const promise3 = view.whenLayerView(timeLayersArr[2]);
@@ -168,27 +173,24 @@ view.when(initTimeSlider).then((timePieces) => {
 		console.log(layerViews);
 		const sliderInfo: any[] | SceneLayerView = [];
 		layerViews.forEach((layerView) => {
-			sliderInfo.push({layerView: layerView,
+			sliderInfo.push({
+				layerView: layerView,
 				fieldName: 'Date'
 			})
 		});
 
 		setupWellSlider(sliderInfo, timePieces.timeSlider, timePieces.timeSliderExpand, view);
 	});
-	
+
 	view.whenLayerView(wells3dLayer).then((wellsLayerView) => {
 		loadWellsView(wells3dLayer, wellsLayerView as SceneLayerView, view);
-
-		// setupWellSlider(wellsLayerView as SceneLayerView, timePieces.timeSlider, timePieces.timeSliderExpand, view);
 	});
 
-	view.whenLayerView(wells2dLayer).then( () => {
-		initTableWidget(view, wells2dLayer as FeatureLayer);
-	});
-	// view.whenLayerView(tceGamaLayer).then( () => {
-	// 	initTableWidget(view, tceGamaLayer as FeatureLayer);
-	// });
-	// view.whenLayerView(pceGamaLayer).then( () => {
-	// 	initTableWidget(view, pceGamaLayer as FeatureLayer);
-	// });
+	const tableLayersArr = [{ div: document.getElementById('wells2dLayer'), layer: wells2dLayer },
+	{ div: document.getElementById('tceGamaLayer'), layer: tceGamaLayer },
+	{ div: document.getElementById('pceGamaLayer'), layer: pceGamaLayer },
+	{ div: document.getElementById('cr6GamaLayer'), layer: cr6GamaLayer }];
+
+	initTableWidget(view, tableLayersArr);
+
 });
