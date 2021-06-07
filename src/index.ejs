@@ -21,6 +21,9 @@
     }
   </script>
   <% } %>
+  <% 
+  
+  %>
 </head>
 
 <body>
@@ -53,24 +56,23 @@
     <div id="slidesDiv" class="esri-widget"></div>
     <div id="tableContainer" class="tableContainer">
       <div class="calcite-tabs" layout="inline" position="above">
-        <div class="calcite-tab wells2dLayer active esri-widget--button" active="" aria-expanded="true" id="wells2dTab"
-          role="tabpanel">All Wells
+        <div class="calcite-tab wells2dLayer active esri-widget--button" active="" aria-expanded="true" id="wells2dTab" role="tabpanel" onclick="changeTab(evt, 'wells2dTab')">All Wells
         </div>
-        <div class="calcite-tab tceGamaLayer esri-widget--button" aria-expanded="false" id="tceGamaTab" role="tabpanel">
+        <Button class="calcite-tab tceGamaLayer esri-widget--button" aria-expanded="false" id="tceGamaTab" role="tabpanel" onclick="changeTab(evt, 'tceGamaLayer')">
           GAMA TCE
-        </div>
-        <div class="calcite-tab pceGamaLayer esri-widget--button" aria-expanded="false" id="pceGamaTab" role="tabpanel">
+        </Button>
+        <Button class="calcite-tab pceGamaLayer esri-widget--button" aria-expanded="false" id="pceGamaTab" role="tabpanel" onclick="changeTab(evt, 'pceGamaLayer')">
           GAMA PCE
-        </div>
-        <div class="calcite-tab cr6GamaLayer esri-widget--button" aria-expanded="false" id="cr6GamaTab" role="tabpanel">
+        </Button>
+        <Button class="calcite-tab cr6GamaLayer esri-widget--button" aria-expanded="false" id="cr6GamaTab" role="tabpanel" onclick="changeTab(evt, 'cr6GamaLayer')">
           GAMA CR6
-        </div>
+        </Button>
       </div>
       <div id="tableTab" class="tableTab">
         <div class="tab-body active-table" id="wells2dLayer" onclick="changeTab()"></div>
-        <div class="tab-body" id="tceGamaLayer" onclick="changeTab()"></div>
-        <div class="tab-body" id="pceGamaLayer" onclick="changeTab()"></div>
-        <div class="tab-body" id="cr6GamaLayer" onclick="changeTab()"></div>
+        <div class="tab-body" id="tceGamaLayer"></div>
+        <div class="tab-body" id="pceGamaLayer"></div>
+        <div class="tab-body" id="cr6GamaLayer"></div>
       </div>
     </div>
   </div>

@@ -49,10 +49,6 @@ whenFalse(view, 'updating', function () {
 	document.getElementById('lds-roller').style.visibility = 'hidden';
 });
 
-function changeTab(layer: string){
-	console.log(layer);
-}
-
 view.when(initWidgets);
 view.when(initSlidesWidget);
 view.when(initTimeSlider).then((timePieces) => {
@@ -153,7 +149,7 @@ view.when(initTimeSlider).then((timePieces) => {
 
 	const timeLayersArr = [wells3dLayer, wrdTce3DLayer, wrdPce3DLayer, gamaTce3DLayer, gamaPce3DLayer, gamaCr63DLayer];
 
-	const dateField = ['Date'];
+	const dateField = ['Date', 'WellsRanThroughDEM_EPA_WQ_DDW_3', 'WellsRanThroughDEM_EPA_WQ_DDW_3', 'Date', 'Date', 'Date'];
 
 	wells3dLayer.outFields = ['*'];
 	wrdTce3DLayer.outFields = ['*'];
@@ -172,10 +168,10 @@ view.when(initTimeSlider).then((timePieces) => {
 	Promise.all([promise1, promise2, promise3, promise4, promise5, promise6]).then((layerViews) => {
 		console.log(layerViews);
 		const sliderInfo: any[] | SceneLayerView = [];
-		layerViews.forEach((layerView) => {
+		layerViews.forEach((layerView, i) => {
 			sliderInfo.push({
 				layerView: layerView,
-				fieldName: 'Date'
+				fieldName: dateField[i]
 			})
 		});
 
@@ -194,3 +190,7 @@ view.when(initTimeSlider).then((timePieces) => {
 	initTableWidget(view, tableLayersArr);
 
 });
+
+function changeTab(evt, elementId) {
+	console.log(evt, elementId);
+}

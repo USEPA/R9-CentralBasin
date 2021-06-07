@@ -364,4 +364,18 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 			},
 		});
 	});
+
+	document.getElementsByClassName('tab-body')[0].addEventListener('click', function (event) {
+		// do something
+	});
+
+	const tabArr = Array.from(document.getElementsByClassName('tab-body'));
+
+	for (let i = 0; i < tabArr.length; i++) {
+		console.log(tabArr[i]);
+
+		tabArr[i].addEventListener('click', function (event) {
+			console.log(event);
+		});
+	}
 }
