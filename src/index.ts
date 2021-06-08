@@ -175,19 +175,19 @@ view.when(initTimeSlider).then((timePieces) => {
 			})
 		});
 
+		const tableLayersArr = [{ div: document.getElementById('wells2dLayer'), layer: wells2dLayer, layer3d: layerViews[0] },
+		{ div: document.getElementById('tceGamaLayer'), layer: tceGamaLayer, layer3d: layerViews[3] },
+		{ div: document.getElementById('pceGamaLayer'), layer: pceGamaLayer, layer3d: layerViews[4] },
+		{ div: document.getElementById('cr6GamaLayer'), layer: cr6GamaLayer, layer3d: layerViews[5] }];
+	
+		initTableWidget(view, tableLayersArr);
+
 		setupWellSlider(sliderInfo, timePieces.timeSlider, timePieces.timeSliderExpand, view);
 	});
 
 	view.whenLayerView(wells3dLayer).then((wellsLayerView) => {
 		loadWellsView(wells3dLayer, wellsLayerView as SceneLayerView, view);
 	});
-
-	const tableLayersArr = [{ div: document.getElementById('wells2dLayer'), layer: wells2dLayer },
-	{ div: document.getElementById('tceGamaLayer'), layer: tceGamaLayer },
-	{ div: document.getElementById('pceGamaLayer'), layer: pceGamaLayer },
-	{ div: document.getElementById('cr6GamaLayer'), layer: cr6GamaLayer }];
-
-	initTableWidget(view, tableLayersArr);
 
 });
 

@@ -21,6 +21,8 @@ import WebScene from '@arcgis/core/WebScene';
 import Basemap from '@arcgis/core/Basemap';
 import FeatureTable from '@arcgis/core/widgets/FeatureTable';
 import { info } from './data/app';
+import { watch } from '@arcgis/core/core/watchUtils';
+
 
 import FeatureLayerView from '@arcgis/core/views/layers/FeatureLayerView';
 
@@ -362,6 +364,49 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 					toggleColumns: false,
 				},
 			},
+		});
+
+		const features: { feature: __esri.Graphic }[] = [];
+		let selectedFeature: number | __esri.Graphic | (number | __esri.Graphic)[], id: any;
+		const features3d;
+		let selectedFeature3d, id3d: any;
+
+		featureTable.on('selection-change', (changes) => {
+			// If row is unselected in table, remove it from the features array
+			changes.removed.forEach(function (item) {
+				const data = features.find(function (data) {
+					return data.feature === item.feature;
+				});
+				// const data3d = features3d.find(function (data3d) {
+				// 	return data3d.feature === item.feature.attributes.OBJECTID;
+				// });
+			});
+
+			// If a row is selected, add to the features array
+			changes.added.forEach(function (item) {
+				// highlight 3d features
+				// features3d.push(item.feature.attributes.OBJECTID);
+				// layerInfo.layer3d.highlight(features3d);
+
+				const feature = item.feature;
+				features.push({
+					feature: feature,
+				});
+
+				// Listen for row selection in the feature table. If the popup is open and a row is selected that is not the same feature as opened popup, close the existing popup.
+				if (feature.attributes.OBJECTID !== id && view.popup.visible === true) {
+					featureTable.deselectRows(selectedFeature);
+					view.popup.close();
+				}
+			});
+		});
+		watch(view.popup.viewModel, 'active', (graphic) => {
+			selectedFeature = view.popup.selectedFeature;
+			if (selectedFeature !== null && view.popup.visible !== false) {
+				featureTable.clearSelection();
+				featureTable.selectRows(view.popup.selectedFeature);
+				id = selectedFeature.getObjectId();
+			}
 		});
 	});
 
