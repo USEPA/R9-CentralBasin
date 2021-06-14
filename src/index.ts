@@ -175,10 +175,10 @@ view.when(initTimeSlider).then((timePieces) => {
 			})
 		});
 
-		const tableLayersArr = [{ div: document.getElementById('wells2dLayer'), layer: wells2dLayer, layer3d: layerViews[0] },
-		{ div: document.getElementById('tceGamaLayer'), layer: tceGamaLayer, layer3d: layerViews[3] },
-		{ div: document.getElementById('pceGamaLayer'), layer: pceGamaLayer, layer3d: layerViews[4] },
-		{ div: document.getElementById('cr6GamaLayer'), layer: cr6GamaLayer, layer3d: layerViews[5] }];
+		const tableLayersArr = [{ div: document.getElementById('wells2d'), layer: wells2dLayer, layer3d: layerViews[0] },
+		{ div: document.getElementById('tceGama'), layer: tceGamaLayer, layer3d: layerViews[3] },
+		{ div: document.getElementById('pceGama'), layer: pceGamaLayer, layer3d: layerViews[4] },
+		{ div: document.getElementById('cr6Gama'), layer: cr6GamaLayer, layer3d: layerViews[5] }];
 	
 		initTableWidget(view, tableLayersArr);
 
@@ -191,6 +191,23 @@ view.when(initTimeSlider).then((timePieces) => {
 
 });
 
-function changeTab(evt, elementId) {
-	console.log(evt, elementId);
+function changeTab(tab: string) {
+	console.log(tab);
+	const tabArr = Array.from(document.getElementsByClassName('calcite-tab'));
+
+	for (let i = 0; i < tabArr.length; i++) {
+		console.log(tabArr[i]);
+		tabArr[i].classList.remove("active");
+	}
+	document.getElementById(tab + 'Tab')?.classList.add('active');
+
+	const tableArr = Array.from(document.getElementsByClassName('tab-body'));
+	for (let i = 0; i < tableArr.length; i++) {
+		console.log(tableArr[i]);
+
+		tableArr[i].classList.remove("active-table");
+	}
+	document.getElementById(tab)?.classList.add('active-table');
 }
+
+window.changeTab = changeTab;

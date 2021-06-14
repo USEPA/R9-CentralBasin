@@ -22,7 +22,7 @@ import Basemap from '@arcgis/core/Basemap';
 import FeatureTable from '@arcgis/core/widgets/FeatureTable';
 import { info } from './data/app';
 import { watch } from '@arcgis/core/core/watchUtils';
-
+import ButtonMenuItem from '@arcgis/core/widgets/FeatureTable/Grid/support/ButtonMenuItem';
 
 import FeatureLayerView from '@arcgis/core/views/layers/FeatureLayerView';
 
@@ -345,8 +345,49 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 					label: 'Other Names',
 				},
 			];
+		} else if (layerInfo.layer.title === 'WRD PCE 2D') {
+			fields = [
+				{
+					name: 'Well ID',
+					label: 'WELL_ID',
+					direction: 'asc',
+				},
+				{
+					name: 'RESULTS',
+					label: 'Results',
+				},
+				{
+					name: 'DATE',
+					label: 'Date',
+				},
+				{
+					name: 'TOP_OF_SCREEN__FT_',
+					label: 'Top of Screen (ft)',
+				},
+				{
+					name: 'SCREEN_LENGTH__FT_',
+					label: 'Screen Length (ft)',
+				},
+				{
+					name: 'SOURCE_NAME',
+					label: 'Source Name',
+				},
+				{
+					name: 'OTHER_NAMES',
+					label: 'Other Names',
+				},
+			];
 		}
 
+		const zoomMenuItem = new ButtonMenuItem({
+			label: 'Zoom to feature(s)',
+			iconClass: 'esri-icon-zoom-in-magnifying-glass',
+			clickFunction: function (evt) {
+				console.log(evt);
+				debugger;
+				zoomToSelectedFeature();
+			},
+		})
 		// Create FeatureTable
 		const featureTable = new FeatureTable({
 			view: view, // make sure to pass in view in order for selection to work
@@ -364,11 +405,16 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 					toggleColumns: false,
 				},
 			},
+			menuConfig: {
+				items: [
+				
+				]
+			},
 		});
 
 		const features: { feature: __esri.Graphic }[] = [];
 		let selectedFeature: number | __esri.Graphic | (number | __esri.Graphic)[], id: any;
-		const features3d;
+		const features3d: any[];
 		let selectedFeature3d, id3d: any;
 
 		featureTable.on('selection-change', (changes) => {
@@ -377,16 +423,16 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 				const data = features.find(function (data) {
 					return data.feature === item.feature;
 				});
-				// const data3d = features3d.find(function (data3d) {
-				// 	return data3d.feature === item.feature.attributes.OBJECTID;
-				// });
+				const data3d = features3d.find(function (data3d) {
+					return data3d.feature === item.feature.attributes.OBJECTID;
+				});
 			});
 
 			// If a row is selected, add to the features array
 			changes.added.forEach(function (item) {
 				// highlight 3d features
-				// features3d.push(item.feature.attributes.OBJECTID);
-				// layerInfo.layer3d.highlight(features3d);
+				features3d.push(item.feature.attributes.OBJECTID);
+				layerInfo.layer3d.highlight(features3d);
 
 				const feature = item.feature;
 				features.push({
@@ -408,6 +454,28 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 				id = selectedFeature.getObjectId();
 			}
 		});
+
+		function zoomToSelectedFeature() {
+			// Create a query off of the feature layer
+			const query = featureLayer.createQuery();
+			// Iterate through the features and grab the feature's objectID
+			const featureIds = features.map((result) => {
+				return result.feature.getAttribute(featureLayer.objectIdField);
+			});
+			// Set the query's objectId
+			query.objectIds = featureIds;
+			// Make sure to return the geometry to zoom to
+			query.returnGeometry = true;
+			// Call queryFeatures on the feature layer and zoom to the resulting features
+			featureLayer.queryFeatures(query).then((results) => {
+				view.goTo(results.features)
+				.catch((error) => {
+					if (error.name != "AbortError"){
+						console.error(error);
+					}
+				});
+			});
+		}
 	});
 
 	document.getElementsByClassName('tab-body')[0].addEventListener('click', function (event) {

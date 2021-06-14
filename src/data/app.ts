@@ -33,7 +33,8 @@ export const mapProperties: any = {
 
 export const map = new WebScene({
 	portalItem: {
-		id: 'b8eab523b28b453cb9cff1d90569cd43', // dev webscene
+		id: 'dd370d1e2c194f4491078b579379f1d1', // dev 2 webscene
+		// id: 'b8eab523b28b453cb9cff1d90569cd43', // dev webscene
 		// id: 'dd983ac69154460fb75f5ce193b5344d', // production webscene
 	},
 	ground: {
