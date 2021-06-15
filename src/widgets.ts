@@ -248,9 +248,9 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 	layersInfo.forEach((layerInfo) => {
 		const tableDiv = layerInfo.div;
 
-		tableDiv.onclick = function (evt) {
-			console.log(evt);
-		};
+		// tableDiv.onclick = function (evt) {
+		// 	console.log(evt);
+		// };
 
 		let fields: (
 			| { name: string; label: string; direction: string }
@@ -383,8 +383,8 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 			label: 'Zoom to feature(s)',
 			iconClass: 'esri-icon-zoom-in-magnifying-glass',
 			clickFunction: function (evt) {
-				console.log(evt);
-				debugger;
+				// console.log(evt);
+				// debugger;
 				zoomToSelectedFeature();
 			},
 		})
@@ -406,15 +406,13 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 				},
 			},
 			menuConfig: {
-				items: [
-				
-				]
+				items: [zoomMenuItem],
 			},
 		});
 
 		const features: { feature: __esri.Graphic }[] = [];
 		let selectedFeature: number | __esri.Graphic | (number | __esri.Graphic)[], id: any;
-		const features3d: any[];
+		const features3d: number[] = [];
 		let selectedFeature3d, id3d: any;
 
 		featureTable.on('selection-change', (changes) => {
@@ -457,38 +455,23 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 
 		function zoomToSelectedFeature() {
 			// Create a query off of the feature layer
-			const query = featureLayer.createQuery();
+			const query = layerInfo.layer.createQuery();
 			// Iterate through the features and grab the feature's objectID
 			const featureIds = features.map((result) => {
-				return result.feature.getAttribute(featureLayer.objectIdField);
+				return result.feature.getAttribute(layerInfo.layer.objectIdField);
 			});
 			// Set the query's objectId
 			query.objectIds = featureIds;
 			// Make sure to return the geometry to zoom to
 			query.returnGeometry = true;
 			// Call queryFeatures on the feature layer and zoom to the resulting features
-			featureLayer.queryFeatures(query).then((results) => {
-				view.goTo(results.features)
-				.catch((error) => {
-					if (error.name != "AbortError"){
+			layerInfo.layer.queryFeatures(query).then((results: { features: any; }) => {
+				view.goTo(results.features).catch((error) => {
+					if (error.name != 'AbortError') {
 						console.error(error);
 					}
 				});
 			});
 		}
 	});
-
-	document.getElementsByClassName('tab-body')[0].addEventListener('click', function (event) {
-		// do something
-	});
-
-	const tabArr = Array.from(document.getElementsByClassName('tab-body'));
-
-	for (let i = 0; i < tabArr.length; i++) {
-		console.log(tabArr[i]);
-
-		tabArr[i].addEventListener('click', function (event) {
-			console.log(event);
-		});
-	}
 }

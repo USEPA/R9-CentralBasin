@@ -196,15 +196,12 @@ function changeTab(tab: string) {
 	const tabArr = Array.from(document.getElementsByClassName('calcite-tab'));
 
 	for (let i = 0; i < tabArr.length; i++) {
-		console.log(tabArr[i]);
 		tabArr[i].classList.remove("active");
 	}
 	document.getElementById(tab + 'Tab')?.classList.add('active');
 
 	const tableArr = Array.from(document.getElementsByClassName('tab-body'));
 	for (let i = 0; i < tableArr.length; i++) {
-		console.log(tableArr[i]);
-
 		tableArr[i].classList.remove("active-table");
 	}
 	document.getElementById(tab)?.classList.add('active-table');
