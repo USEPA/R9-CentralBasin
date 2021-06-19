@@ -2,6 +2,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
+import { config } from '../config';
+
 import OAuthInfo from '@arcgis/core/identity/OAuthInfo';
 import WebScene from '@arcgis/core/WebScene';
 import ElevationLayer from '@arcgis/core/layers/ElevationLayer';
@@ -19,23 +21,28 @@ import Camera from '@arcgis/core/Camera';
 // import LayerView from '@arcgis/core/views/layers/LayerView';
 let highlight: any;
 
+let env;
+if (process.env.NODE_ENV === 'production') {
+	env = config.portalEnv.production;
+} else {
+	env = config.portalEnv.development;
+}
+
 export const info = new OAuthInfo({
-	appId: process.env.NODE_ENV === 'production' ? 'RjgBsWrJbfY8hMGY' : 'ZtlpDht9ywRCA4Iq',
-	portalUrl: 'https://epa.maps.arcgis.com',
+	appId: process.env.NODE_ENV === 'production' ? env.appId : env.appId,
+	portalUrl: env.portalUrl,
 	// Uncomment the next line to prevent the user's signed in state from being shared with other apps on the same domain with the same authNamespace value.
 	// authNamespace: "portal_oauth_inline",
 	popup: false,
 });
 
 export const mapProperties: any = {
-	blankBasemapId: 'c0af3abd0d60427ba659e38d457fbe07',
+	blankBasemapId: env.blankBasemap,
 };
 
 export const map = new WebScene({
 	portalItem: {
-		id: 'dd370d1e2c194f4491078b579379f1d1', // dev 2 webscene
-		// id: 'b8eab523b28b453cb9cff1d90569cd43', // dev webscene
-		// id: 'dd983ac69154460fb75f5ce193b5344d', // production webscene
+		id: env.webScene,
 	},
 	ground: {
 		navigationConstraint: {
@@ -44,10 +51,8 @@ export const map = new WebScene({
 	},
 });
 
-
-
 export const elevLyr = new ElevationLayer({
-	url: '//elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer',
+	url: env.elevationUrl,
 });
 
 function applyTimeExtent(timeExtent: TimeExtent, layerView: SceneLayerView, timeField: string) {

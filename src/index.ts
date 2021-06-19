@@ -13,6 +13,7 @@ import SceneView from '@arcgis/core/views/SceneView';
 import SceneLayer from '@arcgis/core/layers/SceneLayer';
 import { whenFalse, whenTrue } from '@arcgis/core/core/watchUtils';
 import FeatureLayerView from '@arcgis/core/views/layers/FeatureLayerView';
+import { config } from './config';
 
 // add calcite components
 // import '@esri/calcite-components/dist/calcite.js';
@@ -60,151 +61,100 @@ view.when(initTimeSlider).then((timePieces) => {
 		console.log('click');
 	});
 
-	// @ts-ignore
-	let wells2dId;
-	let wells3dId;
-	let gamaTce2dId;
-	let gamaTce3dId;
-	let gamaPce2dId;
-	let gamaPce3dId;
-	let wrdPce3dId;
-	let wrdTce3dId;
-	let gamaCr62dId;
-	let gamaCr63dId;
+	let tableLayersArr = config.tableLayers.layers;
 
-	view.map.layers.items.forEach((parentLayer) => {
-		console.log('layer', parentLayer.title);
-		if (parentLayer.title === 'Wells 2D') {
-			parentLayer.layers.items.forEach((layer: any) => {
-				if (layer.title === 'All Wells With Labels') {
-					console.log(layer);
-					wells2dId = layer.id;
-				}
-			});
-		} else if (parentLayer.title === 'Wells 3D') {
-			parentLayer.layers.items.forEach((layer: any) => {
-				if (layer.title === 'All Wells - Gray V3') {
-					console.log(layer);
-					wells3dId = layer.id;
-				}
-			});
-		} else if (parentLayer.title === 'TCE Sampling Results') {
-			parentLayer.layers.items.forEach((layer: any) => {
-				if (layer.title === 'GAMA TCE 2D') {
-					console.log(layer);
-					gamaTce2dId = layer.id;
-				} else if (layer.title === 'GAMA TCE 3D') {
-					console.log(layer);
-					gamaTce3dId = layer.id;
-				}
-				else if (layer.title === 'WRD TCE 3D') {
-					console.log(layer);
-					wrdTce3dId = layer.id;
-				}
-			});
-		} else if (parentLayer.title === 'PCE Sampling Results') {
-			parentLayer.layers.items.forEach((layer: any) => {
-				if (layer.title === 'GAMA PCE 2D') {
-					console.log(layer);
-					gamaPce2dId = layer.id;
-				} else if (layer.title === 'GAMA PCE 3D') {
-					console.log(layer);
-					gamaPce3dId = layer.id;
-				}
-				else if (layer.title === 'WRD PCE 3D') {
-					console.log(layer);
-					wrdPce3dId = layer.id;
-				}
-			});
-		} else if (parentLayer.title === 'CR6 Sampling Results') {
-			parentLayer.layers.items.forEach((layer: any) => {
-				if (layer.title === 'GAMA CR6 2D') {
-					console.log(layer);
-					gamaCr62dId = layer.id;
-				} else if (layer.title === 'GAMA CR6 3D') {
-					console.log(layer);
-					gamaCr63dId = layer.id;
-				}
-			});
-		} else {
-			console.log(parentLayer.title);
-		}
+	//loop through map layers
+	view.map.layers.items.forEach((parentLayer: { title: string; id: any; layers: { items: any[]; }; }) => {
+
+		console.log('layer: ', parentLayer.title, 'id: ', parentLayer.id);
+		// loop through config layers
+		config.tableLayers.layers.forEach((configLayer, configLayerIndex) => {
+			// loop through group to match config and map layers
+			if (parentLayer.title === configLayer.parentTitle) {
+				parentLayer.layers.items.forEach((layer: any) => {
+					if (layer.id === '17a21a99df2-layer-1'){
+						debugger;
+					}
+
+					if (layer.title === configLayer.title2D) {
+						tableLayersArr[configLayerIndex].id2D = layer.id;
+						tableLayersArr[configLayerIndex].layer2D = view.map.findLayerById(layer.id) as FeatureLayer;
+						tableLayersArr[configLayerIndex].layer2D.outFields = ['*'];
+					} else if (layer.title === configLayer.title3D) {
+						tableLayersArr[configLayerIndex].id3D = layer.id;
+						tableLayersArr[configLayerIndex].layer3D = view.map.findLayerById(layer.id) as SceneLayer;
+					}
+				});
+			}
+		});
 	});
 
-	const wells2dLayer = view.map.findLayerById(wells2dId) as FeatureLayer;
-	wells2dLayer.outFields = ['*'];
-	const tceGamaLayer = view.map.findLayerById(gamaTce2dId) as FeatureLayer;
-	tceGamaLayer.outFields = ['*'];
-	const pceGamaLayer = view.map.findLayerById(gamaPce2dId) as FeatureLayer;
-	pceGamaLayer.outFields = ['*'];
-	const cr6GamaLayer = view.map.findLayerById(gamaCr62dId) as FeatureLayer;
-	cr6GamaLayer.outFields = ['*'];
+	let promiseArr = [];
 
-	const wells3dLayer = view.map.findLayerById(wells3dId) as SceneLayer;
-	const wrdTce3DLayer = view.map.findLayerById(wrdTce3dId) as SceneLayer;
-	const wrdPce3DLayer = view.map.findLayerById(wrdPce3dId) as SceneLayer;
-	const gamaTce3DLayer = view.map.findLayerById(gamaTce3dId) as SceneLayer;
-	const gamaPce3DLayer = view.map.findLayerById(gamaPce3dId) as SceneLayer;
-	const gamaCr63DLayer = view.map.findLayerById(gamaCr63dId) as SceneLayer;
+	tableLayersArr.forEach((layer) => {
+		promiseArr.push(view.whenLayerView(layer.layer3D));
+	});
 
-	const timeLayersArr = [wells3dLayer, wrdTce3DLayer, wrdPce3DLayer, gamaTce3DLayer, gamaPce3DLayer, gamaCr63DLayer];
-
-	const dateField = ['Date', 'WellsRanThroughDEM_EPA_WQ_DDW_3', 'WellsRanThroughDEM_EPA_WQ_DDW_3', 'Date', 'Date', 'Date'];
-
-	wells3dLayer.outFields = ['*'];
-	wrdTce3DLayer.outFields = ['*'];
-	wrdPce3DLayer.outFields = ['*'];
-	gamaTce3DLayer.outFields = ['*'];
-	gamaPce3DLayer.outFields = ['*'];
-	gamaCr63DLayer.outFields = ['*'];
-
-	const promise1 = view.whenLayerView(timeLayersArr[0]);
-	const promise2 = view.whenLayerView(timeLayersArr[1]);
-	const promise3 = view.whenLayerView(timeLayersArr[2]);
-	const promise4 = view.whenLayerView(timeLayersArr[3]);
-	const promise5 = view.whenLayerView(timeLayersArr[4]);
-	const promise6 = view.whenLayerView(timeLayersArr[5]);
-
-	Promise.all([promise1, promise2, promise3, promise4, promise5, promise6]).then((layerViews) => {
+	Promise.all(promiseArr).then((layerViews) => {
 		console.log(layerViews);
+
 		const sliderInfo: any[] | SceneLayerView = [];
+
 		layerViews.forEach((layerView, i) => {
-			sliderInfo.push({
-				layerView: layerView,
-				fieldName: dateField[i]
+			tableLayersArr.forEach((tableLayer, j) => {
+				console.log(tableLayer);
+				// add scene view, html elements to array
+				if (tableLayer.id3D === layerView.layer.associatedLayer.id) {
+					tableLayersArr[j].sceneView = layerView;
+
+					tableLayersArr[j].tableDiv = document.createElement('DIV');
+					tableLayersArr[j].tableDiv.classList.add('tab-body');
+
+					tableLayersArr[j].tab = document.createElement('BUTTON');
+					tableLayersArr[j].tab.classList.add('calcite-tab', 'wells2d', 'esri-widget--button');
+					tableLayersArr[j].tab.innerHTML = layerView.title3D;
+
+					if (j === 0) {
+						tableLayersArr[j].tab.classList.add('active');
+						tableLayersArr[j].tableDiv.classList.add('active-table');
+					}
+
+					document.getElementById('tableTabs')?.appendChild(tableLayersArr[j].tab);
+					document.getElementById('tableDivs')?.appendChild(tableLayersArr[j].tableDiv);
+
+					tableLayersArr[j].tab.onclick(() => {
+						changeTab(tableLayersArr[j]);
+					});
+				}
 			})
 		});
 
-		const tableLayersArr = [{ div: document.getElementById('wells2d'), layer: wells2dLayer, layer3d: layerViews[0] },
-		{ div: document.getElementById('tceGama'), layer: tceGamaLayer, layer3d: layerViews[3] },
-		{ div: document.getElementById('pceGama'), layer: pceGamaLayer, layer3d: layerViews[4] },
-		{ div: document.getElementById('cr6Gama'), layer: cr6GamaLayer, layer3d: layerViews[5] }];
-	
 		initTableWidget(view, tableLayersArr);
 
-		setupWellSlider(sliderInfo, timePieces.timeSlider, timePieces.timeSliderExpand, view);
+
+		//setupWellSlider(sliderInfo, timePieces.timeSlider, timePieces.timeSliderExpand, view);
 	});
 
-	view.whenLayerView(wells3dLayer).then((wellsLayerView) => {
-		loadWellsView(wells3dLayer, wellsLayerView as SceneLayerView, view);
-	});
+	// view.whenLayerView(wells3dLayer).then((wellsLayerView) => {
+	// 	loadWellsView(wells3dLayer, wellsLayerView as SceneLayerView, view);
+	// });
 
 });
 
-function changeTab(tab: string) {
+function changeTab(layerInfo: string) {
 	console.log(tab);
 	const tabArr = Array.from(document.getElementsByClassName('calcite-tab'));
 
 	for (let i = 0; i < tabArr.length; i++) {
 		tabArr[i].classList.remove("active");
 	}
-	document.getElementById(tab + 'Tab')?.classList.add('active');
+	layerInfo.tab?.classList.add('active');
 
 	const tableArr = Array.from(document.getElementsByClassName('tab-body'));
 	for (let i = 0; i < tableArr.length; i++) {
 		tableArr[i].classList.remove("active-table");
 	}
-	document.getElementById(tab)?.classList.add('active-table');
+	document.getElementById(layerInfo.tableDiv)?.classList.add('active-table');
 }
 
-window.changeTab = changeTab;
+		// window.changeTab = changeTab;

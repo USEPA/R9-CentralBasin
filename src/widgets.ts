@@ -246,138 +246,11 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 	// const appContainer = document.getElementById("appContainer");
 	// const tableContainer = document.getElementById("tableContainer");
 	layersInfo.forEach((layerInfo) => {
-		const tableDiv = layerInfo.div;
+		// const tableDiv = layerInfo.div;
 
 		// tableDiv.onclick = function (evt) {
 		// 	console.log(evt);
 		// };
-
-		let fields: (
-			| { name: string; label: string; direction: string }
-			| { name: string; label: string; direction?: undefined }
-		)[] = [];
-
-		if (layerInfo.layer.title === 'All Wells - Gray V3') {
-			fields = [
-				{
-					name: 'WellsRanThroughDEM2_WRDID',
-					label: 'WRDID',
-					direction: 'asc',
-				},
-				{
-					name: 'WellsRanThroughDEM2_DPW_ID',
-					label: 'DPW ID',
-				},
-				// {
-				// 	name: 'WellsRanThroughDEM2_Common_Nam ',
-				// 	label: 'Common_Nam',
-				// },
-				{
-					name: 'WellsRanThroughDEM2_Owner_No',
-					label: 'Owner No',
-				},
-				{
-					name: 'WellsRanThroughDEM2_Type',
-					label: 'Type',
-				},
-			];
-		} else if (layerInfo.layer.title === 'GAMA TCE 2D') {
-			fields = [
-				{
-					name: 'Well ID',
-					label: 'WELL_ID',
-					direction: 'asc',
-				},
-				{
-					name: 'RESULTS',
-					label: 'Results',
-				},
-				{
-					name: 'DATE',
-					label: 'Date',
-				},
-				{
-					name: 'TOP_OF_SCREEN__FT_',
-					label: 'Top of Screen (ft)',
-				},
-				{
-					name: 'SCREEN_LENGTH__FT_',
-					label: 'Screen Length (ft)',
-				},
-				{
-					name: 'SOURCE_NAME',
-					label: 'Source Name',
-				},
-				{
-					name: 'OTHER_NAMES',
-					label: 'Other Names',
-				},
-			];
-		} else if (layerInfo.layer.title === 'GAMA PCE 2D') {
-			fields = [
-				{
-					name: 'Well ID',
-					label: 'WELL_ID',
-					direction: 'asc',
-				},
-				{
-					name: 'RESULTS',
-					label: 'Results',
-				},
-				{
-					name: 'DATE',
-					label: 'Date',
-				},
-				{
-					name: 'TOP_OF_SCREEN__FT_',
-					label: 'Top of Screen (ft)',
-				},
-				{
-					name: 'SCREEN_LENGTH__FT_',
-					label: 'Screen Length (ft)',
-				},
-				{
-					name: 'SOURCE_NAME',
-					label: 'Source Name',
-				},
-				{
-					name: 'OTHER_NAMES',
-					label: 'Other Names',
-				},
-			];
-		} else if (layerInfo.layer.title === 'WRD PCE 2D') {
-			fields = [
-				{
-					name: 'Well ID',
-					label: 'WELL_ID',
-					direction: 'asc',
-				},
-				{
-					name: 'RESULTS',
-					label: 'Results',
-				},
-				{
-					name: 'DATE',
-					label: 'Date',
-				},
-				{
-					name: 'TOP_OF_SCREEN__FT_',
-					label: 'Top of Screen (ft)',
-				},
-				{
-					name: 'SCREEN_LENGTH__FT_',
-					label: 'Screen Length (ft)',
-				},
-				{
-					name: 'SOURCE_NAME',
-					label: 'Source Name',
-				},
-				{
-					name: 'OTHER_NAMES',
-					label: 'Other Names',
-				},
-			];
-		}
 
 		const zoomMenuItem = new ButtonMenuItem({
 			label: 'Zoom to feature(s)',
@@ -391,10 +264,10 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 		// Create FeatureTable
 		const featureTable = new FeatureTable({
 			view: view, // make sure to pass in view in order for selection to work
-			layer: layerInfo.layer,
-			fieldConfigs: fields,
+			layer: layerInfo.layer2D,
+			fieldConfigs: layerInfo.fields,
 			// @ts-ignore
-			container: tableDiv,
+			container: layerInfo.tableDiv,
 			highlightOnRowSelectEnabled: true,
 			visibleElements: {
 				header: true,
@@ -458,7 +331,7 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 			const query = layerInfo.layer.createQuery();
 			// Iterate through the features and grab the feature's objectID
 			const featureIds = features.map((result) => {
-				return result.feature.getAttribute(layerInfo.layer.objectIdField);
+				return result.feature.getAttribute(layerInfo.layer2D.objectIdField);
 			});
 			// Set the query's objectId
 			query.objectIds = featureIds;
