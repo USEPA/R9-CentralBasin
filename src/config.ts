@@ -63,10 +63,17 @@ export const config = {
 			appId: 'ZtlpDht9ywRCA4Iq',
 			portalUrl: 'https://epa.maps.arcgis.com',
 			blankBasemap: 'c0af3abd0d60427ba659e38d457fbe07',
-			webScene: 'dd370d1e2c194f4491078b579379f1d1',
 			// webScene: 'dd370d1e2c194f4491078b579379f1d1',
+			// webScene: 'dd370d1e2c194f4491078b579379f1d1',
+			webScene: '6e43620d338a418481c9702fe2a97f26',
 			elevationUrl: '//elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer',
 		},
+	},
+	wells3D: {
+		parentTitle: 'Wells 3D',
+		title2D: 'All Wells With Labels',
+		title3D: 'All Wells - Gray V3',
+		layerVar: 'wells2D',
 	},
 	tableLayers: {
 		layers: [
@@ -102,6 +109,7 @@ export const config = {
 				title3D: 'GAMA TCE 3D',
 				layerVar: 'gamaTCE',
 				fields: gamaFields,
+				dateField: 'DATE',
 			},
 			{
 				parentTitle: 'TCE Sampling Results',
@@ -109,6 +117,7 @@ export const config = {
 				title3D: 'WRD TCE 3D',
 				layerVar: 'wrdTCE',
 				fields: wrdFields,
+				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
 			},
 			{
 				parentTitle: 'PCE Sampling Results',
@@ -116,6 +125,7 @@ export const config = {
 				title3D: 'GAMA PCE 3D',
 				layerVar: 'gamaPCE',
 				fields: gamaFields,
+				dateField: 'DATE',
 			},
 			{
 				parentTitle: 'PCE Sampling Results',
@@ -123,6 +133,7 @@ export const config = {
 				title3D: 'WRD PCE 3D',
 				layerVar: 'wrdPCE',
 				fields: wrdFields,
+				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
 			},
 			{
 				parentTitle: 'CR6 Sampling Results',
@@ -130,13 +141,15 @@ export const config = {
 				title3D: 'GAMA CR6 3D',
 				layerVar: 'gamaCR6',
 				fields: gamaFields,
+				dateField: 'DATE',
 			},
 			{
-				parentTitle: 'PCE Sampling Results',
+				parentTitle: 'CR6 Sampling Results',
 				title2D: 'WRD CR6 2D',
 				title3D: 'WRD CR6 3D',
 				layerVar: 'wrdCR6',
 				fields: wrdFields,
+				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
 			},
 		],
 		layers3D: [

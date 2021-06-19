@@ -66,31 +66,31 @@ function applyTimeExtent(timeExtent: TimeExtent, layerView: SceneLayerView, time
 }
 
 export async function setupWellSlider(
-	layerViews: any[] | SceneLayerView,
+	layersArr: any[],
 	timeSlider: TimeSlider,
 	timeSliderExpand: Expand,
 	view: SceneView,
 ) {
 	timeSlider.watch('timeExtent', () => {
 		if (timeSliderExpand.expanded) {
-			layerViews.forEach(layerView => {
-				applyTimeExtent(timeSlider.timeExtent, layerView.layerView, layerView.fieldName);
+			layersArr.forEach((layerInfo) => {
+				applyTimeExtent(timeSlider.timeExtent, layerInfo.sceneView, layerInfo.dateField);
 			});
 		}
 	});
 
-	layerViews.forEach(layerView => {
-		layerView.layerView.filter = null;
+	layersArr.forEach((layerInfo) => {
+		layerInfo.sceneView.filter = null;
 	});
 	timeSliderExpand.watch('expanded', () => {
 		if (!timeSliderExpand.expanded) {
 			// @ts-ignore
-			layerViews.forEach(layerView => {
-				layerView.layerView.filter = null;
+			layersArr.forEach((layerInfo) => {
+				layerInfo.sceneView.filter = null;
 			});
 		} else if (timeSlider.timeExtent) {
-			layerViews.forEach(layerView => {
-				applyTimeExtent(timeSlider.timeExtent, layerView.layerView, layerView.fieldName);
+			layersArr.forEach((layerInfo) => {
+				applyTimeExtent(timeSlider.timeExtent, layerInfo.sceneView, layerInfo.dateField);
 			});
 		}
 	});
@@ -130,7 +130,7 @@ async function highlightFeature(wellsSceneLayerView: SceneLayerView, view: Scene
 			.queryFeatures({
 				where: `WellsRanThroughDEM2_WRDID = ${parseInt(value, 10)}`,
 			})
-			.then(response => {
+			.then((response) => {
 				highlight = wellsSceneLayerView.highlight(response.features);
 			});
 	});

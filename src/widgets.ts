@@ -328,7 +328,7 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 
 		function zoomToSelectedFeature() {
 			// Create a query off of the feature layer
-			const query = layerInfo.layer.createQuery();
+			const query = layerInfo.layer2D.createQuery();
 			// Iterate through the features and grab the feature's objectID
 			const featureIds = features.map((result) => {
 				return result.feature.getAttribute(layerInfo.layer2D.objectIdField);
@@ -338,7 +338,7 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 			// Make sure to return the geometry to zoom to
 			query.returnGeometry = true;
 			// Call queryFeatures on the feature layer and zoom to the resulting features
-			layerInfo.layer.queryFeatures(query).then((results: { features: any; }) => {
+			layerInfo.layer2D.queryFeatures(query).then((results: { features: any; }) => {
 				view.goTo(results.features).catch((error) => {
 					if (error.name != 'AbortError') {
 						console.error(error);

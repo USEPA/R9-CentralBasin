@@ -50,8 +50,8 @@ whenFalse(view, 'updating', function () {
 	document.getElementById('lds-roller').style.visibility = 'hidden';
 });
 
-view.when(initWidgets);
-view.when(initSlidesWidget);
+// view.when(initWidgets);
+// view.when(initSlidesWidget);
 view.when(initTimeSlider).then((timePieces) => {
 	// @ts-ignore
 	document.getElementById('slidesDiv').style.visibility = 'visible';
@@ -62,31 +62,53 @@ view.when(initTimeSlider).then((timePieces) => {
 	});
 
 	let tableLayersArr = config.tableLayers.layers;
+	let wells3DInfo = config.wells3D;
 
 	//loop through map layers
 	view.map.layers.items.forEach((parentLayer: { title: string; id: any; layers: { items: any[]; }; }) => {
+		if (parentLayer.id === '17a21a99df2-layer-1'){
+			debugger;
+		}
 
-		console.log('layer: ', parentLayer.title, 'id: ', parentLayer.id);
-		// loop through config layers
-		config.tableLayers.layers.forEach((configLayer, configLayerIndex) => {
-			// loop through group to match config and map layers
-			if (parentLayer.title === configLayer.parentTitle) {
+		// console.log('parentlayer: ', parentLayer.title, 'id: ', parentLayer.id);
+		if(parentLayer.layers){
+			parentLayer.layers.items.forEach((layer: any) => {
+				// console.log('      layer: ', layer.title, 'id: ', layer.id);
+
+				if (layer.id === '17a21a99df2-layer-1'){
+					debugger;
+				}
+			});
+	
+			// console.log('parentlayer: ', parentLayer.title, 'id: ', parentLayer.id);
+			// loop through config layers
+			config.tableLayers.layers.forEach((configLayer, configLayerIndex) => {
+				// loop through group to match config and map layers
+				if (parentLayer.title === configLayer.parentTitle) {
+					parentLayer.layers.items.forEach((layer: any) => {
+						if (layer.title === configLayer.title2D) {
+							tableLayersArr[configLayerIndex].id2D = layer.id;
+							tableLayersArr[configLayerIndex].layer2D = view.map.findLayerById(layer.id) as FeatureLayer;
+							tableLayersArr[configLayerIndex].layer2D.outFields = ['*'];
+						} else if (layer.title === configLayer.title3D) {
+							tableLayersArr[configLayerIndex].id3D = layer.id;
+							tableLayersArr[configLayerIndex].layer3D = view.map.findLayerById(layer.id) as SceneLayer;
+						}
+					});
+				}
+			});
+
+			if (parentLayer.title === config.wells3D.parentTitle) {
 				parentLayer.layers.items.forEach((layer: any) => {
-					if (layer.id === '17a21a99df2-layer-1'){
-						debugger;
-					}
-
-					if (layer.title === configLayer.title2D) {
-						tableLayersArr[configLayerIndex].id2D = layer.id;
-						tableLayersArr[configLayerIndex].layer2D = view.map.findLayerById(layer.id) as FeatureLayer;
-						tableLayersArr[configLayerIndex].layer2D.outFields = ['*'];
-					} else if (layer.title === configLayer.title3D) {
-						tableLayersArr[configLayerIndex].id3D = layer.id;
-						tableLayersArr[configLayerIndex].layer3D = view.map.findLayerById(layer.id) as SceneLayer;
+					if (layer.title === config.wells3D.title3D) {
+						wells3DInfo.id3D = layer.id;
+						wells3DInfo.layer3D = view.map.findLayerById(layer.id) as SceneLayer;
+						wells3DInfo.layer3D.outFields = ['*'];
 					}
 				});
 			}
-		});
+		}
+	
 	});
 
 	let promiseArr = [];
@@ -94,6 +116,7 @@ view.when(initTimeSlider).then((timePieces) => {
 	tableLayersArr.forEach((layer) => {
 		promiseArr.push(view.whenLayerView(layer.layer3D));
 	});
+	// promiseArr.push(view.whenLayerView(tableLayersArr[0].layer3D));
 
 	Promise.all(promiseArr).then((layerViews) => {
 		console.log(layerViews);
@@ -131,18 +154,16 @@ view.when(initTimeSlider).then((timePieces) => {
 
 		initTableWidget(view, tableLayersArr);
 
-
-		//setupWellSlider(sliderInfo, timePieces.timeSlider, timePieces.timeSliderExpand, view);
+		setupWellSlider(tableLayersArr, timePieces.timeSlider, timePieces.timeSliderExpand, view);
 	});
 
-	// view.whenLayerView(wells3dLayer).then((wellsLayerView) => {
-	// 	loadWellsView(wells3dLayer, wellsLayerView as SceneLayerView, view);
-	// });
-
+	view.whenLayerView(wells3DInfo.layer3D).then((wellsLayerView) => {
+		loadWellsView(wells3DInfo.layer3D, wellsLayerView as SceneLayerView, view);
+	});
 });
 
 function changeTab(layerInfo: string) {
-	console.log(tab);
+	console.log(layerInfo);
 	const tabArr = Array.from(document.getElementsByClassName('calcite-tab'));
 
 	for (let i = 0; i < tabArr.length; i++) {
