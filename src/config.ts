@@ -56,7 +56,8 @@ export const config = {
 			appId: 'RjgBsWrJbfY8hMGY',
 			portalUrl: 'https://epa.maps.arcgis.com',
 			blankBasemap: 'c0af3abd0d60427ba659e38d457fbe07',
-			webScene: 'dd983ac69154460fb75f5ce193b5344d',
+			// webScene: 'dd983ac69154460fb75f5ce193b5344d',
+			webScene: '6e43620d338a418481c9702fe2a97f26',
 			elevationUrl: '//elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer',
 		},
 		development: {
