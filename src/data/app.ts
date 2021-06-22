@@ -16,7 +16,6 @@ import Expand from '@arcgis/core/widgets/Expand';
 import TimeExtent from '@arcgis/core/TimeExtent';
 import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
 import SceneLayer from '@arcgis/core/layers/SceneLayer';
-import Camera from '@arcgis/core/Camera';
 // import FeatureTable from '@arcgis/core/widgets/FeatureTable';
 // import LayerView from '@arcgis/core/views/layers/LayerView';
 let highlight: any;
@@ -55,7 +54,7 @@ export const elevLyr = new ElevationLayer({
 	url: env.elevationUrl,
 });
 
-function applyTimeExtent(timeExtent: TimeExtent, layerView: SceneLayerView, timeField: string) {
+const applyTimeExtent = (timeExtent: TimeExtent, layerView: SceneLayerView, timeField: string) => {
 	const start = moment(timeExtent.start).format('YYYY-MM-DD');
 	const end = moment(timeExtent.end).format('YYYY-MM-DD');
 
@@ -63,14 +62,14 @@ function applyTimeExtent(timeExtent: TimeExtent, layerView: SceneLayerView, time
 		where: `${timeField} BETWEEN DATE '${start}' AND DATE '${end}'`,
 		// where: `WellsRanThroughDEM_EPA_WQ_DDW_1 = DATE '${start}'`
 	});
-}
+};
 
-export async function setupWellSlider(
+export const setupWellSlider = async (
 	layersArr: any[],
 	timeSlider: TimeSlider,
 	timeSliderExpand: Expand,
 	view: SceneView,
-) {
+) => {
 	timeSlider.watch('timeExtent', () => {
 		if (timeSliderExpand.expanded) {
 			layersArr.forEach((layerInfo) => {
@@ -96,9 +95,13 @@ export async function setupWellSlider(
 	});
 
 	await whenNotOnce(view, 'updating');
-}
+};
 
-export async function loadWellsView(wellsSceneLayer: SceneLayer, wellsSceneLayerView: SceneLayerView, view: SceneView) {
+export const loadWellsView = async (
+	wellsSceneLayer: SceneLayer,
+	wellsSceneLayerView: SceneLayerView,
+	view: SceneView,
+) => {
 	const featureSearchInput = document.getElementById('featureSearch');
 	// @ts-ignore
 	featureSearchInput.onkeyup = (event: any) => {
@@ -118,14 +121,14 @@ export async function loadWellsView(wellsSceneLayer: SceneLayer, wellsSceneLayer
 				});
 		}
 	};
-}
+};
 
-async function highlightFeature(wellsSceneLayerView: SceneLayerView, view: SceneView, value: string) {
+const highlightFeature = async (wellsSceneLayerView: SceneLayerView, view: SceneView, value: string) => {
 	if (highlight) {
 		highlight.remove();
 	}
 
-	return whenNotOnce(wellsSceneLayerView, 'updating', updating => {
+	return whenNotOnce(wellsSceneLayerView, 'updating', () => {
 		wellsSceneLayerView
 			.queryFeatures({
 				where: `WellsRanThroughDEM2_WRDID = ${parseInt(value, 10)}`,
@@ -134,4 +137,4 @@ async function highlightFeature(wellsSceneLayerView: SceneLayerView, view: Scene
 				highlight = wellsSceneLayerView.highlight(response.features);
 			});
 	});
-}
+};

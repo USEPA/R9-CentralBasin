@@ -77,36 +77,37 @@ export const config = {
 	},
 	tableLayers: {
 		layers: [
-			// {
-			// 	parentTitle2D: 'Wells 2D',
-			// 	parentTitle3D: 'Wells 3D',
-			// 	title2D: 'All Wells With Labels',
-			// 	title3D: 'All Wells - Gray V3',
-			// 	layerVar: 'wells2D',
-			// 	fields: [
-			// 		{
-			// 			name: 'WellsRanThroughDEM2_WRDID',
-			// 			label: 'WRDID',
-			// 			direction: 'asc',
-			// 		},
-			// 		{
-			// 			name: 'WellsRanThroughDEM2_DPW_ID',
-			// 			label: 'DPW ID',
-			// 		},
-			// 		{
-			// 			name: 'WellsRanThroughDEM2_Owner_No',
-			// 			label: 'Owner No',
-			// 		},
-			// 		{
-			// 			name: 'WellsRanThroughDEM2_Type',
-			// 			label: 'Type',
-			// 		},
-			// 	],
-			// },
+			{
+				parentTitle: 'Wells 3D',
+				title2D: 'All Wells With Labels',
+				title3D: 'All Wells - Gray V3',
+				label: 'All Wells',
+				layerVar: 'wells2D',
+				fields: [
+					{
+						name: 'WellsRanThroughDEM2_WRDID',
+						label: 'WRDID',
+						direction: 'asc',
+					},
+					{
+						name: 'WellsRanThroughDEM2_DPW_ID',
+						label: 'DPW ID',
+					},
+					{
+						name: 'WellsRanThroughDEM2_Owner_No',
+						label: 'Owner No',
+					},
+					{
+						name: 'WellsRanThroughDEM2_Type',
+						label: 'Type',
+					},
+				],
+			},
 			{
 				parentTitle: 'TCE Sampling Results',
 				title2D: 'GAMA TCE 2D',
 				title3D: 'GAMA TCE 3D',
+				label: 'GAMA TCE',
 				layerVar: 'gamaTCE',
 				fields: gamaFields,
 				dateField: 'DATE',
@@ -115,6 +116,7 @@ export const config = {
 				parentTitle: 'TCE Sampling Results',
 				title2D: 'WRD TCE 2D',
 				title3D: 'WRD TCE 3D',
+				label: 'WRD TCE',
 				layerVar: 'wrdTCE',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
@@ -123,6 +125,7 @@ export const config = {
 				parentTitle: 'PCE Sampling Results',
 				title2D: 'GAMA PCE 2D',
 				title3D: 'GAMA PCE 3D',
+				label: 'GAMA PCE',
 				layerVar: 'gamaPCE',
 				fields: gamaFields,
 				dateField: 'DATE',
@@ -131,6 +134,7 @@ export const config = {
 				parentTitle: 'PCE Sampling Results',
 				title2D: 'WRD PCE 2D',
 				title3D: 'WRD PCE 3D',
+				label: 'WRD PCE',
 				layerVar: 'wrdPCE',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
@@ -139,6 +143,7 @@ export const config = {
 				parentTitle: 'CR6 Sampling Results',
 				title2D: 'GAMA CR6 2D',
 				title3D: 'GAMA CR6 3D',
+				label: 'GAMA CR6',
 				layerVar: 'gamaCR6',
 				fields: gamaFields,
 				dateField: 'DATE',
@@ -147,6 +152,7 @@ export const config = {
 				parentTitle: 'CR6 Sampling Results',
 				title2D: 'WRD CR6 2D',
 				title3D: 'WRD CR6 3D',
+				label: 'WRD CR6',
 				layerVar: 'wrdCR6',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',

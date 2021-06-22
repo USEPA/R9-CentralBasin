@@ -279,9 +279,11 @@ input:checked+.slider:before {
   display: flex;
   flex-direction: row;
   align-items: flex-end;
+  overflow-x: auto;
 }
 
 .calcite-tab {
+  min-width: 100px;
   width: 150px;
   padding: 5px;
   border: darkgray;

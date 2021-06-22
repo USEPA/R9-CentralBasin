@@ -3,7 +3,6 @@ import { mapProperties } from './data/app';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 // Widgets
 import LayerList from '@arcgis/core/widgets/LayerList';
 import Legend from '@arcgis/core/widgets/Legend';
@@ -24,16 +23,14 @@ import { info } from './data/app';
 import { watch } from '@arcgis/core/core/watchUtils';
 import ButtonMenuItem from '@arcgis/core/widgets/FeatureTable/Grid/support/ButtonMenuItem';
 
-import FeatureLayerView from '@arcgis/core/views/layers/FeatureLayerView';
-
-export function initWidgets(view: SceneView) {
+export const initWidgets = (view: SceneView) => {
 	const legend = new Legend({ view });
 
 	const homeButton = new Home({ view });
 
 	const layerList = new LayerList({
 		view,
-		listItemCreatedFunction: function (event: any) {
+		listItemCreatedFunction: (event: any) => {
 			const item = event.item;
 			if (item.layer.type !== 'group') {
 				// don't show legend twice
@@ -54,7 +51,7 @@ export function initWidgets(view: SceneView) {
 		// @ts-ignore
 		source: {
 			portal: info.portalUrl,
-			updateBasemapsCallback: function (items) {
+			updateBasemapsCallback: (items) => {
 				// create custom basemap to be added to the array of portal basemaps
 				const bm = new Basemap({
 					portalItem: {
@@ -117,7 +114,7 @@ export function initWidgets(view: SceneView) {
 		expandTooltip: 'Slice',
 	});
 
-	sliceExpand.viewModel.watch('expanded', function (value) {
+	sliceExpand.viewModel.watch('expanded', (value) => {
 		// console.log(value);
 		if (!value) {
 			slice.viewModel.clear();
@@ -125,7 +122,6 @@ export function initWidgets(view: SceneView) {
 	});
 
 	// Add widget to the bottom left corner of the view
-	// view.ui.add(legend, 'bottom-left');
 	view.ui.add(layerList, 'top-right');
 
 	view.ui.add(homeButton, 'top-left');
@@ -151,11 +147,11 @@ export function initWidgets(view: SceneView) {
 
 	// Listen for when toggle is changed, call toggleFeatureTable function
 	// @ts-ignore
-	checkboxEle.onchange = function () {
+	checkboxEle.onchange = () => {
 		toggleFeatureTable();
 	};
 
-	function toggleFeatureTable() {
+	const toggleFeatureTable = () => {
 		// Check if the table is displayed, if so, toggle off. If not, display.
 		// @ts-ignore
 		if (!checkboxEle.checked) {
@@ -168,14 +164,15 @@ export function initWidgets(view: SceneView) {
 			appContainer.appendChild(tableContainer);
 			// @ts-ignore
 			labelText.innerHTML = 'Hide Feature Table';
+			// @ts-ignore
 			tableContainer.style.display = 'flex';
 		}
-	}
+	};
 
 	return view;
-}
+};
 
-export function initTimeSlider(view: SceneView) {
+export const initTimeSlider = (view: SceneView) => {
 	const timeInterval = new TimeInterval({ value: 1, unit: 'months' });
 	const timeSlider = new TimeSlider({
 		container: 'timeSlider',
@@ -198,13 +195,13 @@ export function initTimeSlider(view: SceneView) {
 
 	view.ui.add(timeSliderExpand, 'bottom-left');
 	return { timeSlider, timeSliderExpand };
-}
+};
 
-export function initSlidesWidget(view: SceneView) {
+export const initSlidesWidget = (view: SceneView) => {
 	const slidesDiv: any = document.getElementById('slidesDiv');
 	// @ts-ignore
 	const slides = view.map.presentation.slides;
-	slides.forEach(function (slide: any, placement: number) {
+	slides.forEach((slide: any, placement: number) => {
 		const slideElement = document.createElement('div');
 		slideElement.id = slide.id;
 		slideElement.classList.add('slide');
@@ -222,9 +219,9 @@ export function initSlidesWidget(view: SceneView) {
 		img.title = slide.title.text;
 		slideElement.appendChild(img);
 
-		slideElement.addEventListener('click', function () {
+		slideElement.addEventListener('click', () => {
 			const slides = document.querySelectorAll('.slide');
-			Array.from(slides).forEach(function (node) {
+			Array.from(slides).forEach((node) => {
 				node.classList.remove('active');
 			});
 			slideElement.classList.add('active');
@@ -239,28 +236,20 @@ export function initSlidesWidget(view: SceneView) {
 		expandTooltip: 'Slides',
 	});
 	view.ui.add(slidesExpand, 'top-left');
-}
+};
 
-export function initTableWidget(view: SceneView, layersInfo: any[]) {
-	// Get references to div elements for toggling table visibility
-	// const appContainer = document.getElementById("appContainer");
-	// const tableContainer = document.getElementById("tableContainer");
+export const initTableWidget = (view: SceneView, layersInfo: any[]) => {
+	// create table for each layer in config
 	layersInfo.forEach((layerInfo) => {
-		// const tableDiv = layerInfo.div;
-
-		// tableDiv.onclick = function (evt) {
-		// 	console.log(evt);
-		// };
-
 		const zoomMenuItem = new ButtonMenuItem({
 			label: 'Zoom to feature(s)',
 			iconClass: 'esri-icon-zoom-in-magnifying-glass',
-			clickFunction: function (evt) {
+			clickFunction: (evt) => {
 				// console.log(evt);
 				// debugger;
 				zoomToSelectedFeature();
 			},
-		})
+		});
 		// Create FeatureTable
 		const featureTable = new FeatureTable({
 			view: view, // make sure to pass in view in order for selection to work
@@ -275,7 +264,7 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 				menuItems: {
 					clearSelection: true,
 					refreshData: false,
-					toggleColumns: false,
+					toggleColumns: true,
 				},
 			},
 			menuConfig: {
@@ -285,25 +274,31 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 
 		const features: { feature: __esri.Graphic }[] = [];
 		let selectedFeature: number | __esri.Graphic | (number | __esri.Graphic)[], id: any;
-		const features3d: number[] = [];
-		let selectedFeature3d, id3d: any;
+		let features3D: number[] = [];
+		let highlight: { remove: () => void } | null = null;
 
 		featureTable.on('selection-change', (changes) => {
 			// If row is unselected in table, remove it from the features array
-			changes.removed.forEach(function (item) {
-				const data = features.find(function (data) {
-					return data.feature === item.feature;
+			changes.removed.forEach((item) => {
+				const data = features.find((data) => {
+					return data.feature !== item.feature;
 				});
-				const data3d = features3d.find(function (data3d) {
-					return data3d.feature === item.feature.attributes.OBJECTID;
+
+				features3D = features3D.filter((feature) => {
+					return feature !== item.feature.attributes.OBJECTID;
 				});
+
+				if (highlight) {
+					highlight.remove();
+				}
+				highlight = layerInfo.sceneView.highlight(features3D);
 			});
 
 			// If a row is selected, add to the features array
-			changes.added.forEach(function (item) {
+			changes.added.forEach((item) => {
 				// highlight 3d features
-				features3d.push(item.feature.attributes.OBJECTID);
-				layerInfo.layer3d.highlight(features3d);
+				features3D.push(item.feature.attributes.OBJECTID);
+				highlight = layerInfo.sceneView.highlight(features3D);
 
 				const feature = item.feature;
 				features.push({
@@ -326,7 +321,7 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 			}
 		});
 
-		function zoomToSelectedFeature() {
+		const zoomToSelectedFeature = () => {
 			// Create a query off of the feature layer
 			const query = layerInfo.layer2D.createQuery();
 			// Iterate through the features and grab the feature's objectID
@@ -347,4 +342,4 @@ export function initTableWidget(view: SceneView, layersInfo: any[]) {
 			});
 		}
 	});
-}
+};
