@@ -1,10 +1,12 @@
+@import '~@arcgis/core/assets/esri/themes/light/main.css';
+
 :root {
-  --blue: #2196f3;
+  --blue: #2196F3;
   --gray: #efefef;
   --white: #fff;
+  --orange: #f97d1a
 }
 
-@import '~@arcgis/core/assets/esri/themes/light/main.css';
 html, body {
   height: 100%;
   width: 100%;
@@ -22,6 +24,7 @@ body {
   color: var(--white);
   display: flex;
   justify-content: space-between;
+  font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .heading {
@@ -46,8 +49,9 @@ body {
   position: relative;
 }
 
-.container {
-  display: flex;
+
+.tableContainer {
+  display: none;
   flex: 1;
   width: 100%;
 }
@@ -55,6 +59,8 @@ body {
 #featureSearch {
   width: 240px;
   margin: 0px;
+  height: 32px;
+  padding: 0 .5em;
 }
 
 #featureSearchDiv {
@@ -82,7 +88,9 @@ body {
 #slidesDiv .slide .title {
   /* Center the title text */
   text-align: center;
+  font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+
 /* Draw active slide with a nice border around the thumbnail */
 
 #slidesDiv .slide.active img {
@@ -90,11 +98,12 @@ body {
   border-style: solid;
   border-width: thin;
   border-color: black;
-} 
+}
 
 #toggleDiv {
   padding: 8px;
-  display: none;
+  display: flex;
+  align-items: center;
 }
 
 .switch {
@@ -136,11 +145,13 @@ body {
 }
 
 input:checked+.slider {
-  background-color: #2196f3;
+  background-color: var(--orange);
+  ;
 }
 
 input:focus+.slider {
-  box-shadow: 0 0 1px #2196f3;
+  box-shadow: 0 0 1px var(--orange);
+  ;
 }
 
 input:checked+.slider:before {
@@ -162,4 +173,114 @@ input:checked+.slider:before {
 .labelText {
   padding-left: 5px;
   font-size: 15px;
+}
+
+
+
+/* loader from https://loading.io/css/ */
+
+.lds-roller {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  left: 50vw;
+  top: 45vh;
+  visibility: hidden;
+}
+
+.lds-roller div {
+  animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  transform-origin: 40px 40px;
+}
+
+.lds-roller div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--blue);
+  margin: -4px 0 0 -4px;
+}
+
+.lds-roller div:nth-child(1) {
+  animation-delay: -0.036s;
+}
+
+.lds-roller div:nth-child(1):after {
+  top: 63px;
+  left: 63px;
+}
+
+.lds-roller div:nth-child(2) {
+  animation-delay: -0.072s;
+}
+
+.lds-roller div:nth-child(2):after {
+  top: 68px;
+  left: 56px;
+}
+
+.lds-roller div:nth-child(3) {
+  animation-delay: -0.108s;
+}
+
+.lds-roller div:nth-child(3):after {
+  top: 71px;
+  left: 48px;
+}
+
+.lds-roller div:nth-child(4) {
+  animation-delay: -0.144s;
+}
+
+.lds-roller div:nth-child(4):after {
+  top: 72px;
+  left: 40px;
+}
+
+.lds-roller div:nth-child(5) {
+  animation-delay: -0.18s;
+}
+
+.lds-roller div:nth-child(5):after {
+  top: 71px;
+  left: 32px;
+}
+
+.lds-roller div:nth-child(6) {
+  animation-delay: -0.216s;
+}
+
+.lds-roller div:nth-child(6):after {
+  top: 68px;
+  left: 24px;
+}
+
+.lds-roller div:nth-child(7) {
+  animation-delay: -0.252s;
+}
+
+.lds-roller div:nth-child(7):after {
+  top: 63px;
+  left: 17px;
+}
+
+.lds-roller div:nth-child(8) {
+  animation-delay: -0.288s;
+}
+
+.lds-roller div:nth-child(8):after {
+  top: 56px;
+  left: 12px;
+}
+
+@keyframes lds-roller {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

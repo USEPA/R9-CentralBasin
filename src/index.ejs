@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="mobile-web-app-capable" content="yes">
-  <title>Central Basin Map</title>
+  <title>Central Basin Map - beta</title>
   <% if (htmlWebpackPlugin.options.mode === 'production') { %>
   <script>
     // Check that service workers are registered
@@ -25,26 +25,34 @@
 
 <body>
   <noscript> JavaScript is required in order to use this app </noscript>
-  <div class="app-container">
+  <div id="appContainer" class="app-container">
     <header class="header">
-      <h2 class="heading">Central Basin Map</h2>
-      <div id="toggleDiv" class="esri-widget">
-      <label class="switch">
-        <input id="checkboxId" type="checkbox" checked="yes">
-        <span class="slider round"></span>
-      </label>
-      <label class="labelText" id="labelText">Hide feature table</label>
-    </div>
+      <h2 class="heading">Central Basin Map - beta</h2>
+      <div id="toggleDiv">
+        <label class="switch">
+          <input id="checkboxId" type="checkbox">
+          <span class="slider round"></span>
+        </label>
+        <label class="labelText" id="labelText">Show feature table</label>
+      </div>
     </header>
     <div id="viewDiv">
       <div id="timeSlider" style="width: 80vw;"></div>
+      <div id="lds-roller" class="lds-roller">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
     </div>
+
     <div id="featureSearchDiv" class="esri-widget">
       <input type="text" id="featureSearch" class="esri-input esri-feature-form__input"
         placeholder="Press Enter to Search by WRDID" />
     </div>
     <div id="slidesDiv" class="esri-widget"></div>
     <div id="tableContainer" class="tableContainer">
+      <!--<div id="tableTab" class="tableTab"></div>-->
       <div id="tableDiv"></div>
     </div>
   </div>
