@@ -1,3 +1,1 @@
-import FeatureFilter from './FeatureFilter';
-
-export { FeatureFilter };
+export * from './FeatureFilter';
