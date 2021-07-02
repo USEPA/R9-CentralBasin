@@ -2,6 +2,7 @@ import { initFeatureTable, initTimeSlider, initWidgets, toggleFeatureTable } fro
 
 jest.mock('@arcgis/core/widgets/LayerList');
 jest.mock('@arcgis/core/widgets/Legend');
+jest.mock('@arcgis/core/views/layers/support/FeatureFilter');
 
 let spy: jest.SpyInstance;
 
