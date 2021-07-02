@@ -1,3 +1,4 @@
+import { FeatureFilter } from '@arcgis/core/views/layers/support/FeatureFilter';
 import { mapProperties } from './data/app';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -301,9 +302,11 @@ export const initTableWidget = (view: SceneView, layersInfo: any[]) => {
 				highlight = layerInfo.sceneView.highlight(features3D);
 
 				const feature = item.feature;
-				features.push({
-					feature: feature,
-				});
+				if (!containsObject(item.feature, features)) {
+					features.push({
+						feature: feature,
+					});
+				}
 
 				// Listen for row selection in the feature table. If the popup is open and a row is selected that is not the same feature as opened popup, close the existing popup.
 				if (feature.attributes.OBJECTID !== id && view.popup.visible === true) {
@@ -342,4 +345,14 @@ export const initTableWidget = (view: SceneView, layersInfo: any[]) => {
 			});
 		}
 	});
+};
+
+const containsObject = (obj: any, list: any[]) => {
+	let match = false;
+	list.forEach((listItem) => {
+		if (listItem.feature === obj) {
+			match = true;
+		}
+	});
+	return match;
 };
