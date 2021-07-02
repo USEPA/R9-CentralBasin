@@ -1,5 +1,6 @@
 import {applyTimeExtent} from './app';
 
+jest.mock('@arcgis/core/views/layers/support/FeatureFilter');
 
 describe('app', () => {
     it('applies correct time filter', () => {
