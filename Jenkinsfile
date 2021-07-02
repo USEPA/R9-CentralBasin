@@ -5,6 +5,7 @@ node {
 
         stage('unit test') {
             sh "npm test"
+            publishCoverageGithub(filepath: './coverage/cobertura-coverage.xml', coverageXmlType: 'cobertura')
         }
         stage('build') {
             sh "npm run build"
