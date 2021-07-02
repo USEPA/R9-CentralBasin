@@ -24,6 +24,13 @@ import { info } from './data/app';
 import { watch } from '@arcgis/core/core/watchUtils';
 import ButtonMenuItem from '@arcgis/core/widgets/FeatureTable/Grid/support/ButtonMenuItem';
 
+let appContainer: HTMLElement | null;
+let tableContainer: HTMLElement | null;
+// const tableDiv = document.getElementById('tableDiv');
+
+// Get reference to div elements
+let labelText: HTMLElement | null;
+
 export const initWidgets = (view: SceneView) => {
 	const legend = new Legend({ view });
 
@@ -137,40 +144,41 @@ export const initWidgets = (view: SceneView) => {
 	view.ui.add(featureSearch, 'top-right', 0);
 	view.ui.add(searchWidget, 'top-right');
 
+	return view;
+};
+
+export const initFeatureTable = (view: SceneView) => {
 	// Get references to div elements for toggling table visibility
-	const appContainer = document.getElementById('appContainer');
-	const tableContainer = document.getElementById('tableContainer');
+	appContainer = document.getElementById('appContainer');
+	tableContainer = document.getElementById('tableContainer');
 	// const tableDiv = document.getElementById('tableDiv');
 
 	// Get reference to div elements
 	const checkboxEle = document.getElementById('checkboxId');
-	const labelText = document.getElementById('labelText');
+	labelText = document.getElementById('labelText');
 
 	// Listen for when toggle is changed, call toggleFeatureTable function
 	// @ts-ignore
-	checkboxEle.onchange = () => {
-		toggleFeatureTable();
+	checkboxEle.onchange = (e) => {
+		toggleFeatureTable(e.target as HTMLElement);
 	};
-
-	const toggleFeatureTable = () => {
-		// Check if the table is displayed, if so, toggle off. If not, display.
+};
+export const toggleFeatureTable = (checkboxEle: HTMLElement) => {
+	// Check if the table is displayed, if so, toggle off. If not, display.
+	// @ts-ignore
+	if (!checkboxEle.checked) {
 		// @ts-ignore
-		if (!checkboxEle.checked) {
-			// @ts-ignore
-			appContainer.removeChild(tableContainer);
-			// @ts-ignore
-			labelText.innerHTML = 'Show Feature Table';
-		} else {
-			// @ts-ignore
-			appContainer.appendChild(tableContainer);
-			// @ts-ignore
-			labelText.innerHTML = 'Hide Feature Table';
-			// @ts-ignore
-			tableContainer.style.display = 'flex';
-		}
-	};
-
-	return view;
+		appContainer.removeChild(tableContainer);
+		// @ts-ignore
+		labelText.innerHTML = 'Show Feature Table';
+	} else {
+		// @ts-ignore
+		appContainer.appendChild(tableContainer);
+		// @ts-ignore
+		labelText.innerHTML = 'Hide Feature Table';
+		// @ts-ignore
+		tableContainer.style.display = 'flex';
+	}
 };
 
 export const initTimeSlider = (view: SceneView) => {
@@ -336,14 +344,14 @@ export const initTableWidget = (view: SceneView, layersInfo: any[]) => {
 			// Make sure to return the geometry to zoom to
 			query.returnGeometry = true;
 			// Call queryFeatures on the feature layer and zoom to the resulting features
-			layerInfo.layer2D.queryFeatures(query).then((results: { features: any; }) => {
+			layerInfo.layer2D.queryFeatures(query).then((results: { features: any }) => {
 				view.goTo(results.features).catch((error) => {
 					if (error.name != 'AbortError') {
 						console.error(error);
 					}
 				});
 			});
-		}
+		};
 	});
 };
 

@@ -1,11 +1,17 @@
 node {
-    stage('build') {
+    docker.image('node:lts').inside {
         checkout scm
-        docker.image('node:lts').inside {
-            sh "npm install"
+        sh "npm install"
+
+        stage('unit test') {
+            sh "npm test"
+            publishCoverageGithub(filepath: './coverage/cobertura-coverage.xml', coverageXmlType: 'cobertura')
+        }
+        stage('build') {
             sh "npm run build"
         }
     }
+
     stage('deploy') {
         sh "rm -rf /var/r9centralbasin/html/${env.BRANCH_NAME}"
         sh "cp -r ./dist /var/r9centralbasin/html/${env.BRANCH_NAME}"

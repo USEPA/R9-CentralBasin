@@ -93,7 +93,13 @@
     ],
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"
-    }
+    },
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "json",
+      "cobertura"
+    ]
   },
   "prettier": {
     "semi": true,
