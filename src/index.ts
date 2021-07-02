@@ -7,7 +7,7 @@ import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import { info, map, elevLyr, loadWellsView, setupWellSlider } from './data/app';
 
 // widget utils
-import { initTimeSlider, initWidgets, initSlidesWidget, initTableWidget } from './widgets';
+import {initTimeSlider, initWidgets, initSlidesWidget, initTableWidget, initFeatureTable} from './widgets';
 import IdentityManager from '@arcgis/core/identity/IdentityManager';
 import SceneView from '@arcgis/core/views/SceneView';
 import SceneLayer from '@arcgis/core/layers/SceneLayer';
@@ -50,6 +50,7 @@ whenFalse(view, 'updating', () => {
 
 // load widgets
 view.when(initWidgets);
+view.when(initFeatureTable);
 view.when(initSlidesWidget);
 view.when(initTimeSlider).then((timePieces) => {
 	// @ts-ignore
