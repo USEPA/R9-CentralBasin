@@ -1,4 +1,3 @@
-import { FeatureFilter } from '@arcgis/core/views/layers/support/FeatureFilter';
 import { mapProperties } from './data/app';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -247,9 +246,10 @@ export const initSlidesWidget = (view: SceneView) => {
 	view.ui.add(slidesExpand, 'top-left');
 };
 
-export const initTableWidget = (view: SceneView, layersInfo: any[]) => {
+export const initTableWidget = (view: SceneView, layersInfo: any[], layerViews: any[]) => {
 	// create table for each layer in config
-	layersInfo.forEach((layerInfo) => {
+	layersInfo.forEach((layerInfo, layerIndex) => {
+		const layerView = layerViews[layerIndex];
 		const zoomMenuItem = new ButtonMenuItem({
 			label: 'Zoom to feature(s)',
 			iconClass: 'esri-icon-zoom-in-magnifying-glass',
@@ -289,43 +289,65 @@ export const initTableWidget = (view: SceneView, layersInfo: any[]) => {
 		featureTable.on('selection-change', (changes) => {
 			// If row is unselected in table, remove it from the features array
 			changes.removed.forEach((item) => {
-				const data = features.find((data) => {
-					return data.feature !== item.feature;
-				});
 
 				features3D = features3D.filter((feature) => {
-					return feature !== item.feature.attributes.OBJECTID;
+					return feature !== item.objectId;
 				});
 
 				if (highlight) {
 					highlight.remove();
 				}
 				highlight = layerInfo.sceneView.highlight(features3D);
+
+				const data = features.find((data) => {
+					return data.feature.getObjectId() !== item.objectId;
+				});
 			});
 
 			// If a row is selected, add to the features array
-			changes.added.forEach((item) => {
+			changes.added.forEach(async (item) => {
 				// highlight 3d features
-				features3D.push(item.feature.attributes.OBJECTID);
+				if (!item.feature) {
+					console.log(item);
+				}
+				features3D.push(item.objectId);
 				highlight = layerInfo.sceneView.highlight(features3D);
 
-				const feature = item.feature;
-				if (!containsObject(item.feature, features)) {
-					features.push({
-						feature: feature,
+				let feature;
+				if (item.feature) {
+					feature = item.feature;
+				} else {
+					console.log(layerView);
+					await layerView.queryFeatures({ objectIds: [item.objectId] }).then((results) => {
+						console.log(results);
+						feature = results.features[0];
 					});
 				}
 
-				// Listen for row selection in the feature table. If the popup is open and a row is selected that is not the same feature as opened popup, close the existing popup.
-				if (feature.attributes.OBJECTID !== id && view.popup.visible === true) {
-					featureTable.deselectRows(selectedFeature);
-					view.popup.close();
+				// why isn't the query above finding a feature???
+				if (feature) {
+					if (!containsObject(feature, features)) {
+						features.push({
+							feature: feature,
+						});
+					}
+
+					// Listen for row selection in the feature table. If the popup is open and a row is selected that is not the same feature as opened popup, close the existing popup.
+					if (feature.attributes.OBJECTID !== id && view.popup.visible === true) {
+						featureTable.deselectRows(selectedFeature);
+						view.popup.close();
+					}
 				}
 			});
 		});
 		watch(view.popup.viewModel, 'active', (graphic) => {
 			selectedFeature = view.popup.selectedFeature;
-			if (selectedFeature !== null && view.popup.visible !== false) {
+
+			if (
+				selectedFeature !== null &&
+				view.popup.visible !== false &&
+				selectedFeature.sourceLayer.id === layerInfo.layer3D.id
+			) {
 				featureTable.clearSelection();
 				featureTable.selectRows(view.popup.selectedFeature);
 				id = selectedFeature.getObjectId();

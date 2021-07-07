@@ -28,6 +28,21 @@ describe('widgets', () => {
         initWidgets(view);
         expect(widgets).toHaveLength(8);
     });
+
+    // it('initializes time slider', () => {
+    //     const widgets: any[] = [];
+    //     const view: any = {
+    //         ui: {
+    //             add(w: any) {
+    //                 widgets.push(w);
+    //             },
+    //         },
+    //         watch() {
+    //         },
+    //     };
+    //     initTimeSlider(view);
+    //     expect(widgets).toHaveLength(8);
+    // });
 });
 
 describe('featureTable', () => {

@@ -109,7 +109,7 @@ view.when(initTimeSlider).then((timePieces) => {
 		console.log(layerViews);
 
 		tableLayersArr = createTableElements(layerViews, tableLayersArr);
-		initTableWidget(view, tableLayersArr);
+		initTableWidget(view, tableLayersArr, layerViews);
 		setupWellSlider(tableLayersArr, timePieces.timeSlider, timePieces.timeSliderExpand, view);
 	});
 
