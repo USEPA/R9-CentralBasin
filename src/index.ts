@@ -32,6 +32,7 @@ const view = new SceneView({
 	map,
 	qualityProfile: 'high',
 });
+view.popup.highlightEnabled = false;
 
 map.layers.splice(0, 0, wellsLayer);
 map.ground.layers.add(elevLyr);

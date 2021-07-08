@@ -284,60 +284,38 @@ export const initTableWidget = (view: SceneView, layersInfo: any[], layerViews: 
 		const features: { feature: __esri.Graphic }[] = [];
 		let selectedFeature: number | __esri.Graphic | (number | __esri.Graphic)[], id: any;
 		let features3D: number[] = [];
-		let highlight: { remove: () => void } | null = null;
+		let highlight: any;
 
 		featureTable.on('selection-change', (changes) => {
 			// If row is unselected in table, remove it from the features array
-			changes.removed.forEach((item) => {
+			changes.removed.forEach(async (item) => {
 
 				features3D = features3D.filter((feature) => {
-					return feature !== item.objectId;
+					return feature !== item.feature;
 				});
 
 				if (highlight) {
 					highlight.remove();
 				}
-				highlight = layerInfo.sceneView.highlight(features3D);
+				highlight = layerInfo.sceneView.highlight([]);
+				// highlight = layerInfo.sceneView.highlight(features3D);
 
-				const data = features.find((data) => {
-					return data.feature.getObjectId() !== item.objectId;
-				});
+				// const data = features.find((data) => {
+				// 	return data.feature.getObjectId() !== item.objectId;
+				// });
 			});
 
 			// If a row is selected, add to the features array
 			changes.added.forEach(async (item) => {
 				// highlight 3d features
-				if (!item.feature) {
-					console.log(item);
-				}
-				features3D.push(item.objectId);
+				features3D.push(item.feature);
 				highlight = layerInfo.sceneView.highlight(features3D);
 
-				let feature;
-				if (item.feature) {
-					feature = item.feature;
-				} else {
-					console.log(layerView);
-					await layerView.queryFeatures({ objectIds: [item.objectId] }).then((results) => {
-						console.log(results);
-						feature = results.features[0];
-					});
-				}
-
-				// why isn't the query above finding a feature???
-				if (feature) {
-					if (!containsObject(feature, features)) {
-						features.push({
-							feature: feature,
-						});
-					}
-
-					// Listen for row selection in the feature table. If the popup is open and a row is selected that is not the same feature as opened popup, close the existing popup.
-					if (feature.attributes.OBJECTID !== id && view.popup.visible === true) {
-						featureTable.deselectRows(selectedFeature);
-						view.popup.close();
-					}
-				}
+				// Listen for row selection in the feature table. If the popup is open and a row is selected that is not the same feature as opened popup, close the existing popup.
+				// if (feature.attributes.OBJECTID !== id && view.popup.visible === true) {
+				// 	featureTable.deselectRows(selectedFeature);
+				// 	view.popup.close();
+				// }
 			});
 		});
 		watch(view.popup.viewModel, 'active', (graphic) => {
@@ -349,29 +327,34 @@ export const initTableWidget = (view: SceneView, layersInfo: any[], layerViews: 
 				selectedFeature.sourceLayer.id === layerInfo.layer3D.id
 			) {
 				featureTable.clearSelection();
-				featureTable.selectRows(view.popup.selectedFeature);
+				// featureTable.selectRows(view.popup.selectedFeature);
 				id = selectedFeature.getObjectId();
 			}
 		});
 
 		const zoomToSelectedFeature = () => {
-			// Create a query off of the feature layer
-			const query = layerInfo.layer2D.createQuery();
-			// Iterate through the features and grab the feature's objectID
-			const featureIds = features.map((result) => {
-				return result.feature.getAttribute(layerInfo.layer2D.objectIdField);
-			});
-			// Set the query's objectId
-			query.objectIds = featureIds;
-			// Make sure to return the geometry to zoom to
-			query.returnGeometry = true;
-			// Call queryFeatures on the feature layer and zoom to the resulting features
-			layerInfo.layer2D.queryFeatures(query).then((results: { features: any }) => {
-				view.goTo(results.features).catch((error) => {
-					if (error.name != 'AbortError') {
-						console.error(error);
-					}
-				});
+			// // Create a query off of the feature layer
+			// const query = layerInfo.layer2D.createQuery();
+			// // Iterate through the features and grab the feature's objectID
+			// const featureIds = features.map((result) => {
+			// 	return result.feature.getAttribute(layerInfo.layer2D.objectIdField);
+			// });
+			// // Set the query's objectId
+			// query.objectIds = featureIds;
+			// // Make sure to return the geometry to zoom to
+			// query.returnGeometry = true;
+			// // Call queryFeatures on the feature layer and zoom to the resulting features
+			// layerInfo.layer2D.queryFeatures(query).then((results: { features: any }) => {
+			// 	view.goTo(results.features).catch((error) => {
+			// 		if (error.name != 'AbortError') {
+			// 			console.error(error);
+			// 		}
+			// 	});
+			// });
+			view.goTo(features3D).catch((error) => {
+				if (error.name != 'AbortError') {
+					console.error(error);
+				}
 			});
 		};
 	});
