@@ -32,6 +32,7 @@ const view = new SceneView({
 	map,
 	qualityProfile: 'high',
 });
+view.popup.highlightEnabled = false;
 
 map.layers.splice(0, 0, wellsLayer);
 map.ground.layers.add(elevLyr);
@@ -109,7 +110,7 @@ view.when(initTimeSlider).then((timePieces) => {
 		console.log(layerViews);
 
 		tableLayersArr = createTableElements(layerViews, tableLayersArr);
-		initTableWidget(view, tableLayersArr);
+		initTableWidget(view, tableLayersArr, layerViews);
 		setupWellSlider(tableLayersArr, timePieces.timeSlider, timePieces.timeSliderExpand, view);
 	});
 

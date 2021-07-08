@@ -36,6 +36,7 @@ describe('widgets', () => {
 		initTimeSlider(view);
 		expect(widgets).toHaveLength(widgetsLength + 1);
 	});
+
 });
 
 describe('featureTable', () => {
