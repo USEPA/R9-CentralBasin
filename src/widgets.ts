@@ -287,25 +287,27 @@ export const initTableWidget = (view: SceneView, layersInfo: any[], layerViews: 
 		let highlight: any;
 
 		featureTable.on('selection-change', (changes) => {
+			// remove highlight
+			if (highlight) {
+				highlight.remove();
+			}
+
 			// If row is unselected in table, remove it from the features array
 			changes.removed.forEach(async (item) => {
-
 				features3D = features3D.filter((feature) => {
 					return feature !== item.feature;
 				});
-
-				if (highlight) {
-					highlight.remove();
-				}
-				highlight = layerInfo.sceneView.highlight(features3D);
 			});
 
 			// If a row is selected, add to the features array
 			changes.added.forEach(async (item) => {
-				// highlight 3d features
 				features3D.push(item.feature);
-				highlight = layerInfo.sceneView.highlight(features3D);
 			});
+
+			// highlight selected features
+			if (features3D.length > 0) {
+				highlight = layerInfo.sceneView.highlight(features3D);
+			}
 		});
 
 		const zoomToSelectedFeature = () => {
