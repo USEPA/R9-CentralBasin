@@ -14,13 +14,16 @@
       // Use the window load event to keep the page load performant
       window.addEventListener("load", function () {
         navigator.serviceWorker.register("./service-worker.js")
-          .catch(function () {
+          .catch(() => {
             console.log("Service Worker not loaded");
           });
       });
     }
   </script>
   <% } %>
+  <% 
+  
+  %>
 </head>
 
 <body>
@@ -52,8 +55,10 @@
     </div>
     <div id="slidesDiv" class="esri-widget"></div>
     <div id="tableContainer" class="tableContainer">
-      <!--<div id="tableTab" class="tableTab"></div>-->
-      <div id="tableDiv"></div>
+      <div id="tableTabs" class="calcite-tabs" layout="inline" position="above">
+      </div>
+      <div id="tableDivs" class="tableDivs">
+      </div>
     </div>
   </div>
 </body>
