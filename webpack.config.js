@@ -5,6 +5,7 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
+const stencil = require('@stencil/webpack');
 
 const path = require('path');
 
@@ -109,6 +110,8 @@ module.exports = function build(env, arg) {
         chunksSortMode: 'none',
         inject: false,
       }),
+
+      // new stencil.StencilPlugin(),
     ],
     resolve: {
       modules: [

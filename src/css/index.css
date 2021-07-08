@@ -1,5 +1,4 @@
 @import '~@arcgis/core/assets/esri/themes/light/main.css';
-
 :root {
   --blue: #2196F3;
   --gray: #efefef;
@@ -47,13 +46,6 @@ body {
   height: 100%;
   width: 100%;
   position: relative;
-}
-
-
-.tableContainer {
-  display: none;
-  flex: 1;
-  width: 100%;
 }
 
 #featureSearch {
@@ -175,8 +167,6 @@ input:checked+.slider:before {
   font-size: 15px;
 }
 
-
-
 /* loader from https://loading.io/css/ */
 
 .lds-roller {
@@ -283,4 +273,55 @@ input:checked+.slider:before {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.calcite-tabs {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  overflow-x: auto;
+}
+
+.calcite-tab {
+  min-width: 100px;
+  width: 150px;
+  padding: 5px;
+  border: darkgray;
+  border-width: .5px;
+  border-style: solid;
+  font-size: 14px;
+  background-color: #fff;
+  color: #6e6e6e;
+  margin: 0;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 125ms ease-in-out;
+}
+
+.calcite-tab.active {
+  color: black;
+  background: lightgray;
+}
+
+.tableContainer {
+  display: none;
+  flex-direction: column;
+  width: 100%;
+}
+
+.tab-body {
+  display: none;
+}
+
+.tab-body.active-table {
+  display: block;
+}
+
+.esri-feature-table__content {
+  height: 400px;
 }
