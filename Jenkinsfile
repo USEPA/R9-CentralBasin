@@ -1,17 +1,17 @@
 node {
     checkout scm
-    sh "npm install"
+    bat "npm install"
 
     stage('unit test') {
-        sh "npm test"
+        bat "npm test"
         publishCoverageGithub(filepath: './coverage/cobertura-coverage.xml', coverageXmlType: 'cobertura', comparisonOption: [ value: 'optionFixedCoverage', fixedCoverage: '0.65' ], coverageRateType: 'Lines')
     }
     stage('build') {
-        sh "npm run build"
+        bat "npm run build"
     }
 
 //     stage('deploy') {
-//         sh "rm -rf /var/r9centralbasin/html/${env.BRANCH_NAME}"
-//         sh "cp -r ./dist /var/r9centralbasin/html/${env.BRANCH_NAME}"
+//         bat "rm -rf /var/r9centralbasin/html/${env.BRANCH_NAME}"
+//         bat "cp -r ./dist /var/r9centralbasin/html/${env.BRANCH_NAME}"
 //     }
 }
