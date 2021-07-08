@@ -54,7 +54,7 @@ export const elevLyr = new ElevationLayer({
 	url: env.elevationUrl,
 });
 
-const applyTimeExtent = (timeExtent: TimeExtent, layerView: SceneLayerView, timeField: string) => {
+export const applyTimeExtent = (timeExtent: TimeExtent, layerView: SceneLayerView, timeField: string) => {
 	const start = moment(timeExtent.start).format('YYYY-MM-DD');
 	const end = moment(timeExtent.end).format('YYYY-MM-DD');
 
