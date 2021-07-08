@@ -297,12 +297,7 @@ export const initTableWidget = (view: SceneView, layersInfo: any[], layerViews: 
 				if (highlight) {
 					highlight.remove();
 				}
-				highlight = layerInfo.sceneView.highlight([]);
-				// highlight = layerInfo.sceneView.highlight(features3D);
-
-				// const data = features.find((data) => {
-				// 	return data.feature.getObjectId() !== item.objectId;
-				// });
+				highlight = layerInfo.sceneView.highlight(features3D);
 			});
 
 			// If a row is selected, add to the features array
@@ -310,47 +305,10 @@ export const initTableWidget = (view: SceneView, layersInfo: any[], layerViews: 
 				// highlight 3d features
 				features3D.push(item.feature);
 				highlight = layerInfo.sceneView.highlight(features3D);
-
-				// Listen for row selection in the feature table. If the popup is open and a row is selected that is not the same feature as opened popup, close the existing popup.
-				// if (feature.attributes.OBJECTID !== id && view.popup.visible === true) {
-				// 	featureTable.deselectRows(selectedFeature);
-				// 	view.popup.close();
-				// }
 			});
-		});
-		watch(view.popup.viewModel, 'active', (graphic) => {
-			selectedFeature = view.popup.selectedFeature;
-
-			if (
-				selectedFeature !== null &&
-				view.popup.visible !== false &&
-				selectedFeature.sourceLayer.id === layerInfo.layer3D.id
-			) {
-				featureTable.clearSelection();
-				// featureTable.selectRows(view.popup.selectedFeature);
-				id = selectedFeature.getObjectId();
-			}
 		});
 
 		const zoomToSelectedFeature = () => {
-			// // Create a query off of the feature layer
-			// const query = layerInfo.layer2D.createQuery();
-			// // Iterate through the features and grab the feature's objectID
-			// const featureIds = features.map((result) => {
-			// 	return result.feature.getAttribute(layerInfo.layer2D.objectIdField);
-			// });
-			// // Set the query's objectId
-			// query.objectIds = featureIds;
-			// // Make sure to return the geometry to zoom to
-			// query.returnGeometry = true;
-			// // Call queryFeatures on the feature layer and zoom to the resulting features
-			// layerInfo.layer2D.queryFeatures(query).then((results: { features: any }) => {
-			// 	view.goTo(results.features).catch((error) => {
-			// 		if (error.name != 'AbortError') {
-			// 			console.error(error);
-			// 		}
-			// 	});
-			// });
 			view.goTo(features3D).catch((error) => {
 				if (error.name != 'AbortError') {
 					console.error(error);
