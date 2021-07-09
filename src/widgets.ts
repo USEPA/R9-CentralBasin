@@ -38,7 +38,7 @@ export const initWidgets = (view: SceneView) => {
 	const layerList = new LayerList({
 		view,
 		listItemCreatedFunction: (event: any) => {
-			const item = event.item;
+			const item: any = event.item;
 			if (item.layer.type !== 'group') {
 				// don't show legend twice
 				item.panel = {
@@ -281,9 +281,7 @@ export const initTableWidget = (view: SceneView, layersInfo: any[], layerViews: 
 			},
 		});
 
-		const features: { feature: __esri.Graphic }[] = [];
-		let selectedFeature: number | __esri.Graphic | (number | __esri.Graphic)[], id: any;
-		let features3D: number[] = [];
+		let features3D: __esri.Graphic[];
 		let highlight: any;
 
 		featureTable.on('selection-change', (changes) => {
@@ -293,14 +291,14 @@ export const initTableWidget = (view: SceneView, layersInfo: any[], layerViews: 
 			}
 
 			// If row is unselected in table, remove it from the features array
-			changes.removed.forEach(async (item) => {
+			changes.removed.forEach((item) => {
 				features3D = features3D.filter((feature) => {
 					return feature !== item.feature;
 				});
 			});
 
 			// If a row is selected, add to the features array
-			changes.added.forEach(async (item) => {
+			changes.added.forEach((item) => {
 				features3D.push(item.feature);
 			});
 
