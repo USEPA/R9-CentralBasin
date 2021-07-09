@@ -1,7 +1,3 @@
-import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
-import SceneView from '@arcgis/core/views/SceneView';
-import SceneLayer from '@arcgis/core/layers/SceneLayer';
-
 const wrdFields = [
 	{
 		name: 'WellsRanThroughDEM_WRD_CB_Wel_4',
@@ -97,6 +93,7 @@ export const config = {
 					{
 						name: 'WellsRanThroughDEM2_Owner_No',
 						label: 'Owner No',
+						visible: false,
 					},
 					{
 						name: 'WellsRanThroughDEM2_Type',
@@ -195,6 +192,6 @@ export const config = {
 				title: 'WRD CR6 3D',
 				layerVar: 'wrdCR63D',
 			},
-		]
-	}
+		],
+	},
 };
