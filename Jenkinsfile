@@ -23,7 +23,7 @@ node {
         stage('deploy') {
             bat "del /f /q /S \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasin\\*"
             bat "xcopy /e/h/i/y dist \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasin"
-            bat "xcopy /y web.config \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasin\\web.config"
+            bat "xcopy /i/y web.config \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasin"
         }
     }
 }
