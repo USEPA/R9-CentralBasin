@@ -11,7 +11,7 @@ export interface FieldInfo {
 
 export interface LayerInfo {
 	parentTitle: string;
-	title2D: string,
+	title2D: string;
 	title3D: string;
 	label: string;
 	layerVar: string;

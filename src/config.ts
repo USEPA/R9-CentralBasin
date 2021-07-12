@@ -1,16 +1,108 @@
-const wrdFields = [
+const wellsFields = [
 	{
-		name: 'WellsRanThroughDEM_WRD_CB_Wel_4',
-		label: 'WELL ID',
+		name: 'WellsRanThroughDEM2_WRDID',
+		label: 'WRDID',
 		direction: 'asc',
 	},
 	{
-		name: 'WellsRanThroughDEM_EPA_WQ_DDW_6',
-		label: 'Results',
+		name: 'WellsRanThroughDEM2_STATE_SOUR',
+		label: 'State Source',
+	},
+	{
+		name: 'WellsRanThroughDEM2_Type',
+		label: 'Type',
+	},
+	{
+		name: 'WellsRanThroughDEM2_Agency_Lon',
+		label: 'Agency_Lon',
+	},
+	{
+		name: 'WellsRanThroughDEM2_Short_Lbl',
+		label: 'Short_Lbl',
+	},
+	{
+		name: 'WellsRanThroughDEM2_Status ',
+		label: 'Status',
+	},
+	{
+		name: 'WellsRanThroughDEM2_BOP',
+		label: 'BOP',
+	},
+	{
+		name: 'WellsRanThroughDEM2_Constr_YYY',
+		label: 'Constr_YYY',
+	},
+	{
+		name: 'WellsRanThroughDEM2_Destr_YYYY',
+		label: 'Destr_YYYY',
+	},
+];
+
+const wrdFields = [
+	{
+		name: 'WellsRanThroughDEM_WRD_CB_Wells',
+		label: 'WRDID',
+		direction: 'asc',
+	},
+	{
+		name: 'WellsRanThroughDEM_WRD_CB_Wel_9',
+		label: 'State Source',
+	},
+	{
+		name: 'WellsRanThroughDEM_WRD_CB_Wel_5',
+		label: 'Type',
+	},
+	{
+		name: 'WellsRanThroughDEM_WRD_CB_We_13',
+		label: 'Agency_Lon',
+	},
+	{
+		name: 'WellsRanThroughDEM_WRD_CB_We_11',
+		label: 'Short_Lbl',
+	},
+	{
+		name: 'WellsRanThroughDEM_WRD_CB_We_15',
+		label: 'Status',
+	},
+	{
+		name: 'WellsRanThroughDEM_EPA_WQ_DDW_5',
+		label: 'Constituen',
 	},
 	{
 		name: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
-		label: 'Date',
+		label: 'Sample_Dat',
+	},
+	{
+		name: 'WellsRanThroughDEM_EPA_WQ_DDW_6',
+		label: 'Value_',
+	},
+	{
+		name: 'WellsRanThroughDEM_EPA_WQ_DDW_9',
+		label: 'Unit_Stand',
+	},
+	{
+		name: 'WellsRanThroughDEM_EPA_WQ_DD_17',
+		label: 'Primary__1',
+	},
+	{
+		name: 'PerfsAndAquifersSummary_Max_INT ',
+		label: 'Maximum_INT_No',
+	},
+	{
+		name: 'PerfsAndAquifersSummary_Min_TOI',
+		label: 'Minimum_TOI',
+	},
+	{
+		name: 'PerfsAndAquifersSummary_Max_BOI',
+		label: 'Maximum_BOI',
+	},
+	{
+		name: 'Constr_YYYYDate',
+		label: 'Constr_YYY',
+	},
+	{
+		name: 'Destr_YYYYDate ',
+		label: 'Destr_YYYY',
 	},
 ];
 
@@ -21,28 +113,32 @@ const gamaFields = [
 		direction: 'asc',
 	},
 	{
-		name: 'RESULTS',
-		label: 'Results',
+		name: 'SOURCE_NAME',
+		label: 'Source Name',
+	},
+	{
+		name: 'WELL_TYPE',
+		label: 'WELL_TYPE',
+	},
+	{
+		name: 'CHEMICAL',
+		label: 'CHEMICAL',
 	},
 	{
 		name: 'DATE',
 		label: 'Date',
 	},
 	{
-		name: 'TOP_OF_SCREEN__FT_',
-		label: 'Top of Screen (ft)',
+		name: 'RESULTS',
+		label: 'Results',
 	},
 	{
-		name: 'SCREEN_LENGTH__FT_',
-		label: 'Screen Length (ft)',
+		name: 'UNITS',
+		label: 'UNITS',
 	},
 	{
-		name: 'SOURCE_NAME',
-		label: 'Source Name',
-	},
-	{
-		name: 'OTHER_NAMES',
-		label: 'Other Names',
+		name: 'WELL_DEPTH__FT_',
+		label: 'WELL DEPTH (FT)',
 	},
 ];
 
@@ -80,26 +176,7 @@ export const config = {
 				title3D: 'All Wells - Gray V3',
 				label: 'All Wells',
 				layerVar: 'wells2D',
-				fields: [
-					{
-						name: 'WellsRanThroughDEM2_WRDID',
-						label: 'WRDID',
-						direction: 'asc',
-					},
-					{
-						name: 'WellsRanThroughDEM2_DPW_ID',
-						label: 'DPW ID',
-					},
-					{
-						name: 'WellsRanThroughDEM2_Owner_No',
-						label: 'Owner No',
-						visible: false,
-					},
-					{
-						name: 'WellsRanThroughDEM2_Type',
-						label: 'Type',
-					},
-				],
+				fields: wellsFields,
 			},
 			{
 				parentTitle: 'TCE Sampling Results',
