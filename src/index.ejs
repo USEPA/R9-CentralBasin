@@ -48,6 +48,28 @@
         <div></div>
       </div>
     </div>
+    <div id="layerLegendDiv" class="esri-widget">
+      <calcite-tabs layout="inline" position="above" scale="m" bordered="">
+        <calcite-tab-nav slot="tab-nav" role="tablist" scale="m" layout="inline" position="above" bordered="">
+          <calcite-tab-title tab="layersTab" aria-expanded="false"
+            id="calcite-tab-title-43261aac-4fad-0b1c-a400-431625d1ab03" role="tab" tabindex="0" layout="inline"
+            position="above" scale="m" bordered="">
+            Layers
+          </calcite-tab-title>
+          <calcite-tab-title tab="legendTab" aria-expanded="false"
+            id="calcite-tab-title-163fa47f-41c2-2145-bfca-e1e2165ed47e" role="tab" tabindex="0" layout="inline"
+            position="above" scale="m" bordered="">
+            Legend
+          </calcite-tab-title>
+        </calcite-tab-nav>
+        <calcite-tab tab="layersContent" aria-expanded="false" id="layersContent"
+          role="tabpanel" scale="m">
+        </calcite-tab>
+        <calcite-tab tab="legendContent" aria-expanded="false" id="legendContent"
+          role="tabpanel" scale="m">
+        </calcite-tab>
+      </calcite-tabs>
+    </div>
 
     <div id="featureSearchDiv" class="esri-widget">
       <input type="text" id="featureSearch" class="esri-input esri-feature-form__input"

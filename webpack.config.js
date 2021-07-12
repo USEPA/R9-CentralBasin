@@ -111,7 +111,7 @@ module.exports = function build(env, arg) {
         inject: false,
       }),
 
-      // new stencil.StencilPlugin(),
+      new stencil.StencilPlugin(),
     ],
     resolve: {
       modules: [
