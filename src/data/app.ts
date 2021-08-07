@@ -20,7 +20,7 @@ import SceneLayer from '@arcgis/core/layers/SceneLayer';
 // import LayerView from '@arcgis/core/views/layers/LayerView';
 let highlight: any;
 
-let env;
+let env: any;
 if (process.env.NODE_ENV === 'production') {
 	env = config.portalEnv.production;
 } else {
@@ -55,8 +55,8 @@ export const elevLyr = new ElevationLayer({
 });
 
 const applyTimeExtent = (timeExtent: TimeExtent, layerView: SceneLayerView, timeField: string) => {
-	const start = moment(timeExtent.start).format('YYYY-MM-DD');
-	const end = moment(timeExtent.end).format('YYYY-MM-DD');
+	const start: string = moment(timeExtent.start).format('YYYY-MM-DD');
+	const end: string = moment(timeExtent.end).format('YYYY-MM-DD');
 
 	layerView.filter = new FeatureFilter({
 		where: `${timeField} BETWEEN DATE '${start}' AND DATE '${end}'`,

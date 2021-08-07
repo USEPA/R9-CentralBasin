@@ -160,7 +160,6 @@ export const config = {
 			// webScene: 'dd370d1e2c194f4491078b579379f1d1',
 			// webScene: '6e43620d338a418481c9702fe2a97f26',
 			webScene: 'c28d269394414b0cb55b2e3308816bb3', // 15
-
 			elevationUrl: '//elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer',
 		},
 	},
