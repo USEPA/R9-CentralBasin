@@ -133,7 +133,7 @@ const createTableElements = (layerViews: SceneLayerView[], tableLayersArr: Layer
 				tableLayersArr[j].sceneView = layerView;
 
 				tableLayersArr[j].tableDiv = document.createElement('DIV') as HTMLElement;
-				tableLayersArr[j]?.tableDiv?.classList.add('tab-body');
+				tableLayersArr[j]?.tableDiv?.classList.add('tab-content');
 
 				tableLayersArr[j].tab = document.createElement('BUTTON');
 				// if (!tableLayersArr[j]?.tab) return;
@@ -144,8 +144,8 @@ const createTableElements = (layerViews: SceneLayerView[], tableLayersArr: Layer
 				tableLayersArr[j].tab.innerHTML = tableLayer.label;
 
 				if (j === 0) {
-					tableLayersArr[j]?.tab?.classList.add('active');
-					tableLayersArr[j]?.tableDiv?.classList.add('active-table');
+					tableLayersArr[j]?.tab?.classList.add('active-button');
+					tableLayersArr[j]?.tableDiv?.classList.add('active-content');
 				}
 
 				// @ts-ignore
@@ -162,8 +162,8 @@ const createTableElements = (layerViews: SceneLayerView[], tableLayersArr: Layer
 
 // manage table and tab elements when changing tabs
 export const changeTab = (layerInfo: LayerInfo) => {
-	removeActive('calcite-tab', 'active');
-	removeActive('tab-body', 'active-table');
+	removeActive('calcite-tab', 'active-button');
+	removeActive('tab-content', 'active-content');
 	setActive(layerInfo);
 	return '';
 };
@@ -178,6 +178,6 @@ const removeActive = (elementClass: string, activeClass: string) => {
 const setActive = (layerInfo: LayerInfo) => {
 	console.log(layerInfo);
 
-	layerInfo.tab?.classList.add('active');
-	layerInfo.tableDiv?.classList.add('active-table');
+	layerInfo.tab?.classList.add('active-button');
+	layerInfo.tableDiv?.classList.add('active-content');
 };

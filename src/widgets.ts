@@ -70,22 +70,32 @@ export const initWidgets = (view: SceneView) => {
 	});
 
 	const llDiv: any = document.getElementById('layerLegendDiv');
-	const layersContentDiv: any = document.getElementById('layersContent');
-	const legendContentDiv: any = document.getElementById('legendContent');
+	const layersContentDiv: any = document.getElementById('layers-content');
+	const legendContentDiv: any = document.getElementById('legend-content');
+
+	const layersBtn: any = document.getElementById('layers-button');
+	const legendBtn: any = document.getElementById('legend-button');
+
+	layersBtn.onclick = () => changeTab('layers');
+	legendBtn.onclick = () => changeTab('legend');
+
+	const changeTab = (clicked: string) => {
+		if (clicked === 'layers') {
+			legendBtn.classList.remove('active-button');
+			legendContentDiv.classList.remove('active-content');
+			layersBtn.classList.add('active-button');
+			layersContentDiv.classList.add('active-content');
+		} else {
+			legendBtn.classList.add('active-button');
+			legendContentDiv.classList.add('active-content');
+			layersBtn.classList.remove('active-button');
+			layersContentDiv.classList.remove('active-content');
+		}
+	};
 
 	const layerList = new LayerList({
 		view,
 		container: layersContentDiv,
-		listItemCreatedFunction: (event: any) => {
-			const item: any = event.item;
-			if (item.layer.type !== 'group') {
-				// don't show legend twice
-				item.panel = {
-					content: 'legend',
-					open: false,
-				};
-			}
-		},
 	});
 
 	const legend = new Legend({
@@ -248,9 +258,9 @@ export const initSlidesWidget = (view: SceneView) => {
 		slideElement.addEventListener('click', () => {
 			const slides = document.querySelectorAll('.slide');
 			Array.from(slides).forEach((node) => {
-				node.classList.remove('active');
+				node.classList.remove('active-slide');
 			});
-			slideElement.classList.add('active');
+			slideElement.classList.add('active-slide');
 			slide.applyTo(view);
 		});
 	});
