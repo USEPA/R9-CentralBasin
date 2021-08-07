@@ -120,7 +120,7 @@ describe('tabs', () => {
         mockElement1 = document.createElement('mockElement1');
         mockElement2 = document.createElement('mockElement2');
         mockElement2 = document.createElement('mockElement3');
-        mockElement1.classList.add('active');
+        mockElement1.classList.add('active-button');
         mockElement1.classList.add('calcite-tab');
         mockElement2.classList.add('calcite-tab');
         mockElement3.classList.add('calcite-tab');
@@ -132,7 +132,7 @@ describe('tabs', () => {
     it('changes active feature table tab', () => {
         // const e = { checked: false } as any;
         changeTab(layerInfo);
-        expect(layerInfo.tab?.classList.contains('active')).toBeTruthy();
-        expect(layerInfo.tableDiv?.classList.contains('active-table')).toBeTruthy();
+        expect(layerInfo.tab?.classList.contains('active-button')).toBeTruthy();
+        expect(layerInfo.tableDiv?.classList.contains('active-content')).toBeTruthy();
     });
 });
