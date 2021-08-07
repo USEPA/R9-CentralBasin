@@ -1,7 +1,5 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
-import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 
 // Map data
 import { info, map, elevLyr, loadWellsView, setupWellSlider } from './data/app';
@@ -11,12 +9,14 @@ import { initTimeSlider, initWidgets, initSlidesWidget, initTableWidget, initFea
 import IdentityManager from '@arcgis/core/identity/IdentityManager';
 import SceneView from '@arcgis/core/views/SceneView';
 import SceneLayer from '@arcgis/core/layers/SceneLayer';
+import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import { whenFalse, whenTrue } from '@arcgis/core/core/watchUtils';
 import { config } from './config';
 import { LayerInfo, WellsInfo } from './tableLayers';
 
 // add calcite components
-// import '@esri/calcite-components/dist/calcite.js';
+import '@esri/calcite-components/dist/index.js';
 
 const wellsLayer = new FeatureLayer();
 
@@ -161,10 +161,11 @@ const createTableElements = (layerViews: SceneLayerView[], tableLayersArr: Layer
 };
 
 // manage table and tab elements when changing tabs
-const changeTab = (layerInfo: LayerInfo) => {
+export const changeTab = (layerInfo: LayerInfo) => {
 	removeActive('calcite-tab', 'active');
 	removeActive('tab-body', 'active-table');
 	setActive(layerInfo);
+	return '';
 };
 
 const removeActive = (elementClass: string, activeClass: string) => {

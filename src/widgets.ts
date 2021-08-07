@@ -31,23 +31,7 @@ let tableContainer: HTMLElement | null;
 let labelText: HTMLElement | null;
 
 export const initWidgets = (view: SceneView) => {
-	const legend = new Legend({ view });
-
 	const homeButton = new Home({ view });
-
-	const layerList = new LayerList({
-		view,
-		listItemCreatedFunction: (event: any) => {
-			const item: any = event.item;
-			if (item.layer.type !== 'group') {
-				// don't show legend twice
-				item.panel = {
-					content: 'legend',
-					open: false,
-				};
-			}
-		},
-	});
 
 	const searchWidget = new Search({
 		view: view,
@@ -83,6 +67,40 @@ export const initWidgets = (view: SceneView) => {
 
 	const slice = new Slice({
 		view: view,
+	});
+
+	const llDiv: any = document.getElementById('layerLegendDiv');
+	const layersContentDiv: any = document.getElementById('layersContent');
+	const legendContentDiv: any = document.getElementById('legendContent');
+
+	const layerList = new LayerList({
+		view,
+		container: layersContentDiv,
+		listItemCreatedFunction: (event: any) => {
+			const item: any = event.item;
+			if (item.layer.type !== 'group') {
+				// don't show legend twice
+				item.panel = {
+					content: 'legend',
+					open: false,
+				};
+			}
+		},
+	});
+
+	const legend = new Legend({
+		view,
+		container: legendContentDiv,
+	});
+
+	const llExpand = new Expand({
+		view,
+		content: llDiv,
+		expandIconClass: 'esri-icon-layers',
+		autoCollapse: true,
+		group: 'top-left',
+		expandTooltip: 'Legend and Layer List',
+		expanded: true,
 	});
 
 	const basemapExpand = new Expand({
@@ -129,7 +147,12 @@ export const initWidgets = (view: SceneView) => {
 	});
 
 	// Add widget to the bottom left corner of the view
-	view.ui.add(layerList, 'top-right');
+	const featureSearch = document.getElementById('featureSearchDiv');
+	// @ts-ignore
+	view.ui.add(featureSearch, 'top-right', 0);
+	view.ui.add(searchWidget, 'top-right');
+
+	view.ui.add(llExpand, 'top-right');
 
 	view.ui.add(homeButton, 'top-left');
 	view.ui.add(basemapExpand, 'top-left');
@@ -137,11 +160,6 @@ export const initWidgets = (view: SceneView) => {
 	view.ui.add(lineMeasurementExpand, 'top-left');
 	view.ui.add(areaMeasurementExpand, 'top-left');
 	view.ui.add(sliceExpand, 'top-left');
-
-	const featureSearch = document.getElementById('featureSearchDiv');
-	// @ts-ignore
-	view.ui.add(featureSearch, 'top-right', 0);
-	view.ui.add(searchWidget, 'top-right');
 
 	return view;
 };
