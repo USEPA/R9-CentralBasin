@@ -49,6 +49,17 @@
       </div>
     </div>
 
+    <div id="layerLegendDiv" class="esri-widget">
+      <div id="llTabs" class="calcite-tabs" layout="inline" position="above">
+        <button id="layers-button" class="calcite-tab wells2d esri-widget--button active-button" onclick="toggleLLTab()">Layers</button>
+        <button id="legend-button" class="calcite-tab wells2d esri-widget--button" onclick="toggleLLTab()">Legend</button>
+      </div>
+      <div id="llDivs" class="tableDivs">
+        <div id="layers-content" class="tab-content active-div esri-widget active-content"></div>
+        <div id="legend-content" class="tab-content active-div esri-widget"></div>
+      </div>
+    </div> 
+
     <div id="featureSearchDiv" class="esri-widget">
       <input type="text" id="featureSearch" class="esri-input esri-feature-form__input"
         placeholder="Press Enter to Search by WRDID" />
