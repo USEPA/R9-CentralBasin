@@ -44,6 +44,7 @@
     "precommit": "lint-staged",
     "start": "webpack serve --mode development",
     "build": "webpack --mode production",
+    "build-dev": "webpack --mode development",
     "prettier": "prettier --write \"src/**/*.ts?(x)\"",
     "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet --fix",
     "test": "jest --coverage"
