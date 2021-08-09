@@ -144,7 +144,7 @@ const gamaFields = [
 
 export const configDev = {
 	portalEnv: {
-		appId: 'ZtlpDht9ywRCA4Iq',
+		appId: 'RjgBsWrJbfY8hMGY',
 		portalUrl: 'https://epa.maps.arcgis.com',
 		blankBasemap: 'c0af3abd0d60427ba659e38d457fbe07',
 		// webScene: 'dd370d1e2c194f4491078b579379f1d1',
