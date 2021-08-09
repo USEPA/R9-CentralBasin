@@ -21,14 +21,14 @@ node {
 //     }
     if (env.BRANCH_NAME != "master") {
         stage('deploy staging') {
-            bat "del /f /q /S \\\\${env.HOST_ADDRESS}\\R9Apps\\staging\\CentralBasin\\${env.BRANCH_NAME}"
+            powershell "Remove-Item -Recurse -Force \\\\${env.HOST_ADDRESS}\\R9Apps\\staging\\CentralBasin\\${env.BRANCH_NAME}"
             bat "xcopy /e/h/i/y dist \\\\${env.HOST_ADDRESS}\\R9Apps\\staging\\CentralBasin\\${env.BRANCH_NAME}"
             bat "xcopy /i/y web.config \\\\${env.HOST_ADDRESS}\\R9Apps\\staging\\CentralBasin\\${env.BRANCH_NAME}"
         }
     }
     if (env.BRANCH_NAME == "master") {
         stage('deploy') {
-            bat "del /f /q /S \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasin\\*"
+            powershell "Remove-Item -Recurse -Force \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasin\\*"
             bat "xcopy /e/h/i/y dist \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasin"
             bat "xcopy /i/y web.config \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasin"
         }
