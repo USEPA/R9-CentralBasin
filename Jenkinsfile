@@ -7,10 +7,10 @@ node {
     stage('install dependencies') {
         bat "npm install"
     }
-//     stage('unit test') {
-//         bat "npm test"
-//         publishCoverageGithub(filepath: './coverage/cobertura-coverage.xml', coverageXmlType: 'cobertura', comparisonOption: [ value: 'optionFixedCoverage', fixedCoverage: '0.65' ], coverageRateType: 'Lines')
-//     }
+    stage('unit test') {
+        bat "npm test"
+        publishCoverageGithub(filepath: './coverage/cobertura-coverage.xml', coverageXmlType: 'cobertura', comparisonOption: [ value: 'optionFixedCoverage', fixedCoverage: '0.65' ], coverageRateType: 'Lines')
+    }
     stage('build') {
         bat "npm run build"
     }
@@ -19,6 +19,13 @@ node {
 //         bat "rm -rf /var/r9centralbasin/html/${env.BRANCH_NAME}"
 //         bat "cp -r ./dist /var/r9centralbasin/html/${env.BRANCH_NAME}"
 //     }
+    if (env.BRANCH_NAME != "master") {
+        stage('deploy staging') {
+            bat "del /f /q /S \\\\${env.HOST_ADDRESS}\\R9Apps\\staging\\CentralBasin\\${env.BRANCH_NAME}"
+            bat "xcopy /e/h/i/y dist \\\\${env.HOST_ADDRESS}\\R9Apps\\staging\\CentralBasin\\${env.BRANCH_NAME}"
+            bat "xcopy /i/y web.config \\\\${env.HOST_ADDRESS}\\R9Apps\\staging\\CentralBasin\\${env.BRANCH_NAME}"
+        }
+    }
     if (env.BRANCH_NAME == "master") {
         stage('deploy') {
             bat "del /f /q /S \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasin\\*"
