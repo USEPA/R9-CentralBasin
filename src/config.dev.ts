@@ -142,26 +142,16 @@ const gamaFields = [
 	},
 ];
 
-export const config = {
+export const configDev = {
 	portalEnv: {
-		production: {
-			appId: 'RjgBsWrJbfY8hMGY',
-			portalUrl: 'https://epa.maps.arcgis.com',
-			blankBasemap: 'c0af3abd0d60427ba659e38d457fbe07',
-			// webScene: 'dd983ac69154460fb75f5ce193b5344d',
-			webScene: '6e43620d338a418481c9702fe2a97f26',
-			elevationUrl: '//elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer',
-		},
-		development: {
-			appId: 'ZtlpDht9ywRCA4Iq',
-			portalUrl: 'https://epa.maps.arcgis.com',
-			blankBasemap: 'c0af3abd0d60427ba659e38d457fbe07',
-			// webScene: 'dd370d1e2c194f4491078b579379f1d1',
-			// webScene: 'dd370d1e2c194f4491078b579379f1d1',
-			// webScene: '6e43620d338a418481c9702fe2a97f26',
-			webScene: 'c28d269394414b0cb55b2e3308816bb3', // 15
-			elevationUrl: '//elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer',
-		},
+		appId: 'ZtlpDht9ywRCA4Iq',
+		portalUrl: 'https://epa.maps.arcgis.com',
+		blankBasemap: 'c0af3abd0d60427ba659e38d457fbe07',
+		// webScene: 'dd370d1e2c194f4491078b579379f1d1',
+		// webScene: 'dd370d1e2c194f4491078b579379f1d1',
+		// webScene: '6e43620d338a418481c9702fe2a97f26',
+		webScene: 'c28d269394414b0cb55b2e3308816bb3', // 15
+		elevationUrl: '//elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer',
 	},
 	wells3D: {
 		parentTitle: 'Wells 3D',
