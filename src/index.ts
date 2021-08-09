@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 // Map data
-import { info, map, elevLyr, loadWellsView, setupWellSlider } from './data/app';
+import { info, map, elevLyr, loadWellsView, setupWellSlider, config } from './data/app';
 
 // widget utils
 import { initTimeSlider, initWidgets, initSlidesWidget, initTableWidget, initFeatureTable } from './widgets';
@@ -12,7 +12,6 @@ import SceneLayer from '@arcgis/core/layers/SceneLayer';
 import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import { whenFalse, whenTrue } from '@arcgis/core/core/watchUtils';
-import { config } from './config';
 import { LayerInfo, WellsInfo } from './tableLayers';
 
 // add calcite components
