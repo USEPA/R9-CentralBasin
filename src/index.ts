@@ -17,6 +17,9 @@ import { LayerInfo, WellsInfo } from './tableLayers';
 // add calcite components
 import '@esri/calcite-components/dist/index.js';
 
+const appTitle = document.getElementById('appTitle');
+if (appTitle) appTitle.innerHTML = config.appTitle;
+
 const wellsLayer = new FeatureLayer();
 
 /**

@@ -140,6 +140,19 @@ export const initWidgets = (view: SceneView) => {
 		expandTooltip: 'Area Measurement',
 	});
 
+	// api is not recognizing .clear() method
+	// lineMeasurementExpand.watch('expanded', () => {
+	// 	if (!lineMeasurementExpand.expanded) {
+	// 		lineMeasurement.clear();
+	// 	}
+	// });
+
+	// areaMeasurementExpand.watch('expanded', () => {
+	// 	if (!areaMeasurementExpand.expanded) {
+	// 		areaMeasurement.clear();
+	// 	}
+	// });
+
 	const sliceExpand = new Expand({
 		view,
 		content: slice,
