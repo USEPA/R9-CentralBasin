@@ -31,23 +31,7 @@ let tableContainer: HTMLElement | null;
 let labelText: HTMLElement | null;
 
 export const initWidgets = (view: SceneView) => {
-	const legend = new Legend({ view });
-
 	const homeButton = new Home({ view });
-
-	const layerList = new LayerList({
-		view,
-		listItemCreatedFunction: (event: any) => {
-			const item = event.item;
-			if (item.layer.type !== 'group') {
-				// don't show legend twice
-				item.panel = {
-					content: 'legend',
-					open: false,
-				};
-			}
-		},
-	});
 
 	const searchWidget = new Search({
 		view: view,
@@ -85,6 +69,50 @@ export const initWidgets = (view: SceneView) => {
 		view: view,
 	});
 
+	const llDiv: any = document.getElementById('layerLegendDiv');
+	const layersContentDiv: any = document.getElementById('layers-content');
+	const legendContentDiv: any = document.getElementById('legend-content');
+
+	const layersBtn: any = document.getElementById('layers-button');
+	const legendBtn: any = document.getElementById('legend-button');
+
+	layersBtn.onclick = () => changeTab('layers');
+	legendBtn.onclick = () => changeTab('legend');
+
+	const changeTab = (clicked: string) => {
+		if (clicked === 'layers') {
+			legendBtn.classList.remove('active-button');
+			legendContentDiv.classList.remove('active-content');
+			layersBtn.classList.add('active-button');
+			layersContentDiv.classList.add('active-content');
+		} else {
+			legendBtn.classList.add('active-button');
+			legendContentDiv.classList.add('active-content');
+			layersBtn.classList.remove('active-button');
+			layersContentDiv.classList.remove('active-content');
+		}
+	};
+
+	const layerList = new LayerList({
+		view,
+		container: layersContentDiv,
+	});
+
+	const legend = new Legend({
+		view,
+		container: legendContentDiv,
+	});
+
+	const llExpand = new Expand({
+		view,
+		content: llDiv,
+		expandIconClass: 'esri-icon-layers',
+		autoCollapse: true,
+		group: 'top-left',
+		expandTooltip: 'Legend and Layer List',
+		expanded: true,
+	});
+
 	const basemapExpand = new Expand({
 		view,
 		content: basemapGallery,
@@ -112,6 +140,19 @@ export const initWidgets = (view: SceneView) => {
 		expandTooltip: 'Area Measurement',
 	});
 
+	// api is not recognizing .clear() method
+	// lineMeasurementExpand.watch('expanded', () => {
+	// 	if (!lineMeasurementExpand.expanded) {
+	// 		lineMeasurement.clear();
+	// 	}
+	// });
+
+	// areaMeasurementExpand.watch('expanded', () => {
+	// 	if (!areaMeasurementExpand.expanded) {
+	// 		areaMeasurement.clear();
+	// 	}
+	// });
+
 	const sliceExpand = new Expand({
 		view,
 		content: slice,
@@ -129,7 +170,12 @@ export const initWidgets = (view: SceneView) => {
 	});
 
 	// Add widget to the bottom left corner of the view
-	view.ui.add(layerList, 'top-right');
+	const featureSearch = document.getElementById('featureSearchDiv');
+	// @ts-ignore
+	view.ui.add(featureSearch, 'top-right', 0);
+	view.ui.add(searchWidget, 'top-right');
+
+	view.ui.add(llExpand, 'top-right');
 
 	view.ui.add(homeButton, 'top-left');
 	view.ui.add(basemapExpand, 'top-left');
@@ -137,11 +183,6 @@ export const initWidgets = (view: SceneView) => {
 	view.ui.add(lineMeasurementExpand, 'top-left');
 	view.ui.add(areaMeasurementExpand, 'top-left');
 	view.ui.add(sliceExpand, 'top-left');
-
-	const featureSearch = document.getElementById('featureSearchDiv');
-	// @ts-ignore
-	view.ui.add(featureSearch, 'top-right', 0);
-	view.ui.add(searchWidget, 'top-right');
 
 	return view;
 };
@@ -230,9 +271,9 @@ export const initSlidesWidget = (view: SceneView) => {
 		slideElement.addEventListener('click', () => {
 			const slides = document.querySelectorAll('.slide');
 			Array.from(slides).forEach((node) => {
-				node.classList.remove('active');
+				node.classList.remove('active-slide');
 			});
-			slideElement.classList.add('active');
+			slideElement.classList.add('active-slide');
 			slide.applyTo(view);
 		});
 	});
@@ -281,9 +322,7 @@ export const initTableWidget = (view: SceneView, layersInfo: any[], layerViews: 
 			},
 		});
 
-		const features: { feature: __esri.Graphic }[] = [];
-		let selectedFeature: number | __esri.Graphic | (number | __esri.Graphic)[], id: any;
-		let features3D: number[] = [];
+		let features3D: __esri.Graphic[];
 		let highlight: any;
 
 		featureTable.on('selection-change', (changes) => {
@@ -293,14 +332,14 @@ export const initTableWidget = (view: SceneView, layersInfo: any[], layerViews: 
 			}
 
 			// If row is unselected in table, remove it from the features array
-			changes.removed.forEach(async (item) => {
+			changes.removed.forEach((item) => {
 				features3D = features3D.filter((feature) => {
 					return feature !== item.feature;
 				});
 			});
 
 			// If a row is selected, add to the features array
-			changes.added.forEach(async (item) => {
+			changes.added.forEach((item) => {
 				features3D.push(item.feature);
 			});
 

@@ -1,21 +1,24 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
-import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 
 // Map data
-import { info, map, elevLyr, loadWellsView, setupWellSlider } from './data/app';
+import { info, map, elevLyr, loadWellsView, setupWellSlider, config } from './data/app';
 
 // widget utils
-import {initTimeSlider, initWidgets, initSlidesWidget, initTableWidget, initFeatureTable} from './widgets';
+import { initTimeSlider, initWidgets, initSlidesWidget, initTableWidget, initFeatureTable } from './widgets';
 import IdentityManager from '@arcgis/core/identity/IdentityManager';
 import SceneView from '@arcgis/core/views/SceneView';
 import SceneLayer from '@arcgis/core/layers/SceneLayer';
+import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import { whenFalse, whenTrue } from '@arcgis/core/core/watchUtils';
-import { config } from './config';
+import { LayerInfo, WellsInfo } from './tableLayers';
 
 // add calcite components
-// import '@esri/calcite-components/dist/calcite.js';
+import '@esri/calcite-components/dist/index.js';
+
+const appTitle = document.getElementById('appTitle');
+if (appTitle) appTitle.innerHTML = config.appTitle;
 
 const wellsLayer = new FeatureLayer();
 
@@ -59,11 +62,13 @@ view.when(initTimeSlider).then((timePieces) => {
 	// @ts-ignore
 	document.getElementById('featureSearchDiv').style.visibility = 'visible';
 
-	let tableLayersArr = config.tableLayers.layers;
-	const wells3DInfo = config.wells3D;
+	let tableLayersArr: LayerInfo[] = config.tableLayers.layers;
+	const wells3DInfo: WellsInfo = config.wells3D;
 
 	//loop through map layers
-	view.map.layers.items.forEach((parentLayer: { title: string; id: any; layers: { items: any[]; }; }) => {
+	// @ts-ignore
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	view.map.layers.items.forEach((parentLayer: { title: string; id: string; layers: { items: any[]; }; }) => {
 		if (parentLayer.id === '17a21a99df2-layer-1') {
 			debugger;
 		}
@@ -71,13 +76,14 @@ view.when(initTimeSlider).then((timePieces) => {
 		// console.log('parentlayer: ', parentLayer.title, 'id: ', parentLayer.id);
 		if (parentLayer.layers) {
 			// loop through config layers
-			config.tableLayers.layers.forEach((configLayer, configLayerIndex) => {
+			config.tableLayers.layers.forEach((configLayer: LayerInfo, configLayerIndex) => {
 				// loop through group to match config and map layers
 				if (parentLayer.title === configLayer.parentTitle) {
 					parentLayer.layers.items.forEach((layer: any) => {
 						if (layer.title === configLayer.title2D) {
 							tableLayersArr[configLayerIndex].id2D = layer.id;
 							tableLayersArr[configLayerIndex].layer2D = view.map.findLayerById(layer.id) as FeatureLayer;
+							// @ts-ignore
 							tableLayersArr[configLayerIndex].layer2D.outFields = ['*'];
 						} else if (layer.title === configLayer.title3D) {
 							tableLayersArr[configLayerIndex].id3D = layer.id;
@@ -100,9 +106,9 @@ view.when(initTimeSlider).then((timePieces) => {
 	});
 
 	// create promises for when layers load
-	let promiseArr = [];
-	tableLayersArr.forEach((layer) => {
-		promiseArr.push(view.whenLayerView(layer.layer3D));
+	const promiseArr: Promise<SceneLayerView>[] = [];
+	tableLayersArr.forEach((layer: LayerInfo) => {
+		promiseArr.push(view.whenLayerView(layer.layer3D as SceneLayer));
 	});
 
 	// execute after layers loaded
@@ -114,12 +120,12 @@ view.when(initTimeSlider).then((timePieces) => {
 		setupWellSlider(tableLayersArr, timePieces.timeSlider, timePieces.timeSliderExpand, view);
 	});
 
-	view.whenLayerView(wells3DInfo.layer3D).then((wellsLayerView) => {
-		loadWellsView(wells3DInfo.layer3D, wellsLayerView as SceneLayerView, view);
+	view.whenLayerView(wells3DInfo.layer3D as SceneLayer).then((wellsLayerView) => {
+		loadWellsView(wells3DInfo.layer3D as SceneLayer, wellsLayerView as SceneLayerView, view);
 	});
 });
 
-const createTableElements = (layerViews: any[], tableLayersArr: any[]) => {
+const createTableElements = (layerViews: SceneLayerView[], tableLayersArr: LayerInfo[]) => {
 	layerViews.forEach((layerView) => {
 		tableLayersArr.forEach((tableLayer, j) => {
 			// console.log(tableLayer);
@@ -128,21 +134,27 @@ const createTableElements = (layerViews: any[], tableLayersArr: any[]) => {
 				console.log(tableLayer);
 				tableLayersArr[j].sceneView = layerView;
 
-				tableLayersArr[j].tableDiv = document.createElement('DIV');
-				tableLayersArr[j].tableDiv.classList.add('tab-body');
+				tableLayersArr[j].tableDiv = document.createElement('DIV') as HTMLElement;
+				tableLayersArr[j]?.tableDiv?.classList.add('tab-content');
 
 				tableLayersArr[j].tab = document.createElement('BUTTON');
+				// if (!tableLayersArr[j]?.tab) return;
+
+				// @ts-ignore
 				tableLayersArr[j].tab.classList.add('calcite-tab', 'wells2d', 'esri-widget--button');
+				// @ts-ignore
 				tableLayersArr[j].tab.innerHTML = tableLayer.label;
 
 				if (j === 0) {
-					tableLayersArr[j].tab.classList.add('active');
-					tableLayersArr[j].tableDiv.classList.add('active-table');
+					tableLayersArr[j]?.tab?.classList.add('active-button');
+					tableLayersArr[j]?.tableDiv?.classList.add('active-content');
 				}
 
+				// @ts-ignore
 				document.getElementById('tableTabs')?.appendChild(tableLayersArr[j].tab);
+				// @ts-ignore
 				document.getElementById('tableDivs')?.appendChild(tableLayersArr[j].tableDiv);
-
+				// @ts-ignore
 				tableLayersArr[j].tab.onclick = () => changeTab(tableLayersArr[j]);
 			}
 		})
@@ -151,18 +163,23 @@ const createTableElements = (layerViews: any[], tableLayersArr: any[]) => {
 };
 
 // manage table and tab elements when changing tabs
-const changeTab = (layerInfo: string) => {
-	console.log(layerInfo);
-	const tabArr = Array.from(document.getElementsByClassName('calcite-tab'));
+export const changeTab = (layerInfo: LayerInfo) => {
+	removeActive('calcite-tab', 'active-button');
+	removeActive('tab-content', 'active-content');
+	setActive(layerInfo);
+	return '';
+};
 
+const removeActive = (elementClass: string, activeClass: string) => {
+	const tabArr = Array.from(document.getElementsByClassName(elementClass));
 	for (let i = 0; i < tabArr.length; i++) {
-		tabArr[i].classList.remove("active");
+		tabArr[i].classList.remove(activeClass);
 	}
-	layerInfo.tab?.classList.add('active');
+};
 
-	const tableArr = Array.from(document.getElementsByClassName('tab-body'));
-	for (let i = 0; i < tableArr.length; i++) {
-		tableArr[i].classList.remove("active-table");
-	}
-	layerInfo.tableDiv?.classList.add('active-table');
+const setActive = (layerInfo: LayerInfo) => {
+	console.log(layerInfo);
+
+	layerInfo.tab?.classList.add('active-button');
+	layerInfo.tableDiv?.classList.add('active-content');
 };

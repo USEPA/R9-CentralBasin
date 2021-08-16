@@ -2,7 +2,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
-import { config } from '../config';
+import { configDev } from '../config.dev';
+import { configProd } from '../config.prod';
 
 import OAuthInfo from '@arcgis/core/identity/OAuthInfo';
 import WebScene from '@arcgis/core/WebScene';
@@ -19,16 +20,18 @@ import SceneLayer from '@arcgis/core/layers/SceneLayer';
 // import FeatureTable from '@arcgis/core/widgets/FeatureTable';
 // import LayerView from '@arcgis/core/views/layers/LayerView';
 let highlight: any;
+export let config: any;
 
-let env;
 if (process.env.NODE_ENV === 'production') {
-	env = config.portalEnv.production;
+	config = configProd;
 } else {
-	env = config.portalEnv.development;
+	config = configDev;
 }
 
+const env: any = config.portalEnv;
+
 export const info = new OAuthInfo({
-	appId: process.env.NODE_ENV === 'production' ? env.appId : env.appId,
+	appId: env.appId,
 	portalUrl: env.portalUrl,
 	// Uncomment the next line to prevent the user's signed in state from being shared with other apps on the same domain with the same authNamespace value.
 	// authNamespace: "portal_oauth_inline",
@@ -55,8 +58,8 @@ export const elevLyr = new ElevationLayer({
 });
 
 const applyTimeExtent = (timeExtent: TimeExtent, layerView: SceneLayerView, timeField: string) => {
-	const start = moment(timeExtent.start).format('YYYY-MM-DD');
-	const end = moment(timeExtent.end).format('YYYY-MM-DD');
+	const start: string = moment(timeExtent.start).format('YYYY-MM-DD');
+	const end: string = moment(timeExtent.end).format('YYYY-MM-DD');
 
 	layerView.filter = new FeatureFilter({
 		where: `${timeField} BETWEEN DATE '${start}' AND DATE '${end}'`,

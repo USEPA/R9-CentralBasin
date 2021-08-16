@@ -142,25 +142,15 @@ const gamaFields = [
 	},
 ];
 
-export const config = {
+export const configProd = {
+	appTitle: 'Central Basin Map',
 	portalEnv: {
-		production: {
-			appId: 'RjgBsWrJbfY8hMGY',
-			portalUrl: 'https://epa.maps.arcgis.com',
-			blankBasemap: 'c0af3abd0d60427ba659e38d457fbe07',
-			// webScene: 'dd983ac69154460fb75f5ce193b5344d',
-			webScene: '6e43620d338a418481c9702fe2a97f26',
-			elevationUrl: '//elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer',
-		},
-		development: {
-			appId: 'ZtlpDht9ywRCA4Iq',
-			portalUrl: 'https://epa.maps.arcgis.com',
-			blankBasemap: 'c0af3abd0d60427ba659e38d457fbe07',
-			// webScene: 'dd370d1e2c194f4491078b579379f1d1',
-			// webScene: 'dd370d1e2c194f4491078b579379f1d1',
-			webScene: '6e43620d338a418481c9702fe2a97f26',
-			elevationUrl: '//elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer',
-		},
+		appId: 'RjgBsWrJbfY8hMGY',
+		portalUrl: 'https://epa.maps.arcgis.com',
+		blankBasemap: 'c0af3abd0d60427ba659e38d457fbe07',
+		// webScene: 'dd983ac69154460fb75f5ce193b5344d',
+		webScene: 'c6c5e203c3ab44058353f151ad967b59',
+		elevationUrl: '//elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer',
 	},
 	wells3D: {
 		parentTitle: 'Wells 3D',
@@ -231,43 +221,6 @@ export const config = {
 				layerVar: 'wrdCR6',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
-			},
-		],
-		layers3D: [
-			{
-				parentTitle: 'Wells 3D',
-				title: 'All Wells - Gray V3',
-				layerVar: 'wells3D',
-			},
-			{
-				parentTitle: 'TCE Sampling Results',
-				title: 'GAMA TCE 3D',
-				layerVar: 'gamaTCE3D',
-			},
-			{
-				parentTitle: 'TCE Sampling Results',
-				title: 'WRD TCE 3D',
-				layerVar: 'wrdTCE3D',
-			},
-			{
-				parentTitle: 'PCE Sampling Results',
-				title: 'GAMA PCE 3D',
-				layerVar: 'gamaPCE3D',
-			},
-			{
-				parentTitle: 'PCE Sampling Results',
-				title: 'WRD PCE 3D',
-				layerVar: 'wrdPCE3D',
-			},
-			{
-				parentTitle: 'CR6 Sampling Results',
-				title: 'GAMA CR6 3D',
-				layerVar: 'gamaCR63D',
-			},
-			{
-				parentTitle: 'PCE Sampling Results',
-				title: 'WRD CR6 3D',
-				layerVar: 'wrdCR63D',
 			},
 		],
 	},
