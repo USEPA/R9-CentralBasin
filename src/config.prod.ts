@@ -143,12 +143,13 @@ const gamaFields = [
 ];
 
 export const configProd = {
+	appTitle: 'Central Basin Map',
 	portalEnv: {
 		appId: 'RjgBsWrJbfY8hMGY',
 		portalUrl: 'https://epa.maps.arcgis.com',
 		blankBasemap: 'c0af3abd0d60427ba659e38d457fbe07',
 		// webScene: 'dd983ac69154460fb75f5ce193b5344d',
-		webScene: '6e43620d338a418481c9702fe2a97f26',
+		webScene: 'c6c5e203c3ab44058353f151ad967b59',
 		elevationUrl: '//elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer',
 	},
 	wells3D: {
