@@ -2,6 +2,7 @@ node {
     configFileProvider([configFile(fileId: "d5c35859-b519-4869-ab0d-7f51f9ad90d5", variable: 'configFile')]) {
       props = readProperties file: "$configFile"
       env.HOST_ADDRESS = props['HOST_ADDRESS']
+      env.PUBLIC_DOMAIN = props['PUBLIC_DOMAIN']
     }
     checkout scm
     stage('install dependencies') {
