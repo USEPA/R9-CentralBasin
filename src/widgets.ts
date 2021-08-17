@@ -141,17 +141,21 @@ export const initWidgets = (view: SceneView) => {
 	});
 
 	// api is not recognizing .clear() method
-	// lineMeasurementExpand.watch('expanded', () => {
-	// 	if (!lineMeasurementExpand.expanded) {
-	// 		lineMeasurement.clear();
-	// 	}
-	// });
+	lineMeasurementExpand.watch('expanded', () => {
+		if (!lineMeasurementExpand.expanded) {
+			lineMeasurement.set({ visible: false });
+		} else {
+			lineMeasurement.set({ visible: true });
+		}
+	});
 
-	// areaMeasurementExpand.watch('expanded', () => {
-	// 	if (!areaMeasurementExpand.expanded) {
-	// 		areaMeasurement.clear();
-	// 	}
-	// });
+	areaMeasurementExpand.watch('expanded', () => {
+		if (!areaMeasurementExpand.expanded) {
+			areaMeasurement.set({ visible: false });
+		} else {
+			areaMeasurement.set({ visible: true });
+		}
+	});
 
 	const sliceExpand = new Expand({
 		view,
