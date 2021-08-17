@@ -19,7 +19,7 @@ node {
         else {
             bat "npm run build-dev"
         }
-        slackSend(channel:"#r9-service-alerts", message: "R9 Central Basin branch ${env.BRANCH_NAME} deployed to STAGING\nReview: https://${env.PUBLIC_DOMAIN}/apps/staging/r9cop/${env.BRANCH_NAME}/")
+//         slackSend(channel:"#r9-service-alerts", message: "R9 Central Basin branch ${env.BRANCH_NAME} deployed to STAGING\nReview: https://${env.PUBLIC_DOMAIN}/apps/staging/r9cop/${env.BRANCH_NAME}/")
     }
 
 //     stage('deploy staging') {
