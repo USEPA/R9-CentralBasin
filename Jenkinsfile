@@ -31,7 +31,7 @@ node {
             powershell "Remove-Item -Recurse -Force \\\\${env.HOST_ADDRESS}\\R9Apps\\staging\\CentralBasin\\${env.BRANCH_NAME}"
             bat "xcopy /e/h/i/y dist \\\\${env.HOST_ADDRESS}\\R9Apps\\staging\\CentralBasin\\${env.BRANCH_NAME}"
             bat "xcopy /i/y web.config \\\\${env.HOST_ADDRESS}\\R9Apps\\staging\\CentralBasin\\${env.BRANCH_NAME}"
-            slackSend(channel:"#r9-service-alerts", message: "R9 Central Basin branch ${env.BRANCH_NAME} deployed to STAGING\nReview: https://${env.PUBLIC_DOMAIN}/apps/staging/r9cop/${env.BRANCH_NAME}/")
+            slackSend(channel:"#r9-service-alerts", message: "R9 Central Basin branch ${env.BRANCH_NAME} deployed to STAGING\nReview: https://${env.PUBLIC_DOMAIN}/apps/staging/centralbasin/${env.BRANCH_NAME}/")
         }
     }
     if (env.BRANCH_NAME == "master") {
@@ -39,7 +39,7 @@ node {
             powershell "Remove-Item -Recurse -Force \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasin\\*"
             bat "xcopy /e/h/i/y dist \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasin"
             bat "xcopy /i/y web.config \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasin"
-            slackSend(channel:"#r9-service-alerts", message: "R9 Central Basin branch ${env.BRANCH_NAME} deployed to STAGING\nReview: https://${env.PUBLIC_DOMAIN}/apps/staging/r9cop/${env.BRANCH_NAME}/")
+            slackSend(channel:"#r9-service-alerts", message: "R9 Central Basin branch ${env.BRANCH_NAME} deployed to PRODUCTION\nReview: https://${env.PUBLIC_DOMAIN}/centralbasin/")
         }
     }
 }
