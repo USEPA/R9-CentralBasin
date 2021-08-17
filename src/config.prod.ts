@@ -143,7 +143,7 @@ const gamaFields = [
 ];
 
 export const configProd = {
-	appTitle: 'Central Basin Map',
+	appTitle: 'Central Basin Map v1.2',
 	portalEnv: {
 		appId: 'RjgBsWrJbfY8hMGY',
 		portalUrl: 'https://epa.maps.arcgis.com',
