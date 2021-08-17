@@ -22,6 +22,7 @@ import FeatureTable from '@arcgis/core/widgets/FeatureTable';
 import { info } from './data/app';
 import { watch } from '@arcgis/core/core/watchUtils';
 import ButtonMenuItem from '@arcgis/core/widgets/FeatureTable/Grid/support/ButtonMenuItem';
+import Graphic from '@arcgis/core/Graphic';
 
 let appContainer: HTMLElement | null;
 let tableContainer: HTMLElement | null;
@@ -326,7 +327,7 @@ export const initTableWidget = (view: SceneView, layersInfo: any[], layerViews: 
 			},
 		});
 
-		let features3D: __esri.Graphic[];
+		let features3D: Graphic[];
 		let highlight: any;
 
 		featureTable.on('selection-change', (changes) => {
