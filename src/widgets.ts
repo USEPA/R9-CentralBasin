@@ -327,7 +327,7 @@ export const initTableWidget = (view: SceneView, layersInfo: any[], layerViews: 
 			},
 		});
 
-		let features3D: Graphic[];
+		let features3D: Graphic[] = [];
 		let highlight: any;
 
 		featureTable.on('selection-change', (changes) => {
