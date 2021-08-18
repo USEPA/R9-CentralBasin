@@ -22,6 +22,7 @@ import FeatureTable from '@arcgis/core/widgets/FeatureTable';
 import { info } from './data/app';
 import { watch } from '@arcgis/core/core/watchUtils';
 import ButtonMenuItem from '@arcgis/core/widgets/FeatureTable/Grid/support/ButtonMenuItem';
+import Graphic from '@arcgis/core/Graphic';
 
 let appContainer: HTMLElement | null;
 let tableContainer: HTMLElement | null;
@@ -141,17 +142,21 @@ export const initWidgets = (view: SceneView) => {
 	});
 
 	// api is not recognizing .clear() method
-	// lineMeasurementExpand.watch('expanded', () => {
-	// 	if (!lineMeasurementExpand.expanded) {
-	// 		lineMeasurement.clear();
-	// 	}
-	// });
+	lineMeasurementExpand.watch('expanded', () => {
+		if (!lineMeasurementExpand.expanded) {
+			lineMeasurement.set({ visible: false });
+		} else {
+			lineMeasurement.set({ visible: true });
+		}
+	});
 
-	// areaMeasurementExpand.watch('expanded', () => {
-	// 	if (!areaMeasurementExpand.expanded) {
-	// 		areaMeasurement.clear();
-	// 	}
-	// });
+	areaMeasurementExpand.watch('expanded', () => {
+		if (!areaMeasurementExpand.expanded) {
+			areaMeasurement.set({ visible: false });
+		} else {
+			areaMeasurement.set({ visible: true });
+		}
+	});
 
 	const sliceExpand = new Expand({
 		view,
@@ -322,7 +327,7 @@ export const initTableWidget = (view: SceneView, layersInfo: any[], layerViews: 
 			},
 		});
 
-		let features3D: __esri.Graphic[];
+		let features3D: Graphic[] = [];
 		let highlight: any;
 
 		featureTable.on('selection-change', (changes) => {
