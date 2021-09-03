@@ -46,11 +46,6 @@ export const map = new WebScene({
 	portalItem: {
 		id: env.webScene,
 	},
-	ground: {
-		navigationConstraint: {
-			type: 'none',
-		},
-	},
 });
 
 export const elevLyr = new ElevationLayer({
