@@ -38,7 +38,6 @@ const view = new SceneView({
 view.popup.highlightEnabled = false;
 
 map.layers.splice(0, 0, wellsLayer);
-map.ground.layers.add(elevLyr);
 
 view.popup.defaultPopupTemplateEnabled = true;
 
