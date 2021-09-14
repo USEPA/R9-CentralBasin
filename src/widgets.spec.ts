@@ -105,7 +105,7 @@ describe('tabs', () => {
         title2D: 'All Wells With Labels',
         title3D: 'All Wells - Gray V3',
         label: 'All Wells',
-        layerVar: 'wells2D',
+        layerVar: 'allWells',
         fields: [
             {
                 name: 'WellsRanThroughDEM2_WRDID',
