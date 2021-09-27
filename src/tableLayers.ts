@@ -1,6 +1,7 @@
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import SceneLayer from '@arcgis/core/layers/SceneLayer';
 import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
+import PopupTemplate from '@arcgis/core/PopupTemplate';
 
 export interface FieldInfo {
 	name: string;
@@ -23,6 +24,7 @@ export interface LayerInfo {
 	tab?: HTMLElement;
 	tableDiv?: HTMLElement;
 	sceneView?: SceneLayerView;
+	template?: PopupTemplate;
 }
 
 export interface TableLayers {
