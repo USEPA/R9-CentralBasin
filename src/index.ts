@@ -81,11 +81,13 @@ view.when(initTimeSlider).then((timePieces) => {
 						if (layer.title === configLayer.title2D) {
 							tableLayersArr[configLayerIndex].id2D = layer.id;
 							tableLayersArr[configLayerIndex].layer2D = view.map.findLayerById(layer.id) as FeatureLayer;
+							tableLayersArr[configLayerIndex].layer2D?.set('popupTemplate', tableLayersArr[configLayerIndex].template);
 							// @ts-ignore
 							tableLayersArr[configLayerIndex].layer2D.outFields = ['*'];
 						} else if (layer.title === configLayer.title3D) {
 							tableLayersArr[configLayerIndex].id3D = layer.id;
 							tableLayersArr[configLayerIndex].layer3D = view.map.findLayerById(layer.id) as SceneLayer;
+							tableLayersArr[configLayerIndex].layer3D?.set('popupTemplate', tableLayersArr[configLayerIndex].template);
 						}
 					});
 				}

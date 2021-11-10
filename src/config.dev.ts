@@ -142,6 +142,199 @@ const gamaFields = [
 	},
 ];
 
+const wellsTemplate = {
+	title: 'WRD ID No. {WellsRanThroughDEM2_WRDID}',
+	content: [
+		{
+			type: 'fields',
+			fieldInfos: [
+				{
+					fieldName: 'WellsRanThroughDEM2_Type',
+					label: 'Type',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_Common_Nam',
+					label: 'Common Name',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_Status',
+					label: 'Well Status',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_WRDID',
+					label: 'WRD ID No.',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_STATE_SOUR',
+					label: 'State Well No.',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_Agency_Lon',
+					label: 'Purveyor',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_Owner_No',
+					label: 'Purveyor Well No.',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_Constr_YYY',
+					label: 'Construction Year',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_Destr_YYYY',
+					label: 'Destruction Year',
+				},
+				{
+					fieldName: 'PerfsAndAquifersSummary_Max_INT',
+					label: 'No. of Perforations',
+				},
+				{
+					fieldName: 'PerfsAndAquifersSummary_Min_TOI',
+					label: 'Top of Perforation',
+				},
+				{
+					fieldName: 'PerfsAndAquifersSummary_Max_BOI',
+					label: 'Bottom of Perforation',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_SN_LONG',
+					label: 'DWR Well No.',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_Log_Avail',
+					label: 'Well Log Available',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_City',
+					label: 'City',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_Basin',
+					label: 'Basin',
+				},
+			],
+		},
+	],
+};
+
+const wrdTemplate = {
+	title: 'WRD ID No. {WellsRanThroughDEM_WRD_CB_Wells}',
+	content: [
+		{
+			type: 'fields',
+			fieldInfos: [
+				{
+					fieldName: 'WellsRanThroughDEM_WRD_CB_Wells',
+					label: 'WRDID',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM_WRD_CB_Wel_9',
+					label: 'State Source',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM_WRD_CB_Wel_5',
+					label: 'Type',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM_WRD_CB_We_13',
+					label: 'Agency_Lon',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM_WRD_CB_We_11',
+					label: 'Short_Lbl',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM_WRD_CB_We_15',
+					label: 'Status',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM_EPA_WQ_DDW_5',
+					label: 'Constituen',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+					label: 'Sample_Dat',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM_EPA_WQ_DDW_6',
+					label: 'Value_',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM_EPA_WQ_DDW_9',
+					label: 'Unit_Stand',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM_EPA_WQ_DD_17',
+					label: 'Primary__1',
+				},
+				{
+					fieldName: 'PerfsAndAquifersSummary_Max_INT ',
+					label: 'Maximum_INT_No',
+				},
+				{
+					fieldName: 'PerfsAndAquifersSummary_Min_TOI',
+					label: 'Minimum_TOI',
+				},
+				{
+					fieldName: 'PerfsAndAquifersSummary_Max_BOI',
+					label: 'Maximum_BOI',
+				},
+				{
+					fieldName: 'Constr_YYYYDate',
+					label: 'Constr_YYY',
+				},
+				{
+					fieldName: 'Destr_YYYYDate ',
+					label: 'Destr_YYYY',
+				},
+			],
+		},
+	],
+};
+
+const gamaTemplate = {
+	title: 'WRD ID No. {WELL_ID}',
+	content: [
+		{
+			type: 'fields',
+			fieldInfos: [
+				{
+					fieldName: 'RESULTS',
+					label: 'Results',
+				},
+				{
+					fieldName: 'SOURCE_NAME',
+					label: 'Source Name',
+				},
+				{
+					fieldName: 'WELL_TYPE',
+					label: 'WELL_TYPE',
+				},
+				{
+					fieldName: 'CHEMICAL',
+					label: 'CHEMICAL',
+				},
+				{
+					fieldName: 'DATE',
+					label: 'Date',
+				},
+				{
+					fieldName: 'RESULTS',
+					label: 'Results',
+				},
+				{
+					fieldName: 'UNITS',
+					label: 'UNITS',
+				},
+				{
+					fieldName: 'WELL_DEPTH__FT_',
+					label: 'WELL DEPTH (FT)',
+				},
+			],
+		},
+	],
+};
+
 export const configDev = {
 	appTitle: 'Central Basin Map - v1.3 beta',
 	portalEnv: {
@@ -155,20 +348,21 @@ export const configDev = {
 		elevationUrl: '//elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer',
 	},
 	wells3D: {
-		parentTitle: 'Wells 3D',
-		title2D: 'All Wells With Labels',
-		title3D: 'All Wells - Gray V3',
-		layerVar: 'wells2D',
+		parentTitle: 'All Wells',
+		title2D: 'All Wells 2D with Labels',
+		title3D: 'All Wells 3D',
+		layerVar: 'allWells',
 	},
 	tableLayers: {
 		layers: [
 			{
-				parentTitle: 'Wells 3D',
-				title2D: 'All Wells With Labels',
-				title3D: 'All Wells - Gray V3',
+				parentTitle: 'All Wells',
+				title2D: 'All Wells 2D with Labels',
+				title3D: 'All Wells 3D',
 				label: 'All Wells',
-				layerVar: 'wells2D',
+				layerVar: 'allWells',
 				fields: wellsFields,
+				template: wellsTemplate,
 			},
 			{
 				parentTitle: 'TCE Sampling Results (Trichloroethylene)',
@@ -178,6 +372,7 @@ export const configDev = {
 				layerVar: 'gamaTCE',
 				fields: gamaFields,
 				dateField: 'DATE',
+				template: gamaTemplate,
 			},
 			{
 				parentTitle: 'TCE Sampling Results (Trichloroethylene)',
@@ -187,6 +382,7 @@ export const configDev = {
 				layerVar: 'wrdTCE',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+				template: wrdTemplate,
 			},
 			{
 				parentTitle: 'PCE Sampling Results (Tetrachloroethylene)',
@@ -196,6 +392,7 @@ export const configDev = {
 				layerVar: 'gamaPCE',
 				fields: gamaFields,
 				dateField: 'DATE',
+				template: gamaTemplate,
 			},
 			{
 				parentTitle: 'PCE Sampling Results (Tetrachloroethylene)',
@@ -205,6 +402,7 @@ export const configDev = {
 				layerVar: 'wrdPCE',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+				template: wrdTemplate,
 			},
 			{
 				parentTitle: 'CR6 Sampling Results (Hexavalent Chromium)',
@@ -214,6 +412,7 @@ export const configDev = {
 				layerVar: 'gamaCR6',
 				fields: gamaFields,
 				dateField: 'DATE',
+				template: gamaTemplate,
 			},
 			{
 				parentTitle: 'CR6 Sampling Results (Hexavalent Chromium)',
@@ -223,6 +422,7 @@ export const configDev = {
 				layerVar: 'wrdCR6',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+				template: wrdTemplate,
 			},
 			{
 				parentTitle: 'CR Sampling Results (Total Chromium)',
@@ -232,6 +432,7 @@ export const configDev = {
 				layerVar: 'gamaCR',
 				fields: gamaFields,
 				dateField: 'DATE',
+				template: gamaTemplate,
 			},
 			{
 				parentTitle: 'CR Sampling Results (Total Chromium)',
@@ -241,6 +442,7 @@ export const configDev = {
 				layerVar: 'wrdCR',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+				template: wrdTemplate,
 			},
 			{
 				parentTitle: 'DCE12C Sampling Results (cis-1,2-Dichloroethylene)',
@@ -250,6 +452,7 @@ export const configDev = {
 				layerVar: 'gamaDCE12C',
 				fields: gamaFields,
 				dateField: 'DATE',
+				template: gamaTemplate,
 			},
 			{
 				parentTitle: 'DCE12C Sampling Results (cis-1,2-Dichloroethylene)',
@@ -259,6 +462,7 @@ export const configDev = {
 				layerVar: 'wrdDCE12C',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+				template: wrdTemplate,
 			},
 			{
 				parentTitle: 'AS Sampling Results (Arsenic)',
@@ -268,6 +472,7 @@ export const configDev = {
 				layerVar: 'gamaAS',
 				fields: gamaFields,
 				dateField: 'DATE',
+				template: gamaTemplate,
 			},
 			{
 				parentTitle: 'AS Sampling Results (Arsenic)',
@@ -277,6 +482,7 @@ export const configDev = {
 				layerVar: 'wrdAS',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+				template: wrdTemplate,
 			},
 			{
 				parentTitle: 'DCE11 Sampling Results (1,1-Dichloroethylene)',
@@ -286,6 +492,7 @@ export const configDev = {
 				layerVar: 'gamaDCE11',
 				fields: gamaFields,
 				dateField: 'DATE',
+				template: gamaTemplate,
 			},
 			{
 				parentTitle: 'DCE11 Sampling Results (1,1-Dichloroethylene)',
@@ -295,6 +502,7 @@ export const configDev = {
 				layerVar: 'wrdDCE11',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+				template: wrdTemplate,
 			},
 			{
 				parentTitle: 'DIOXANE14C Sampling Results (C4H8O2, 1,4-Dioxane)',
@@ -304,6 +512,7 @@ export const configDev = {
 				layerVar: 'gamaDIOXANE14C',
 				fields: gamaFields,
 				dateField: 'DATE',
+				template: gamaTemplate,
 			},
 			{
 				parentTitle: 'DIOXANE14C Sampling Results (C4H8O2, 1,4-Dioxane)',
@@ -313,6 +522,7 @@ export const configDev = {
 				layerVar: 'wrdDIOXANE14C',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+				template: wrdTemplate,
 			},
 			{
 				parentTitle: 'PB Sampling Results (Lead)',
@@ -322,6 +532,7 @@ export const configDev = {
 				layerVar: 'gamaPB',
 				fields: gamaFields,
 				dateField: 'DATE',
+				template: gamaTemplate,
 			},
 			{
 				parentTitle: 'PB Sampling Results (Lead)',
@@ -331,6 +542,7 @@ export const configDev = {
 				layerVar: 'wrdPB',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+				template: wrdTemplate,
 			},
 			{
 				parentTitle: 'PCATE Sampling Results (ClO4, Perchlorate)',
@@ -340,6 +552,7 @@ export const configDev = {
 				layerVar: 'gama0PCATE',
 				fields: gamaFields,
 				dateField: 'DATE',
+				template: gamaTemplate,
 			},
 			{
 				parentTitle: 'PCATE Sampling Results (ClO4, Perchlorate)',
@@ -349,6 +562,7 @@ export const configDev = {
 				layerVar: 'wrdPCATE',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+				template: wrdTemplate,
 			},
 			{
 				parentTitle: 'PFOA Sampling Results (Perfuloroctanioic Acid)',
@@ -358,6 +572,7 @@ export const configDev = {
 				layerVar: 'gamaPFOA',
 				fields: gamaFields,
 				dateField: 'DATE',
+				template: gamaTemplate,
 			},
 			{
 				parentTitle: 'PFOA Sampling Results (Perfuloroctanioic Acid)',
@@ -367,6 +582,7 @@ export const configDev = {
 				layerVar: 'wrdPFOA',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+				template: wrdTemplate,
 			},
 			{
 				parentTitle: 'TCPR123 Sampling Results (Trichlp)',
@@ -376,6 +592,7 @@ export const configDev = {
 				layerVar: 'gamaTCPR123',
 				fields: gamaFields,
 				dateField: 'DATE',
+				template: gamaTemplate,
 			},
 			{
 				parentTitle: 'TCPR123 Sampling Results (Trichlp)',
@@ -385,6 +602,7 @@ export const configDev = {
 				layerVar: 'wrdTCPR123',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+				template: wrdTemplate,
 			},
 			{
 				parentTitle: 'VC Sampling Results (Vinyl Chloride)',
@@ -394,6 +612,7 @@ export const configDev = {
 				layerVar: 'gamaVC',
 				fields: gamaFields,
 				dateField: 'DATE',
+				template: gamaTemplate,
 			},
 			{
 				parentTitle: 'VC Sampling Results (Vinyl Chloride)',
@@ -403,6 +622,7 @@ export const configDev = {
 				layerVar: 'wrdVC',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+				template: wrdTemplate,
 			},
 			{
 				parentTitle: 'CTCL Sampling Results (CT, Carbon Tetrachloride)',
@@ -412,6 +632,7 @@ export const configDev = {
 				layerVar: 'gamaCTCL',
 				fields: gamaFields,
 				dateField: 'DATE',
+				template: gamaTemplate,
 			},
 			{
 				parentTitle: 'CTCL Sampling Results (CT, Carbon Tetrachloride)',
@@ -421,6 +642,7 @@ export const configDev = {
 				layerVar: 'wrdCTCL',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+				template: wrdTemplate,
 			},
 			{
 				parentTitle: 'PFOS Sampling Results (Perfluorooctancesulfonic Acid)',
@@ -430,6 +652,7 @@ export const configDev = {
 				layerVar: 'gamaPFOS',
 				fields: gamaFields,
 				dateField: 'DATE',
+				template: gamaTemplate,
 			},
 			{
 				parentTitle: 'PFOS Sampling Results (Perfluorooctancesulfonic Acid)',
@@ -439,6 +662,7 @@ export const configDev = {
 				layerVar: 'wrdPFOS',
 				fields: wrdFields,
 				dateField: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+				template: wrdTemplate,
 			},
 		],
 	},
