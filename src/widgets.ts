@@ -26,7 +26,6 @@ import Graphic from '@arcgis/core/Graphic';
 
 let appContainer: HTMLElement | null;
 let tableContainer: HTMLElement | null;
-// const tableDiv = document.getElementById('tableDiv');
 
 // Get reference to div elements
 let labelText: HTMLElement | null;
@@ -301,7 +300,6 @@ export const initTableWidget = (view: SceneView, layersInfo: any[], layerViews: 
 			iconClass: 'esri-icon-zoom-in-magnifying-glass',
 			clickFunction: (evt) => {
 				// console.log(evt);
-				// debugger;
 				zoomToSelectedFeature();
 			},
 		});
@@ -362,14 +360,4 @@ export const initTableWidget = (view: SceneView, layersInfo: any[], layerViews: 
 			});
 		};
 	});
-};
-
-const containsObject = (obj: any, list: any[]) => {
-	let match = false;
-	list.forEach((listItem) => {
-		if (listItem.feature === obj) {
-			match = true;
-		}
-	});
-	return match;
 };

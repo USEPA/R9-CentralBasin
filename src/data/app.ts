@@ -17,8 +17,7 @@ import Expand from '@arcgis/core/widgets/Expand';
 import TimeExtent from '@arcgis/core/TimeExtent';
 import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
 import SceneLayer from '@arcgis/core/layers/SceneLayer';
-// import FeatureTable from '@arcgis/core/widgets/FeatureTable';
-// import LayerView from '@arcgis/core/views/layers/LayerView';
+
 let highlight: any;
 export let config: any;
 
@@ -58,7 +57,6 @@ const applyTimeExtent = (timeExtent: TimeExtent, layerView: SceneLayerView, time
 
 	layerView.filter = new FeatureFilter({
 		where: `${timeField} BETWEEN DATE '${start}' AND DATE '${end}'`,
-		// where: `WellsRanThroughDEM_EPA_WQ_DDW_1 = DATE '${start}'`
 	});
 };
 
@@ -125,7 +123,6 @@ const highlightFeature = async (wellsSceneLayerView: SceneLayerView, view: Scene
 	if (highlight) {
 		highlight.remove();
 	}
-
 	return whenNotOnce(wellsSceneLayerView, 'updating', () => {
 		wellsSceneLayerView
 			.queryFeatures({

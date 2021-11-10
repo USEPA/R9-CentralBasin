@@ -72,7 +72,6 @@ view.when(initTimeSlider).then((timePieces) => {
 			debugger;
 		}
 
-		// console.log('parentlayer: ', parentLayer.title, 'id: ', parentLayer.id);
 		if (parentLayer.layers) {
 			// loop through config layers
 			config.tableLayers.layers.forEach((configLayer: LayerInfo, configLayerIndex) => {
@@ -127,7 +126,6 @@ view.when(initTimeSlider).then((timePieces) => {
 const createTableElements = (layerViews: SceneLayerView[], tableLayersArr: LayerInfo[]) => {
 	layerViews.forEach((layerView) => {
 		tableLayersArr.forEach((tableLayer, j) => {
-			// console.log(tableLayer);
 			// add scene view, html elements to array
 			if (tableLayer.id3D === layerView.layer.id) {
 				console.log(tableLayer);
@@ -137,7 +135,6 @@ const createTableElements = (layerViews: SceneLayerView[], tableLayersArr: Layer
 				tableLayersArr[j]?.tableDiv?.classList.add('tab-content');
 
 				tableLayersArr[j].tab = document.createElement('BUTTON');
-				// if (!tableLayersArr[j]?.tab) return;
 
 				// @ts-ignore
 				tableLayersArr[j].tab.classList.add('calcite-tab', 'wells2d', 'esri-widget--button');
