@@ -1,4 +1,4 @@
-import { mapProperties } from './data/app';
+import { map, mapProperties } from './data/app';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -18,6 +18,7 @@ import BasemapGallery from '@arcgis/core/widgets/BasemapGallery';
 import Search from '@arcgis/core/widgets/Search';
 import WebScene from '@arcgis/core/WebScene';
 import Basemap from '@arcgis/core/Basemap';
+import Slider from "@arcgis/core/widgets/Slider";
 import FeatureTable from '@arcgis/core/widgets/FeatureTable';
 import { info } from './data/app';
 import { watch } from '@arcgis/core/core/watchUtils';
@@ -56,6 +57,26 @@ export const initWidgets = (view: SceneView) => {
 			},
 		},
 	});
+
+	const opacSlider = new Slider({
+		container: document.createElement("div"),
+		min: 0,
+		max: 1,
+		values: [1],
+		precision: 2,
+		steps: 0.1,
+		snapOnClickEnabled: true,
+		visibleElements: {
+			labels: true,
+			rangeLabels: true
+		}
+	})
+
+	// @ts-ignore
+	opacSlider.on(['thumb-change', 'thumb-drag'], function (event) {
+		console.log(event.value);
+		map.ground.opacity = event.value;
+	})
 
 	const lineMeasurement = new DirectLineMeasurement3D({
 		view: view,
@@ -122,6 +143,15 @@ export const initWidgets = (view: SceneView) => {
 		expandTooltip: 'Basemaps',
 	});
 
+	const opacExpand = new Expand({
+		view,
+		content: opacSlider.container,
+		expandIconClass: 'esri-icon-feature-layer',
+		autoCollapse: true,
+		group: 'top-left',
+		expandTooltip: 'Basemap Opacity'
+	})
+
 	const lineMeasurementExpand = new Expand({
 		view,
 		content: lineMeasurement,
@@ -183,6 +213,7 @@ export const initWidgets = (view: SceneView) => {
 
 	view.ui.add(homeButton, 'top-left');
 	view.ui.add(basemapExpand, 'top-left');
+	view.ui.add(opacExpand, 'top-left');
 
 	view.ui.add(lineMeasurementExpand, 'top-left');
 	view.ui.add(areaMeasurementExpand, 'top-left');

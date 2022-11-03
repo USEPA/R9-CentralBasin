@@ -1,4 +1,5 @@
 @import '~@arcgis/core/assets/esri/themes/light/main.css';
+
 :root {
   --blue: #2196F3;
   --gray: #efefef;
@@ -6,7 +7,8 @@
   --orange: #f97d1a
 }
 
-html, body {
+html,
+body {
   height: 100%;
   width: 100%;
   margin: 0;
@@ -270,6 +272,7 @@ input:checked+.slider:before {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -324,4 +327,8 @@ input:checked+.slider:before {
 
 .esri-feature-table__content {
   height: 400px;
+}
+
+.esri-slider {
+  min-width: 300px;
 }
