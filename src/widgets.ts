@@ -27,6 +27,7 @@ import Graphic from '@arcgis/core/Graphic';
 
 let appContainer: HTMLElement | null;
 let tableContainer: HTMLElement | null;
+let basemapDiv = document.getElementById("basemapGalleryDiv")?.parentElement;
 
 // Get reference to div elements
 let labelText: HTMLElement | null;
@@ -40,6 +41,7 @@ export const initWidgets = (view: SceneView) => {
 
 	const basemapGallery = new BasemapGallery({
 		view: view,
+		container: 'basemapGalleryDiv',
 		// @ts-ignore
 		source: {
 			portal: info.portalUrl,
@@ -59,18 +61,25 @@ export const initWidgets = (view: SceneView) => {
 	});
 
 	const opacSlider = new Slider({
-		container: document.createElement("div"),
+		container: 'opacitySliderDiv',
+		label: 'Ground transparency',
 		min: 0,
 		max: 1,
+		layout: "horizontal-reversed",
 		values: [1],
-		precision: 2,
-		steps: 0.1,
+		steps: 0.01,
 		snapOnClickEnabled: true,
 		visibleElements: {
-			labels: true,
-			rangeLabels: true
+			labels: false,
+			rangeLabels: false
 		}
 	})
+
+	opacSlider.tickConfigs = [{
+		mode: "percent",
+		values: [0, 25, 50, 75, 100],
+		labelsVisible: false
+	}];
 
 	// @ts-ignore
 	opacSlider.on(['thumb-change', 'thumb-drag'], function (event) {
@@ -136,21 +145,21 @@ export const initWidgets = (view: SceneView) => {
 
 	const basemapExpand = new Expand({
 		view,
-		content: basemapGallery,
+		content: basemapDiv,
 		expandIconClass: 'esri-icon-basemap',
 		autoCollapse: true,
 		group: 'top-left',
 		expandTooltip: 'Basemaps',
 	});
 
-	const opacExpand = new Expand({
-		view,
-		content: opacSlider.container,
-		expandIconClass: 'esri-icon-feature-layer',
-		autoCollapse: true,
-		group: 'top-left',
-		expandTooltip: 'Basemap Opacity'
-	})
+	// const opacExpand = new Expand({
+	// 	view,
+	// 	content: opacSlider.container,
+	// 	expandIconClass: 'esri-icon-feature-layer',
+	// 	autoCollapse: true,
+	// 	group: 'top-left',
+	// 	expandTooltip: 'Basemap Opacity'
+	// })
 
 	const lineMeasurementExpand = new Expand({
 		view,
@@ -213,7 +222,7 @@ export const initWidgets = (view: SceneView) => {
 
 	view.ui.add(homeButton, 'top-left');
 	view.ui.add(basemapExpand, 'top-left');
-	view.ui.add(opacExpand, 'top-left');
+	// view.ui.add(opacExpand, 'top-left');
 
 	view.ui.add(lineMeasurementExpand, 'top-left');
 	view.ui.add(areaMeasurementExpand, 'top-left');

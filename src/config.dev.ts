@@ -345,9 +345,11 @@ export const configDev = {
 		// webScene: 'dd370d1e2c194f4491078b579379f1d1',
 		// webScene: '6e43620d338a418481c9702fe2a97f26',
 
-		// Below is the correct scene, I don't have access currently
-		// webScene: 'c28d269394414b0cb55b2e3308816bb3', // 15
-		webScene: 'c6c5e203c3ab44058353f151ad967b59',
+		// Below is the v1.2 (old) web scene
+		// webScene: 'c6c5e203c3ab44058353f151ad967b59',
+
+		webScene: 'c28d269394414b0cb55b2e3308816bb3', // 15
+
 		elevationUrl: '//elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer',
 	},
 	wells3D: {

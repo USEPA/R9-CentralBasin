@@ -330,5 +330,30 @@ input:checked+.slider:before {
 }
 
 .esri-slider {
-  min-width: 300px;
+  min-width: 240px;
+}
+
+#opacLabel {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#basemapGalleryDiv {
+  min-width: 280px;
+  max-height: 440px;
+}
+
+#basemap-gallery-footer-container {
+  height: auto !important;
+  border-top: 1px #a9a9a9 solid;
+  margin-top: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0px 30px 30px 30px;
+}
+
+#basemap-gallery-footer {
+  height: fit-content;
 }
