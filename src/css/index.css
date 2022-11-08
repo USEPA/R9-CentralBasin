@@ -338,13 +338,21 @@ input:checked+.slider:before {
   margin-right: auto;
 }
 
+.esri-slider__tick.sliderQuarterTicks {
+  height: 7px;
+}
+
+.esri-slider__tick.sliderSmallTicks {
+  height: 3px;
+}
+
 #basemapGalleryDiv {
   min-width: 280px;
-  max-height: 440px;
+  max-height: 400px;
 }
 
 #basemap-gallery-footer-container {
-  height: auto !important;
+  height: auto;
   border-top: 1px #a9a9a9 solid;
   margin-top: 0px;
   display: flex;
@@ -356,4 +364,5 @@ input:checked+.slider:before {
 
 #basemap-gallery-footer {
   height: fit-content;
+  margin-bottom: 10px;
 }

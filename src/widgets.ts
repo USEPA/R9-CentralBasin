@@ -78,8 +78,49 @@ export const initWidgets = (view: SceneView) => {
 	opacSlider.tickConfigs = [{
 		mode: "percent",
 		values: [0, 25, 50, 75, 100],
-		labelsVisible: false
-	}];
+		labelsVisible: true,
+		tickCreatedFunction: function (initialValue, tickElement, labelElement) {
+			tickElement.classList.add("sliderQuarterTicks");
+			labelElement?.classList.add("sliderQuarterLabels");
+
+			let sliderLabels = document.getElementsByClassName("sliderQuarterLabels");
+			for (let i = 0; i < sliderLabels.length; i++) {
+				switch (sliderLabels[i].innerHTML) {
+					case "1":
+						sliderLabels[i].innerHTML = "0";
+						break;
+					case "0.75":
+						sliderLabels[i].innerHTML = "25";
+						break;
+					case "0.5":
+						sliderLabels[i].innerHTML = "50";
+						break;
+					case "0.25":
+						sliderLabels[i].innerHTML = "75";
+						break;
+					case "0":
+						sliderLabels[i].innerHTML = "100";
+						break;
+
+					default:
+						break;
+				}
+			}
+		}
+	}, {
+		mode: "percent",
+		values: [5, 10, 15, 20, 30, 35, 40, 45, 55, 60, 65, 70, 80, 85, 90, 95],
+		labelsVisible: false,
+		tickCreatedFunction: function (initialValue, tickElement, labelElement) {
+			tickElement.classList.add("sliderSmallTicks");
+			labelElement?.classList.add("sliderSmallLabels");
+		}
+	}
+	];
+
+	// ToDo: Replace label text
+
+
 
 	// @ts-ignore
 	opacSlider.on(['thumb-change', 'thumb-drag'], function (event) {
@@ -145,21 +186,13 @@ export const initWidgets = (view: SceneView) => {
 
 	const basemapExpand = new Expand({
 		view,
+		// @ts-ignore
 		content: basemapDiv,
 		expandIconClass: 'esri-icon-basemap',
 		autoCollapse: true,
 		group: 'top-left',
 		expandTooltip: 'Basemaps',
 	});
-
-	// const opacExpand = new Expand({
-	// 	view,
-	// 	content: opacSlider.container,
-	// 	expandIconClass: 'esri-icon-feature-layer',
-	// 	autoCollapse: true,
-	// 	group: 'top-left',
-	// 	expandTooltip: 'Basemap Opacity'
-	// })
 
 	const lineMeasurementExpand = new Expand({
 		view,
