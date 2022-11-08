@@ -118,13 +118,8 @@ export const initWidgets = (view: SceneView) => {
 	}
 	];
 
-	// ToDo: Replace label text
-
-
-
 	// @ts-ignore
 	opacSlider.on(['thumb-change', 'thumb-drag'], function (event) {
-		console.log(event.value);
 		map.ground.opacity = event.value;
 	})
 
@@ -255,7 +250,6 @@ export const initWidgets = (view: SceneView) => {
 
 	view.ui.add(homeButton, 'top-left');
 	view.ui.add(basemapExpand, 'top-left');
-	// view.ui.add(opacExpand, 'top-left');
 
 	view.ui.add(lineMeasurementExpand, 'top-left');
 	view.ui.add(areaMeasurementExpand, 'top-left');
