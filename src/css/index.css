@@ -336,14 +336,31 @@ input:checked+.slider:before {
 #opacLabel {
   margin-left: auto;
   margin-right: auto;
+  font-size: 12px;
 }
 
 .esri-slider__tick.sliderQuarterTicks {
   height: 7px;
 }
 
+.esri-slider__tick.sliderQuarterTicks:hover {
+  cursor: pointer;
+}
+
+.esri-slider__tick-label.sliderQuarterLabels {
+  font-size: 9px;
+}
+
+.esri-slider__tick-label.sliderQuarterLabels:hover {
+  cursor: pointer;
+}
+
 .esri-slider__tick.sliderSmallTicks {
   height: 3px;
+}
+
+.esri-slider__tick.sliderSmallTicks:hover {
+  cursor: pointer;
 }
 
 #basemapGalleryDiv {

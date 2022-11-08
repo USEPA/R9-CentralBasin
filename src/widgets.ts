@@ -106,6 +106,20 @@ export const initWidgets = (view: SceneView) => {
 						break;
 				}
 			}
+
+			// @ts-ignore
+			labelElement.onclick = function () {
+				// @ts-ignore
+				const newValue = labelElement["data-value"];
+				opacSlider.values = [newValue];
+			};
+
+			// @ts-ignore
+			tickElement.onclick = function () {
+				// @ts-ignore
+				const newValue = tickElement["data-value"];
+				opacSlider.values = [newValue];
+			};
 		}
 	}, {
 		mode: "percent",
@@ -114,6 +128,13 @@ export const initWidgets = (view: SceneView) => {
 		tickCreatedFunction: function (initialValue, tickElement, labelElement) {
 			tickElement.classList.add("sliderSmallTicks");
 			labelElement?.classList.add("sliderSmallLabels");
+
+			// @ts-ignore
+			tickElement.onclick = function () {
+				// @ts-ignore
+				const newValue = tickElement["data-value"];
+				opacSlider.values = [newValue];
+			};
 		}
 	}
 	];
