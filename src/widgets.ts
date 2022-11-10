@@ -1,4 +1,4 @@
-import { mapProperties } from './data/app';
+import { map, mapProperties } from './data/app';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -20,9 +20,12 @@ import WebScene from '@arcgis/core/WebScene';
 import Basemap from '@arcgis/core/Basemap';
 import FeatureTable from '@arcgis/core/widgets/FeatureTable';
 import { info } from './data/app';
-import { watch } from '@arcgis/core/core/watchUtils';
+import { whenFalseOnce } from '@arcgis/core/core/watchUtils';
 import ButtonMenuItem from '@arcgis/core/widgets/FeatureTable/Grid/support/ButtonMenuItem';
 import Graphic from '@arcgis/core/Graphic';
+
+import { chemicalLayer } from '.';
+import "@esri/calcite-components";
 
 let appContainer: HTMLElement | null;
 let tableContainer: HTMLElement | null;
@@ -113,6 +116,61 @@ export const initWidgets = (view: SceneView) => {
 		expanded: true,
 	});
 
+	// Filter widget added to expand, query feature layer for unique chemicals and add them
+	// to calcite combobox. Selecting a combobox item applies definition expression to
+	// the layer to show only that chemical
+	const filtersDiv: any = document.getElementById('filtersDiv');
+	const notVisible: any = document.getElementById('notVisible');
+	const combobox = document.getElementById('combobox') as HTMLCalciteComboboxElement;
+
+	let chemicalNames: any = [];
+
+	const queryParams = chemicalLayer.createQuery();
+	queryParams.outFields = ["GM_CHEMICAL_NAME"];
+	queryParams.returnDistinctValues = true;
+	chemicalLayer.queryFeatures(queryParams).then(function (results) {
+
+		results.features.forEach(i => {
+			if (!chemicalNames.includes(i.attributes["GM_CHEMICAL_NAME"])) {
+				chemicalNames.push(i.attributes["GM_CHEMICAL_NAME"]);
+				const comboItem = document.createElement('calcite-combobox-item');
+				comboItem.setAttribute('value', i.attributes["GM_CHEMICAL_NAME"]);
+				comboItem.setAttribute('text-label', i.attributes["GM_CHEMICAL_NAME"]);
+				combobox.appendChild(comboItem);
+			}
+		});
+
+	})
+
+	combobox.addEventListener("calciteComboboxChange", calciteComboboxChangeEvt => {
+		// @ts-ignore
+		let selectedItem = calciteComboboxChangeEvt.target.value;
+		if (selectedItem == "Show all") {
+			chemicalLayer.definitionExpression = "";
+		} else {
+			chemicalLayer.definitionExpression = `GM_CHEMICAL_NAME = '${selectedItem}'`;
+		}
+	});
+
+	chemicalLayer.watch("visible", function () {
+		// Prevent user from filtering if layer is not visible, provide tooltip info
+		if (chemicalLayer.visible) {
+			combobox.classList.remove("no-click");
+		} else {
+			filtersDiv.setAttribute("title", `${chemicalLayer.title} layer must be visible to filter.`)
+			combobox.classList.add("no-click");
+		}
+	});
+
+	const filterExpand = new Expand({
+		view,
+		content: filtersDiv,
+		expandIconClass: 'esri-icon-filter',
+		autoCollapse: true,
+		group: 'top-left',
+		expandTooltip: 'Filter',
+	})
+
 	const basemapExpand = new Expand({
 		view,
 		content: basemapGallery,
@@ -180,6 +238,7 @@ export const initWidgets = (view: SceneView) => {
 	view.ui.add(searchWidget, 'top-right');
 
 	view.ui.add(llExpand, 'top-right');
+	view.ui.add(filterExpand, 'top-right');
 
 	view.ui.add(homeButton, 'top-left');
 	view.ui.add(basemapExpand, 'top-left');
