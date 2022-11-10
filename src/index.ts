@@ -39,6 +39,14 @@ view.popup.highlightEnabled = false;
 
 map.layers.splice(0, 0, wellsLayer);
 
+export const testLayer = new FeatureLayer({
+	portalItem: {
+		id: "b2465d9640c848e7b5de175f48c31376"
+	},
+});
+
+map.layers.add(testLayer);
+
 view.popup.defaultPopupTemplateEnabled = true;
 
 // handle spinner for when layers are updating

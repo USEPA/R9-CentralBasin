@@ -7,36 +7,38 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="mobile-web-app-capable" content="yes">
   <title>Central Basin Map</title>
-  <% if (htmlWebpackPlugin.options.mode === 'production') { %>
-  <script>
-    // Check that service workers are registered
-    if ('serviceWorker' in navigator) {
-      // Use the window load event to keep the page load performant
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("./service-worker.js")
-          .catch(() => {
-            console.log("Service Worker not loaded");
-          });
-      });
-    }
-  </script>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src=https://www.googletagmanager.com/gtag/js?id=UA-32633028-1></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-    gtag('config', 'UA-32633028-1');
-  </script>
-  <% } %>
-  <% 
-  
-  %>
+  <% if (htmlWebpackPlugin.options.mode==='production' ) { %>
+    <script>
+      // Check that service workers are registered
+      if ('serviceWorker' in navigator) {
+        // Use the window load event to keep the page load performant
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("./service-worker.js")
+            .catch(() => {
+              console.log("Service Worker not loaded");
+            });
+        });
+      }
+    </script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src=https://www.googletagmanager.com/gtag/js?id=UA-32633028-1></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'UA-32633028-1');
+    </script>
+    <% } %>
+      <% %>
 </head>
 
 <body>
+  <script type="module" src="https://unpkg.com/@esri/calcite-components/dist/calcite/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/@esri/calcite-components/dist/calcite/calcite.css" />
+
+
   <noscript> JavaScript is required in order to use this app </noscript>
   <div id="appContainer" class="app-container">
     <header class="header">
@@ -61,14 +63,16 @@
 
     <div id="layerLegendDiv" class="esri-widget">
       <div id="llTabs" class="calcite-tabs" layout="inline" position="above">
-        <button id="layers-button" class="calcite-tab wells2d esri-widget--button active-button" onclick="toggleLLTab()">Layers</button>
-        <button id="legend-button" class="calcite-tab wells2d esri-widget--button" onclick="toggleLLTab()">Legend</button>
+        <button id="layers-button" class="calcite-tab wells2d esri-widget--button active-button"
+          onclick="toggleLLTab()">Layers</button>
+        <button id="legend-button" class="calcite-tab wells2d esri-widget--button"
+          onclick="toggleLLTab()">Legend</button>
       </div>
       <div id="llDivs" class="tableDivs">
         <div id="layers-content" class="tab-content active-div esri-widget active-content"></div>
         <div id="legend-content" class="tab-content active-div esri-widget"></div>
       </div>
-    </div> 
+    </div>
 
     <div id="featureSearchDiv" class="esri-widget">
       <input type="text" id="featureSearch" class="esri-input esri-feature-form__input"
@@ -81,6 +85,13 @@
       <div id="tableDivs" class="tableDivs">
       </div>
     </div>
+
+
+    <div id="filtersDiv" class="esri-widget">
+      <calcite-combobox selection-mode="single" id="combobox" placeholder="- Select one -">
+      </calcite-combobox>
+    </div>
+
   </div>
 </body>
 

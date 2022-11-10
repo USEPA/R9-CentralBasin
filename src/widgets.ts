@@ -1,4 +1,4 @@
-import { mapProperties } from './data/app';
+import { map, mapProperties } from './data/app';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -23,6 +23,9 @@ import { info } from './data/app';
 import { watch } from '@arcgis/core/core/watchUtils';
 import ButtonMenuItem from '@arcgis/core/widgets/FeatureTable/Grid/support/ButtonMenuItem';
 import Graphic from '@arcgis/core/Graphic';
+
+import { testLayer } from '.';
+import '@esri/calcite-components/dist/index.js';
 
 let appContainer: HTMLElement | null;
 let tableContainer: HTMLElement | null;
@@ -113,6 +116,40 @@ export const initWidgets = (view: SceneView) => {
 		expanded: true,
 	});
 
+	const filtersDiv: any = document.getElementById('filtersDiv');
+	const combobox: any = document.getElementById('combobox');
+
+	let chemicalNames: any = [];
+
+	const queryParams = testLayer.createQuery();
+	queryParams.outFields = ["GM_CHEMICAL_NAME"];
+	queryParams.returnDistinctValues = true;
+	console.log(queryParams);
+	testLayer.queryFeatures(queryParams).then(function (results) {
+		console.log(results.features);
+
+		results.features.forEach(i => {
+			if (!chemicalNames.includes(i.attributes["GM_CHEMICAL_NAME"])) {
+				chemicalNames.push(i.attributes["GM_CHEMICAL_NAME"]);
+				const comboItem = document.createElement('calcite-combobox-item');
+				comboItem.setAttribute('value', i.attributes["GM_CHEMICAL_NAME"]);
+				comboItem.setAttribute('text-label', i.attributes["GM_CHEMICAL_NAME"]);
+				combobox.appendChild(comboItem);
+			}
+		});
+
+		console.log(chemicalNames);
+	})
+
+	const filterExpand = new Expand({
+		view,
+		content: filtersDiv,
+		expandIconClass: 'esri-icon-filter',
+		autoCollapse: true,
+		group: 'top-left',
+		expandTooltip: 'Filter',
+	})
+
 	const basemapExpand = new Expand({
 		view,
 		content: basemapGallery,
@@ -180,6 +217,7 @@ export const initWidgets = (view: SceneView) => {
 	view.ui.add(searchWidget, 'top-right');
 
 	view.ui.add(llExpand, 'top-right');
+	view.ui.add(filterExpand, 'top-right');
 
 	view.ui.add(homeButton, 'top-left');
 	view.ui.add(basemapExpand, 'top-left');
