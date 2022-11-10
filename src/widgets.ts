@@ -20,12 +20,12 @@ import WebScene from '@arcgis/core/WebScene';
 import Basemap from '@arcgis/core/Basemap';
 import FeatureTable from '@arcgis/core/widgets/FeatureTable';
 import { info } from './data/app';
-import { watch } from '@arcgis/core/core/watchUtils';
+import { on, watch } from '@arcgis/core/core/watchUtils';
 import ButtonMenuItem from '@arcgis/core/widgets/FeatureTable/Grid/support/ButtonMenuItem';
 import Graphic from '@arcgis/core/Graphic';
 
 import { testLayer } from '.';
-import '@esri/calcite-components/dist/index.js';
+import "@esri/calcite-components";
 
 let appContainer: HTMLElement | null;
 let tableContainer: HTMLElement | null;
@@ -116,17 +116,19 @@ export const initWidgets = (view: SceneView) => {
 		expanded: true,
 	});
 
+	// Filter widget added to expand, query feature layer for unique chemicals and add them
+	// to calcite combobox. Selecting a combobox item applies definition expression to
+	// the layer to show only that chemical
 	const filtersDiv: any = document.getElementById('filtersDiv');
-	const combobox: any = document.getElementById('combobox');
+	const combobox = document.getElementById('combobox') as HTMLCalciteComboboxElement;
 
+	// Not sure if the chemical names will be needed again, may not need to store them
 	let chemicalNames: any = [];
 
 	const queryParams = testLayer.createQuery();
 	queryParams.outFields = ["GM_CHEMICAL_NAME"];
 	queryParams.returnDistinctValues = true;
-	console.log(queryParams);
 	testLayer.queryFeatures(queryParams).then(function (results) {
-		console.log(results.features);
 
 		results.features.forEach(i => {
 			if (!chemicalNames.includes(i.attributes["GM_CHEMICAL_NAME"])) {
@@ -138,8 +140,17 @@ export const initWidgets = (view: SceneView) => {
 			}
 		});
 
-		console.log(chemicalNames);
 	})
+
+	combobox.addEventListener("calciteComboboxChange", calciteComboboxChangeEvt => {
+		// @ts-ignore
+		let selectedItem = calciteComboboxChangeEvt.target.value;
+		if (selectedItem == "Show all") {
+			testLayer.definitionExpression = "";
+		} else {
+			testLayer.definitionExpression = `GM_CHEMICAL_NAME = '${selectedItem}'`;
+		}
+	});
 
 	const filterExpand = new Expand({
 		view,

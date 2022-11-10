@@ -337,4 +337,5 @@ input:checked+.slider:before {
 #combobox {
   width: 200px;
   height: 32px;
+  margin: auto;
 }
