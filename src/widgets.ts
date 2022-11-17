@@ -20,11 +20,11 @@ import WebScene from '@arcgis/core/WebScene';
 import Basemap from '@arcgis/core/Basemap';
 import FeatureTable from '@arcgis/core/widgets/FeatureTable';
 import { info } from './data/app';
-import { on, watch } from '@arcgis/core/core/watchUtils';
+import { whenFalseOnce } from '@arcgis/core/core/watchUtils';
 import ButtonMenuItem from '@arcgis/core/widgets/FeatureTable/Grid/support/ButtonMenuItem';
 import Graphic from '@arcgis/core/Graphic';
 
-import { testLayer } from '.';
+import { chemicalLayer } from '.';
 import "@esri/calcite-components";
 
 let appContainer: HTMLElement | null;
@@ -120,15 +120,16 @@ export const initWidgets = (view: SceneView) => {
 	// to calcite combobox. Selecting a combobox item applies definition expression to
 	// the layer to show only that chemical
 	const filtersDiv: any = document.getElementById('filtersDiv');
+	const notVisible: any = document.getElementById('notVisible');
 	const combobox = document.getElementById('combobox') as HTMLCalciteComboboxElement;
 
 	// Not sure if the chemical names will be needed again, may not need to store them
 	let chemicalNames: any = [];
 
-	const queryParams = testLayer.createQuery();
+	const queryParams = chemicalLayer.createQuery();
 	queryParams.outFields = ["GM_CHEMICAL_NAME"];
 	queryParams.returnDistinctValues = true;
-	testLayer.queryFeatures(queryParams).then(function (results) {
+	chemicalLayer.queryFeatures(queryParams).then(function (results) {
 
 		results.features.forEach(i => {
 			if (!chemicalNames.includes(i.attributes["GM_CHEMICAL_NAME"])) {
@@ -146,9 +147,19 @@ export const initWidgets = (view: SceneView) => {
 		// @ts-ignore
 		let selectedItem = calciteComboboxChangeEvt.target.value;
 		if (selectedItem == "Show all") {
-			testLayer.definitionExpression = "";
+			chemicalLayer.definitionExpression = "";
 		} else {
-			testLayer.definitionExpression = `GM_CHEMICAL_NAME = '${selectedItem}'`;
+			chemicalLayer.definitionExpression = `GM_CHEMICAL_NAME = '${selectedItem}'`;
+		}
+	});
+
+	chemicalLayer.watch("visible", function () {
+		if (chemicalLayer.visible) {
+			filterExpand.content = filtersDiv;
+		} else {
+			notVisible.innerText = `${chemicalLayer.title} layer must be visible to filter.`
+			filterExpand.content = notVisible;
+			notVisible.style.display = "block";
 		}
 	});
 

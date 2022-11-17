@@ -334,6 +334,15 @@ input:checked+.slider:before {
   height: 32px;
 }
 
+#notVisible {
+  text-align: center;
+  line-height: 32px;
+  width: max-content;
+  padding: 4px;
+  height: 32px;
+  display: none;
+}
+
 #combobox {
   width: 200px;
   height: 32px;

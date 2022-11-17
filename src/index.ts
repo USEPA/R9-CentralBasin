@@ -39,13 +39,13 @@ view.popup.highlightEnabled = false;
 
 map.layers.splice(0, 0, wellsLayer);
 
-export const testLayer = new FeatureLayer({
+export const chemicalLayer = new FeatureLayer({
 	portalItem: {
 		id: "b2465d9640c848e7b5de175f48c31376"
 	},
 });
 
-map.layers.add(testLayer);
+map.layers.add(chemicalLayer);
 
 view.popup.defaultPopupTemplateEnabled = true;
 
