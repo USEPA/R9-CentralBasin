@@ -348,3 +348,7 @@ input:checked+.slider:before {
   height: 32px;
   margin: auto;
 }
+
+.no-click {
+  pointer-events: none !important;
+}

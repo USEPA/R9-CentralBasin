@@ -154,12 +154,12 @@ export const initWidgets = (view: SceneView) => {
 	});
 
 	chemicalLayer.watch("visible", function () {
+		// Prevent user from filtering if layer is not visible, provide tooltip info
 		if (chemicalLayer.visible) {
-			filterExpand.content = filtersDiv;
+			combobox.classList.remove("no-click");
 		} else {
-			notVisible.innerText = `${chemicalLayer.title} layer must be visible to filter.`
-			filterExpand.content = notVisible;
-			notVisible.style.display = "block";
+			filtersDiv.setAttribute("title", `${chemicalLayer.title} layer must be visible to filter.`)
+			combobox.classList.add("no-click");
 		}
 	});
 
