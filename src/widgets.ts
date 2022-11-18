@@ -123,7 +123,6 @@ export const initWidgets = (view: SceneView) => {
 	const notVisible: any = document.getElementById('notVisible');
 	const combobox = document.getElementById('combobox') as HTMLCalciteComboboxElement;
 
-	// Not sure if the chemical names will be needed again, may not need to store them
 	let chemicalNames: any = [];
 
 	const queryParams = chemicalLayer.createQuery();
