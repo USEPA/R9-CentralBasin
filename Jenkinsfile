@@ -36,10 +36,10 @@ node {
     }
     if (env.BRANCH_NAME == "master") {
         stage('deploy') {
-            powershell "Remove-Item -Recurse -Force \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasin\\*"
-            bat "xcopy /e/h/i/y dist \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasin"
-            bat "xcopy /i/y web.config \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasin"
-            slackSend(channel:"#r9-service-alerts", message: "R9 Central Basin branch ${env.BRANCH_NAME} deployed to PRODUCTION\nReview: https://${env.PUBLIC_DOMAIN}/centralbasin/")
+            powershell "Remove-Item -Recurse -Force \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasinV2\\*"
+            bat "xcopy /e/h/i/y dist \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasinV2"
+            bat "xcopy /i/y web.config \\\\${env.HOST_ADDRESS}\\R9Apps\\CentralBasinV2"
+            slackSend(channel:"#r9-service-alerts", message: "R9 Central Basin V2 deployed to PRODUCTION\nReview: https://${env.PUBLIC_DOMAIN}/centralbasinV2/")
         }
     }
 }
