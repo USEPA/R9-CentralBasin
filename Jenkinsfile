@@ -13,12 +13,12 @@ node {
 //         publishCoverageGithub(filepath: './coverage/cobertura-coverage.xml', coverageXmlType: 'cobertura', comparisonOption: [ value: 'optionFixedCoverage', fixedCoverage: '0.65' ], coverageRateType: 'Lines')
 //     }
     stage('build') {
-        if (env.BRANCH_NAME == "master" || env.BRANCH_NAME == "staging") {
+//        if (env.BRANCH_NAME == "master" || env.BRANCH_NAME == "staging") {
             bat "npm run build"
-        }
-        else {
-            bat "npm run build-dev"
-        }
+//        }
+//        else {
+//            bat "npm run build-dev"
+//        }
 //         slackSend(channel:"#r9-service-alerts", message: "R9 Central Basin branch ${env.BRANCH_NAME} deployed to STAGING\nReview: https://${env.PUBLIC_DOMAIN}/apps/staging/r9cop/${env.BRANCH_NAME}/")
     }
 
