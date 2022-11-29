@@ -66,7 +66,7 @@ export const initWidgets = (view: SceneView) => {
 		min: 0,
 		max: 1,
 		layout: "horizontal-reversed",
-		values: [1],
+		values: [map.ground.opacity],
 		steps: 0.01,
 		snapOnClickEnabled: true,
 		visibleElements: {
