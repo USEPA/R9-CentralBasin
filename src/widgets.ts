@@ -216,6 +216,10 @@ export const initWidgets = (view: SceneView) => {
 		expandTooltip: 'Basemaps',
 	});
 
+	basemapExpand.watch('expanded', () => {
+		opacSlider.values = [map.ground.opacity];
+	});
+
 	const lineMeasurementExpand = new Expand({
 		view,
 		content: lineMeasurement,
