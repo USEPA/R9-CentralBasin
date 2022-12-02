@@ -24,7 +24,7 @@ import { whenFalseOnce } from '@arcgis/core/core/watchUtils';
 import ButtonMenuItem from '@arcgis/core/widgets/FeatureTable/Grid/support/ButtonMenuItem';
 import Graphic from '@arcgis/core/Graphic';
 
-import { chemicalLayer } from '.';
+import { chemicalLayer, allWells } from '.';
 import "@esri/calcite-components";
 
 let appContainer: HTMLElement | null;
@@ -142,23 +142,42 @@ export const initWidgets = (view: SceneView) => {
 
 	})
 
+	let selectedItem;
+
 	combobox.addEventListener("calciteComboboxChange", calciteComboboxChangeEvt => {
 		// @ts-ignore
-		let selectedItem = calciteComboboxChangeEvt.target.value;
+		selectedItem = calciteComboboxChangeEvt.target.value;
 		if (selectedItem == "Show all") {
-			chemicalLayer.definitionExpression = "";
+			// Hide layer instead, show all wells
+			// chemicalLayer.definitionExpression = "";
+			chemicalLayer.visible = false;
+			// Need to get parent layer and make that visible as well
+			allWells.visible = true;
 		} else {
 			chemicalLayer.definitionExpression = `GM_CHEMICAL_NAME = '${selectedItem}'`;
+			chemicalLayer.visible = true;
 		}
 	});
 
-	chemicalLayer.watch("visible", function () {
-		// Prevent user from filtering if layer is not visible, provide tooltip info
+	// Don't prevent interaction if layer is not visible
+
+	// chemicalLayer.watch("visible", function () {
+	// 	// Prevent user from filtering if layer is not visible, provide tooltip info
+	// 	if (chemicalLayer.visible) {
+	// 		combobox.classList.remove("no-click");
+	// 	} else {
+	// 		filtersDiv.setAttribute("title", `${chemicalLayer.title} layer must be visible to filter.`)
+	// 		combobox.classList.add("no-click");
+	// 	}
+	// });
+
+	// Watch for layer visibility, if user makes layer visible, change combobox value to selected item
+	chemicalLayer.watch("visible", () => {
 		if (chemicalLayer.visible) {
-			combobox.classList.remove("no-click");
+			console.log(`${chemicalLayer.title} layer is visible`);
+			// combobox.setAttribute()
 		} else {
-			filtersDiv.setAttribute("title", `${chemicalLayer.title} layer must be visible to filter.`)
-			combobox.classList.add("no-click");
+			console.log(`${chemicalLayer.title} layer is not visible`);
 		}
 	});
 
