@@ -46,11 +46,17 @@ export const chemicalLayer = new FeatureLayer({
 	visible: false,
 });
 
+export const allWells = new FeatureLayer({
+	portalItem: {
+		id: "89aa45e4bb2446aeaf692011d4b59483"
+	},
+	visible: false,
+})
+
 chemicalLayer.listMode = "hide";
 
 map.layers.add(chemicalLayer);
-
-export let allWells: SceneLayer;
+map.layers.add(allWells);
 
 view.popup.defaultPopupTemplateEnabled = true;
 
@@ -112,8 +118,6 @@ view.when(initTimeSlider).then((timePieces) => {
 						wells3DInfo.id3D = layer.id;
 						wells3DInfo.layer3D = view.map.findLayerById(layer.id) as SceneLayer;
 						wells3DInfo.layer3D.outFields = ['*'];
-
-						allWells = wells3DInfo.layer3D;
 					}
 				});
 			}
