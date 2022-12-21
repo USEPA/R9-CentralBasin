@@ -39,6 +39,7 @@ view.popup.highlightEnabled = false;
 
 map.layers.splice(0, 0, wellsLayer);
 
+// GamaWellsRanThroughDEMclp
 export const chemicalLayer = new FeatureLayer({
 	portalItem: {
 		id: "b2465d9640c848e7b5de175f48c31376"
@@ -46,11 +47,12 @@ export const chemicalLayer = new FeatureLayer({
 	visible: false,
 });
 
+// GamaWells_Location
 export const allWells = new FeatureLayer({
 	portalItem: {
 		id: "89aa45e4bb2446aeaf692011d4b59483"
 	},
-	visible: false,
+	visible: true,
 })
 
 chemicalLayer.listMode = "hide";
