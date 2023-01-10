@@ -7,8 +7,8 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="mobile-web-app-capable" content="yes">
   <title>Central Basin Map</title>
-
-  <script type="module" src="https://unpkg.com/@esri/calcite-components/dist/calcite/calcite.esm.js"></script>
+  <script type="module" src="https://unpkg.com/@esri/calcite-components/dist/calcite/calcite.esm.js">
+  </script>
   <link rel="stylesheet" type="text/css" href="https://unpkg.com/@esri/calcite-components/dist/calcite/calcite.css" />
 
   <% if (htmlWebpackPlugin.options.mode==='production' ) { %>
@@ -75,6 +75,16 @@
       </div>
     </div>
 
+    <div id="basemapDiv" class="esri-widget">
+      <div id="basemapGalleryDiv" class="esri-widget"></div>
+      <div id="basemap-gallery-footer-container">
+        <h4 id="opacLabel">Ground transparency</h4>
+        <div id="basemap-gallery-footer">
+          <div id="opacitySliderDiv" class="esri-widget"></div>
+        </div>
+      </div>
+    </div>
+
     <div id="featureSearchDiv" class="esri-widget">
       <input type="text" id="featureSearch" class="esri-input esri-feature-form__input"
         placeholder="Press Enter to Search by WRDID" />
@@ -90,10 +100,19 @@
 
     <div id="filtersDiv">
       <calcite-combobox selection-mode="single" id="combobox" placeholder="- Select one -">
-        <calcite-combobox-item value="Show all" text-label="Show all" selected></calcite-combobox-item>
+        <calcite-combobox-item value="Show all" text-label="Show all wells"></calcite-combobox-item>
       </calcite-combobox>
     </div>
 
+    <calcite-alert icon="question" label="Legend values alert" auto-close auto-close-duration="slow" kind="info"
+      scale="m" id="valueAlert">
+      <div slot="title">Legend values not available </div>
+      <div slot="message">Legend values are not available for the selected analyte. Values will be generated based on
+        statistics for field 'GM_RESULT'.</div>
+      <calcite-link
+        href="https://epa.maps.arcgis.com/home/item.html?id=b589f46083ea42058136088689a84bfd&view=list&sortOrder=desc&sortField=defaultFSOrder&showFilters=false#data"
+        target="_blank" slot="link">Analytes with predefined legend values</calcite-link>
+    </calcite-alert>
   </div>
 </body>
 

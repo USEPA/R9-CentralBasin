@@ -339,3 +339,58 @@ input:checked+.slider:before {
   height: 32px;
   margin: auto;
 }
+
+.esri-slider {
+  min-width: 240px;
+}
+
+#opacLabel {
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 12px;
+}
+
+.esri-slider__tick.sliderQuarterTicks {
+  height: 7px;
+}
+
+.esri-slider__tick.sliderQuarterTicks:hover {
+  cursor: pointer;
+}
+
+.esri-slider__tick-label.sliderQuarterLabels {
+  font-size: 9px;
+}
+
+.esri-slider__tick-label.sliderQuarterLabels:hover {
+  cursor: pointer;
+}
+
+.esri-slider__tick.sliderSmallTicks {
+  height: 3px;
+}
+
+.esri-slider__tick.sliderSmallTicks:hover {
+  cursor: pointer;
+}
+
+#basemapGalleryDiv {
+  min-width: 280px;
+  max-height: 400px;
+}
+
+#basemap-gallery-footer-container {
+  height: auto;
+  border-top: 1px #a9a9a9 solid;
+  margin-top: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0px 30px 30px 30px;
+}
+
+#basemap-gallery-footer {
+  height: fit-content;
+  margin-bottom: 10px;
+}
