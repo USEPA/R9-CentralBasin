@@ -11,6 +11,7 @@ import SceneView from '@arcgis/core/views/SceneView';
 import SceneLayer from '@arcgis/core/layers/SceneLayer';
 import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+import GroupLayer from "@arcgis/core/layers/GroupLayer";
 import { whenFalse, whenTrue } from '@arcgis/core/core/watchUtils';
 import { LayerInfo, WellsInfo } from './tableLayers';
 
@@ -45,20 +46,73 @@ export const chemicalLayer = new FeatureLayer({
 		id: "b2465d9640c848e7b5de175f48c31376"
 	},
 	visible: false,
+	title: "Displayed Analyte",
+	// useViewTime: true
 });
 
 // GamaWells_Location
 export const allWells = new FeatureLayer({
 	portalItem: {
-		id: "89aa45e4bb2446aeaf692011d4b59483"
+		// id: "89aa45e4bb2446aeaf692011d4b59483"
+		id: "58c259ccfd5e4115a4b4644d1ffdf4c9"
 	},
-	visible: true,
+	visible: false,
+	title: "GAMA Wells",
 })
 
-chemicalLayer.listMode = "hide";
+let renderer = {
+	type: "simple",
+	symbol:
+	{
+		type: "point-3d",
+		symbolLayers: [{
+			type: "object",  // autocasts as new ObjectSymbol3DLayer()
+			resource: { primitive: "cylinder" },
+			material: { color: [105, 104, 104, 0.5] },
+			width: 40,
+			tilt: 180
+		}]
+	},
+	visualVariables: [
+		{
+			type: "size",
+			axis: "height",
+			field: "GM_BOTTOM_DEPTH_OF_SCREEN_FT",
+			valueUnit: "feet"
+		},
+		{
+			type: "size",
+			axis: "width-and-depth",
+			valueRepresentation: "diameter",
+			useSymbolValues: true,
+			minSize: 40,
+			valueUnit: "feet"
+		},
+	]
+};
 
-map.layers.add(chemicalLayer);
-map.layers.add(allWells);
+
+
+view.when(removeGroup);
+
+function removeGroup() {
+	map.allLayers.forEach((layer) => {
+		console.log(layer.title, layer.id);
+		if (layer.id === "1860a30687c-layer-223") {
+			map.remove(layer);
+		}
+	})
+}
+
+
+allWells.renderer = renderer;
+
+let displayedAnalyte = new GroupLayer;
+displayedAnalyte.title = "Displayed Analyte";
+// displayedAnalyte.visible = false;
+
+displayedAnalyte.addMany([allWells, chemicalLayer]);
+map.layers.add(displayedAnalyte, 1);
 
 view.popup.defaultPopupTemplateEnabled = true;
 
@@ -134,7 +188,7 @@ view.when(initTimeSlider).then((timePieces) => {
 
 	// execute after layers loaded
 	Promise.all(promiseArr).then((layerViews) => {
-		console.log(layerViews);
+		// console.log(layerViews);
 
 		tableLayersArr = createTableElements(layerViews, tableLayersArr);
 		initTableWidget(view, tableLayersArr, layerViews);
@@ -151,7 +205,7 @@ const createTableElements = (layerViews: SceneLayerView[], tableLayersArr: Layer
 		tableLayersArr.forEach((tableLayer, j) => {
 			// add scene view, html elements to array
 			if (tableLayer.id3D === layerView.layer.id) {
-				console.log(tableLayer);
+				// console.log(tableLayer);
 				tableLayersArr[j].sceneView = layerView;
 
 				tableLayersArr[j].tableDiv = document.createElement('DIV') as HTMLElement;
@@ -197,7 +251,7 @@ const removeActive = (elementClass: string, activeClass: string) => {
 };
 
 const setActive = (layerInfo: LayerInfo) => {
-	console.log(layerInfo);
+	// console.log(layerInfo);
 
 	layerInfo.tab?.classList.add('active-button');
 	layerInfo.tableDiv?.classList.add('active-content');

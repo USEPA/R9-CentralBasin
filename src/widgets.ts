@@ -18,25 +18,21 @@ import BasemapGallery from '@arcgis/core/widgets/BasemapGallery';
 import Search from '@arcgis/core/widgets/Search';
 import WebScene from '@arcgis/core/WebScene';
 import Basemap from '@arcgis/core/Basemap';
+import Slider from "@arcgis/core/widgets/Slider";
 import FeatureTable from '@arcgis/core/widgets/FeatureTable';
 import { info } from './data/app';
-import { whenFalseOnce } from '@arcgis/core/core/watchUtils';
 import ButtonMenuItem from '@arcgis/core/widgets/FeatureTable/Grid/support/ButtonMenuItem';
 import Graphic from '@arcgis/core/Graphic';
+// Filter widget/render given chemical
 import ClassBreaksRenderer from "@arcgis/core/renderers/ClassBreaksRenderer";
-
-import StatisticDefinition from "@arcgis/core/rest/support/StatisticDefinition";
-
-import Query from "@arcgis/core/rest/support/Query";
-import * as query from "@arcgis/core/rest/query";
-
 import { chemicalLayer, allWells } from '.';
 import "@esri/calcite-components";
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
-import { executeQueryJSON } from '@arcgis/core/rest/query';
+
 
 let appContainer: HTMLElement | null;
 let tableContainer: HTMLElement | null;
+let basemapDiv = document.getElementById("basemapGalleryDiv")?.parentElement;
 
 // Get reference to div elements
 let labelText: HTMLElement | null;
@@ -50,6 +46,7 @@ export const initWidgets = (view: SceneView) => {
 
 	const basemapGallery = new BasemapGallery({
 		view: view,
+		container: 'basemapGalleryDiv',
 		// @ts-ignore
 		source: {
 			portal: info.portalUrl,
@@ -67,6 +64,96 @@ export const initWidgets = (view: SceneView) => {
 			},
 		},
 	});
+
+	const opacSlider = new Slider({
+		container: 'opacitySliderDiv',
+		label: 'Ground transparency',
+		min: 0,
+		max: 1,
+		layout: "horizontal-reversed",
+		values: [map.ground.opacity],
+		steps: 0.01,
+		snapOnClickEnabled: true,
+		visibleElements: {
+			labels: false,
+			rangeLabels: false
+		}
+	})
+
+	opacSlider.tickConfigs = [{
+		mode: "percent",
+		values: [0, 25, 50, 75, 100],
+		labelsVisible: true,
+		tickCreatedFunction: function (initialValue, tickElement, labelElement) {
+			tickElement.classList.add("sliderQuarterTicks");
+			labelElement?.classList.add("sliderQuarterLabels");
+
+			let sliderLabels = document.getElementsByClassName("sliderQuarterLabels");
+			for (let i = 0; i < sliderLabels.length; i++) {
+				switch (sliderLabels[i].innerHTML) {
+					case "1":
+						sliderLabels[i].innerHTML = "0";
+						break;
+					case "0.75":
+						sliderLabels[i].innerHTML = "25";
+						break;
+					case "0.5":
+						sliderLabels[i].innerHTML = "50";
+						break;
+					case "0.25":
+						sliderLabels[i].innerHTML = "75";
+						break;
+					case "0":
+						sliderLabels[i].innerHTML = "100";
+						break;
+
+					default:
+						break;
+				}
+			}
+
+			// @ts-ignore
+			labelElement.onclick = function () {
+				// @ts-ignore
+				const newValue = labelElement["data-value"];
+				opacSlider.values = [newValue];
+				// @ts-ignore
+				map.ground.opacity = [newValue];
+			};
+
+			// @ts-ignore
+			tickElement.onclick = function () {
+				// @ts-ignore
+				const newValue = tickElement["data-value"];
+				opacSlider.values = [newValue];
+				// @ts-ignore
+				map.ground.opacity = [newValue];
+			};
+		}
+	}, {
+		mode: "percent",
+		values: [5, 10, 15, 20, 30, 35, 40, 45, 55, 60, 65, 70, 80, 85, 90, 95],
+		labelsVisible: false,
+		tickCreatedFunction: function (initialValue, tickElement, labelElement) {
+			tickElement.classList.add("sliderSmallTicks");
+			labelElement?.classList.add("sliderSmallLabels");
+
+			// @ts-ignore
+			tickElement.onclick = function () {
+				// @ts-ignore
+				const newValue = tickElement["data-value"];
+				opacSlider.values = [newValue];
+				// @ts-ignore
+				map.ground.opacity = [newValue];
+			};
+		}
+	}
+	];
+
+	// @ts-ignore
+	opacSlider.on(['thumb-change', 'thumb-drag'], function (event) {
+		map.ground.opacity = event.value;
+	})
 
 	const lineMeasurement = new DirectLineMeasurement3D({
 		view: view,
@@ -149,17 +236,40 @@ export const initWidgets = (view: SceneView) => {
 
 	})
 
-	let selectedItem;
+	let selectedItem: string;
+	let needsAlert = false;
 
 	// Creates a class break renderer, provide an array of 6 numbers for break values
-	function createRenderer(values: number[]) {
+	function createRenderer(values: number[], name: string) {
 		let renderer = new ClassBreaksRenderer({
 			// @ts-ignore
 			type: "class-breaks",
-			field: "GM_RESULT"
+			field: "GM_RESULT",
+			legendOptions: {
+				title: `GM Result Values for ${name}`
+			},
+			visualVariables: [
+				{
+					// @ts-ignore
+					type: "size",
+					axis: "height",
+					field: "GM_BOTTOM_DEPTH_OF_SCREEN_FT",
+					valueUnit: "feet"
+				},
+				{
+					// @ts-ignore
+					type: "size",
+					axis: "width-and-depth",
+					valueRepresentation: "diameter",
+					useSymbolValues: true,
+					minSize: 40,
+					valueUnit: "feet"
+				},
+			]
 		});
 		// All features with 0 values (wells without the analyte present)
 		renderer.addClassBreakInfo({
+			label: "0",
 			minValue: 0,
 			maxValue: 0,
 			symbol: {
@@ -167,16 +277,17 @@ export const initWidgets = (view: SceneView) => {
 				symbolLayers: [{
 					type: "object",  // autocasts as new ObjectSymbol3DLayer()
 					resource: { primitive: "cylinder" },
-					material: { color: [0, 0, 0, 0.3] },
+					material: { color: [105, 104, 104, 0.5] },
 					// ToDo: set height to well depth
 					height: 140,
-					width: 50,
+					width: 40,
 					tilt: 180
 				}]
 			}
 		});
 		// All features with values between min and Legend1
 		renderer.addClassBreakInfo({
+			label: `${values[0]} - ${values[1]}`,
 			minValue: values[0],
 			maxValue: values[1],
 			symbol: {
@@ -186,13 +297,14 @@ export const initWidgets = (view: SceneView) => {
 					resource: { primitive: "cylinder" },
 					material: { color: [0, 255, 0] },
 					height: 600,
-					width: 50,
+					width: 42,
 					tilt: 180
 				}]
 			}
 		});
 		// All features with values between Legend1 and Legend2
 		renderer.addClassBreakInfo({
+			label: `${values[1]} - ${values[2]}`,
 			minValue: values[1],
 			maxValue: values[2],
 			symbol: {
@@ -202,13 +314,14 @@ export const initWidgets = (view: SceneView) => {
 					resource: { primitive: "cylinder" },
 					material: { color: [0, 180, 255] },
 					height: 800,
-					width: 90,
+					width: 44,
 					tilt: 180
 				}]
 			}
 		});
 		// All features with values between Legend2 and Legend3
 		renderer.addClassBreakInfo({
+			label: `${values[2]} - ${values[3]}`,
 			minValue: values[2],
 			maxValue: values[3],
 			symbol: {
@@ -218,13 +331,14 @@ export const initWidgets = (view: SceneView) => {
 					resource: { primitive: "cylinder" },
 					material: { color: [255, 255, 0] },
 					height: 1200,
-					width: 130,
+					width: 46,
 					tilt: 180
 				}]
 			}
 		});
 		// All features with values between Legend3 and Legend4
 		renderer.addClassBreakInfo({
+			label: `${values[3]} - ${values[4]}`,
 			minValue: values[3],
 			maxValue: values[4],
 			symbol: {
@@ -234,13 +348,14 @@ export const initWidgets = (view: SceneView) => {
 					resource: { primitive: "cylinder" },
 					material: { color: [255, 130, 0] },
 					height: 1500,
-					width: 180,
+					width: 48,
 					tilt: 180
 				}]
 			}
 		});
 		// All features with values between Legend4 and the max
 		renderer.addClassBreakInfo({
+			label: `${values[4]} - ${values[5]}`,
 			minValue: values[4],
 			maxValue: values[5],
 			symbol: {
@@ -250,7 +365,7 @@ export const initWidgets = (view: SceneView) => {
 					resource: { primitive: "cylinder" },
 					material: { color: [255, 0, 0] },
 					height: 2000,
-					width: 200,
+					width: 50,
 					tilt: 180
 				}]
 			}
@@ -274,30 +389,41 @@ export const initWidgets = (view: SceneView) => {
 			let features = results.features;
 			let data = features.map(feature => feature.attributes);
 			let vals;
+			let max: number = await getValue("max", chemicalLayer, "GM_RESULT");
+			let min: number = await getValue("min", chemicalLayer, "GM_RESULT");
+			let avg: number = await getValue("avg", chemicalLayer, "GM_RESULT");
 			try {
 				// Map legend values to array, or 0's if null
-				// ToDo: determine a suitable value if a legend value is missing
 				vals = Object.values(data[0]).map(i => i === null ? 0 : i);
+				needsAlert = false;
+
+				// If legend values are not present, generate values based on field stats
+				if (vals.every(item => item === 0)) {
+					// Create steps for generated legend values, round to 2 decimal places
+					let step = +(avg / 4).toFixed(2) / 5;
+					vals = [+(step).toFixed(2), +(step * 2).toFixed(2), +(step * 3).toFixed(2), +(step * 4).toFixed(2)];
+					needsAlert = true;
+				}
 			} catch (error) {
-				// if analyte is not in legend table, return 0's
-				// ToDo: calculate legend values on the fly provided the min and max
-				vals = [0, 0, 0, 0];
+				// If analyte is not in legend table, generate values based on field stats
+				// Create steps for generated legend values, round to 2 decimal places
+				let step = +(avg / 4).toFixed(2) / 5;
+				vals = [+(step).toFixed(2), +(step * 2).toFixed(2), +(step * 3).toFixed(2), +(step * 4).toFixed(2)];
+				needsAlert = true;
 			}
 			// Add max value to end of array
-			await getValue("max", chemicalLayer, "GM_RESULT").then(result => {
-				vals.push(Object.values(result)[0]);
-			})
+			vals.push(max);
+
 			// Add min value to start of array
-			await getValue("min", chemicalLayer, "GM_RESULT").then(result => {
-				vals.unshift(Object.values(result)[0]);
-			})
+			vals.unshift(min);
+
 			return vals;
 		});
 		return legendVals;
 	}
 
-	// Returns a stat (min, max) given a stat, layer, and field to query
-	async function getValue(stat: String, layer: FeatureLayer, field: String) {
+	// Returns a stat (min, max, avg) given a stat, layer, and field to query
+	async function getValue(stat: String, layer: FeatureLayer, field: String): Promise<number> {
 		let val = {
 			onStatisticField: field,
 			outStatisticFieldName: field,
@@ -310,7 +436,7 @@ export const initWidgets = (view: SceneView) => {
 			let stats = response.features[0].attributes;
 			return stats;
 		});
-		return response;
+		return Object.values(response)[0] as number;
 	}
 
 	combobox.addEventListener("calciteComboboxChange", calciteComboboxChangeEvt => {
@@ -320,17 +446,29 @@ export const initWidgets = (view: SceneView) => {
 			// Hide chemical layer instead, show all wells
 			chemicalLayer.visible = false;
 			allWells.visible = true;
+			initTableWidget(view, [chemicalLayer], [chemicalLayer]);
 		} else {
-			chemicalLayer.definitionExpression = `GM_CHEMICAL_NAME = '${selectedItem}'`;
+			chemicalLayer.definitionExpression = `GM_CHEMICAL_NAME = '${selectedItem}'`; // AND GM_SAMP_COLLECTION_DATE BETWEEN '${view.timeExtent.start}' AND '${view.timeExtent.end}'`;
 			getLegendValues(selectedItem).then(result => {
 				// Once legend values are ready use them for renderer
-				console.log(result);
-				chemicalLayer.renderer = createRenderer(result);
+				allWells.visible = true;
+				chemicalLayer.renderer = createRenderer(result, selectedItem);
 				chemicalLayer.visible = true;
+				// Refresh table widget for new selected analyte
+				initTableWidget(view, [chemicalLayer], [chemicalLayer]);
+				createValueAlert();
 			});
 
 		}
 	});
+
+
+	function createValueAlert() {
+		if (needsAlert) {
+			let alert = document.getElementById("valueAlert");
+			alert?.setAttribute("open", "true");
+		}
+	}
 
 	const filterExpand = new Expand({
 		view,
@@ -338,16 +476,21 @@ export const initWidgets = (view: SceneView) => {
 		expandIconClass: 'esri-icon-filter',
 		autoCollapse: true,
 		group: 'top-left',
-		expandTooltip: 'Filter',
+		expandTooltip: 'Display an analyte',
 	})
 
 	const basemapExpand = new Expand({
 		view,
-		content: basemapGallery,
+		// @ts-ignore
+		content: basemapDiv,
 		expandIconClass: 'esri-icon-basemap',
 		autoCollapse: true,
 		group: 'top-left',
 		expandTooltip: 'Basemaps',
+	});
+
+	basemapExpand.watch('expanded', () => {
+		opacSlider.values = [map.ground.opacity];
 	});
 
 	const lineMeasurementExpand = new Expand({
@@ -458,9 +601,14 @@ export const initTimeSlider = (view: SceneView) => {
 	const timeInterval = new TimeInterval({ value: 1, unit: 'months' });
 	const timeSlider = new TimeSlider({
 		container: 'timeSlider',
-		view,
+		view: view,
 		mode: 'time-window',
 		fullTimeExtent: {
+			start: new Date(1984, 0, 23),
+			end: new Date(2021, 0, 6),
+		},
+		// Set default time extent to full extent
+		timeExtent: {
 			start: new Date(1984, 0, 23),
 			end: new Date(2021, 0, 6),
 		},
@@ -468,6 +616,7 @@ export const initTimeSlider = (view: SceneView) => {
 			interval: timeInterval,
 		},
 	});
+
 	const timeSliderExpand = new Expand({
 		view,
 		content: timeSlider.container,
