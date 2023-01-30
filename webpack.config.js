@@ -1,5 +1,5 @@
 const ArcGISPlugin = require('@arcgis/webpack-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -66,7 +66,7 @@ module.exports = function build(env, arg) {
     },
     optimization: {
       minimize: arg.mode === 'production',
-      splitChunks: {minChunks: Infinity, chunks: 'all'},
+      splitChunks: { minChunks: Infinity, chunks: 'all' },
       minimizer: [
         new TerserPlugin({
           parallel: true,
@@ -83,7 +83,7 @@ module.exports = function build(env, arg) {
       },
     },
     plugins: [
-      new CleanWebpackPlugin({cleanStaleWebpackAssets: false}),
+      new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
 
       new MiniCssExtractPlugin({
         filename: '[name].bundle.css',
@@ -102,6 +102,7 @@ module.exports = function build(env, arg) {
         chunksSortMode: 'none',
         inlineSource: '.(css)$',
         mode: arg.mode,
+        minify: false,
       }),
 
       new HtmlWebPackPlugin({
