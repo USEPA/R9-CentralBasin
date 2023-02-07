@@ -47,7 +47,6 @@ export const chemicalLayer = new FeatureLayer({
 	},
 	visible: false,
 	title: "Displayed Analyte",
-	// useViewTime: true
 });
 
 // GamaWells_Location
@@ -57,7 +56,7 @@ export const allWells = new FeatureLayer({
 		id: "58c259ccfd5e4115a4b4644d1ffdf4c9"
 	},
 	visible: false,
-	title: "GAMA Wells",
+	title: "All GAMA Wells",
 })
 
 let renderer = {
@@ -107,9 +106,9 @@ function removeGroup() {
 
 allWells.renderer = renderer;
 
-let displayedAnalyte = new GroupLayer;
+export let displayedAnalyte = new GroupLayer;
 displayedAnalyte.title = "Displayed Analyte";
-// displayedAnalyte.visible = false;
+displayedAnalyte.visible = false;
 
 displayedAnalyte.addMany([allWells, chemicalLayer]);
 map.layers.add(displayedAnalyte, 1);

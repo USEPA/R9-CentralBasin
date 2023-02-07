@@ -25,7 +25,7 @@ import ButtonMenuItem from '@arcgis/core/widgets/FeatureTable/Grid/support/Butto
 import Graphic from '@arcgis/core/Graphic';
 // Filter widget/render given chemical
 import ClassBreaksRenderer from "@arcgis/core/renderers/ClassBreaksRenderer";
-import { chemicalLayer, allWells } from '.';
+import { chemicalLayer, allWells, displayedAnalyte } from '.';
 import "@esri/calcite-components";
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 
@@ -36,6 +36,9 @@ let basemapDiv = document.getElementById("basemapGalleryDiv")?.parentElement;
 
 // Get reference to div elements
 let labelText: HTMLElement | null;
+
+// Selected analyte for title for layer list and feature table
+export let displayedAnalyteTitle = "Displayed Analyte";
 
 export const initWidgets = (view: SceneView) => {
 	const homeButton = new Home({ view });
@@ -278,7 +281,6 @@ export const initWidgets = (view: SceneView) => {
 					type: "object",  // autocasts as new ObjectSymbol3DLayer()
 					resource: { primitive: "cylinder" },
 					material: { color: [105, 104, 104, 0.5] },
-					// ToDo: set height to well depth
 					height: 140,
 					width: 40,
 					tilt: 180
@@ -444,6 +446,7 @@ export const initWidgets = (view: SceneView) => {
 		selectedItem = calciteComboboxChangeEvt.target.value;
 		if (selectedItem == "Show all") {
 			// Hide chemical layer instead, show all wells
+			displayedAnalyte.visible = true;
 			chemicalLayer.visible = false;
 			allWells.visible = true;
 			initTableWidget(view, [chemicalLayer], [chemicalLayer]);
@@ -451,6 +454,9 @@ export const initWidgets = (view: SceneView) => {
 			chemicalLayer.definitionExpression = `GM_CHEMICAL_NAME = '${selectedItem}'`; // AND GM_SAMP_COLLECTION_DATE BETWEEN '${view.timeExtent.start}' AND '${view.timeExtent.end}'`;
 			getLegendValues(selectedItem).then(result => {
 				// Once legend values are ready use them for renderer
+				chemicalLayer.title = `GAMA Wells Containing ${selectedItem}`;
+				displayedAnalyteTitle = chemicalLayer.title;
+				displayedAnalyte.visible = true;
 				allWells.visible = true;
 				chemicalLayer.renderer = createRenderer(result, selectedItem);
 				chemicalLayer.visible = true;

@@ -1,3 +1,5 @@
+import { displayedAnalyteTitle } from "./widgets";
+
 const wellsFields = [
 	{
 		name: 'WellsRanThroughDEM2_WRDID',
@@ -38,111 +40,111 @@ const wellsFields = [
 	},
 ];
 
-const wrdFields = [
-	{
-		name: 'WellsRanThroughDEM_WRD_CB_Wells',
-		label: 'WRDID',
-		direction: 'asc',
-	},
-	{
-		name: 'WellsRanThroughDEM_WRD_CB_Wel_9',
-		label: 'State Source',
-	},
-	{
-		name: 'WellsRanThroughDEM_WRD_CB_Wel_5',
-		label: 'Type',
-	},
-	{
-		name: 'WellsRanThroughDEM_WRD_CB_We_13',
-		label: 'Agency_Lon',
-	},
-	{
-		name: 'WellsRanThroughDEM_WRD_CB_We_11',
-		label: 'Short_Lbl',
-	},
-	{
-		name: 'WellsRanThroughDEM_WRD_CB_We_15',
-		label: 'Status',
-	},
-	{
-		name: 'WellsRanThroughDEM_EPA_WQ_DDW_5',
-		label: 'Constituen',
-	},
-	{
-		name: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
-		label: 'Sample_Dat',
-	},
-	{
-		name: 'WellsRanThroughDEM_EPA_WQ_DDW_6',
-		label: 'Value_',
-	},
-	{
-		name: 'WellsRanThroughDEM_EPA_WQ_DDW_9',
-		label: 'Unit_Stand',
-	},
-	{
-		name: 'WellsRanThroughDEM_EPA_WQ_DD_17',
-		label: 'Primary__1',
-	},
-	{
-		name: 'PerfsAndAquifersSummary_Max_INT ',
-		label: 'Maximum_INT_No',
-	},
-	{
-		name: 'PerfsAndAquifersSummary_Min_TOI',
-		label: 'Minimum_TOI',
-	},
-	{
-		name: 'PerfsAndAquifersSummary_Max_BOI',
-		label: 'Maximum_BOI',
-	},
-	{
-		name: 'Constr_YYYYDate',
-		label: 'Constr_YYY',
-	},
-	{
-		name: 'Destr_YYYYDate ',
-		label: 'Destr_YYYY',
-	},
-];
+// const wrdFields = [
+// 	{
+// 		name: 'WellsRanThroughDEM_WRD_CB_Wells',
+// 		label: 'WRDID',
+// 		direction: 'asc',
+// 	},
+// 	{
+// 		name: 'WellsRanThroughDEM_WRD_CB_Wel_9',
+// 		label: 'State Source',
+// 	},
+// 	{
+// 		name: 'WellsRanThroughDEM_WRD_CB_Wel_5',
+// 		label: 'Type',
+// 	},
+// 	{
+// 		name: 'WellsRanThroughDEM_WRD_CB_We_13',
+// 		label: 'Agency_Lon',
+// 	},
+// 	{
+// 		name: 'WellsRanThroughDEM_WRD_CB_We_11',
+// 		label: 'Short_Lbl',
+// 	},
+// 	{
+// 		name: 'WellsRanThroughDEM_WRD_CB_We_15',
+// 		label: 'Status',
+// 	},
+// 	{
+// 		name: 'WellsRanThroughDEM_EPA_WQ_DDW_5',
+// 		label: 'Constituen',
+// 	},
+// 	{
+// 		name: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+// 		label: 'Sample_Dat',
+// 	},
+// 	{
+// 		name: 'WellsRanThroughDEM_EPA_WQ_DDW_6',
+// 		label: 'Value_',
+// 	},
+// 	{
+// 		name: 'WellsRanThroughDEM_EPA_WQ_DDW_9',
+// 		label: 'Unit_Stand',
+// 	},
+// 	{
+// 		name: 'WellsRanThroughDEM_EPA_WQ_DD_17',
+// 		label: 'Primary__1',
+// 	},
+// 	{
+// 		name: 'PerfsAndAquifersSummary_Max_INT ',
+// 		label: 'Maximum_INT_No',
+// 	},
+// 	{
+// 		name: 'PerfsAndAquifersSummary_Min_TOI',
+// 		label: 'Minimum_TOI',
+// 	},
+// 	{
+// 		name: 'PerfsAndAquifersSummary_Max_BOI',
+// 		label: 'Maximum_BOI',
+// 	},
+// 	{
+// 		name: 'Constr_YYYYDate',
+// 		label: 'Constr_YYY',
+// 	},
+// 	{
+// 		name: 'Destr_YYYYDate ',
+// 		label: 'Destr_YYYY',
+// 	},
+// ];
 
-const gamaFields = [
-	{
-		name: 'Well ID',
-		label: 'WELL_ID',
-		direction: 'asc',
-	},
-	{
-		name: 'SOURCE_NAME',
-		label: 'Source Name',
-	},
-	{
-		name: 'WELL_TYPE',
-		label: 'WELL_TYPE',
-	},
-	{
-		name: 'CHEMICAL',
-		label: 'CHEMICAL',
-	},
-	{
-		name: 'DATE',
-		label: 'Date',
-	},
-	{
-		name: 'RESULTS',
-		label: 'Results',
-	},
-	{
-		name: 'UNITS',
-		label: 'UNITS',
-	},
-	{
-		name: 'WELL_DEPTH__FT_',
-		label: 'WELL DEPTH (FT)',
-	},
-];
+// const gamaFields = [
+// 	{
+// 		name: 'Well ID',
+// 		label: 'WELL_ID',
+// 		direction: 'asc',
+// 	},
+// 	{
+// 		name: 'SOURCE_NAME',
+// 		label: 'Source Name',
+// 	},
+// 	{
+// 		name: 'WELL_TYPE',
+// 		label: 'WELL_TYPE',
+// 	},
+// 	{
+// 		name: 'CHEMICAL',
+// 		label: 'CHEMICAL',
+// 	},
+// 	{
+// 		name: 'DATE',
+// 		label: 'Date',
+// 	},
+// 	{
+// 		name: 'RESULTS',
+// 		label: 'Results',
+// 	},
+// 	{
+// 		name: 'UNITS',
+// 		label: 'UNITS',
+// 	},
+// 	{
+// 		name: 'WELL_DEPTH__FT_',
+// 		label: 'WELL DEPTH (FT)',
+// 	},
+// ];
 
-const testFields = [
+const AnalyteFields = [
 	{
 		name: 'GM_WELL_ID',
 		label: 'WELL_ID',
@@ -249,125 +251,125 @@ const wellsTemplate = {
 	],
 };
 
-const wrdTemplate = {
-	title: 'WRD ID No. {WellsRanThroughDEM_WRD_CB_Wells}',
-	content: [
-		{
-			type: 'fields',
-			fieldInfos: [
-				{
-					fieldName: 'WellsRanThroughDEM_WRD_CB_Wells',
-					label: 'WRDID',
-				},
-				{
-					fieldName: 'WellsRanThroughDEM_WRD_CB_Wel_9',
-					label: 'State Source',
-				},
-				{
-					fieldName: 'WellsRanThroughDEM_WRD_CB_Wel_5',
-					label: 'Type',
-				},
-				{
-					fieldName: 'WellsRanThroughDEM_WRD_CB_We_13',
-					label: 'Agency_Lon',
-				},
-				{
-					fieldName: 'WellsRanThroughDEM_WRD_CB_We_11',
-					label: 'Short_Lbl',
-				},
-				{
-					fieldName: 'WellsRanThroughDEM_WRD_CB_We_15',
-					label: 'Status',
-				},
-				{
-					fieldName: 'WellsRanThroughDEM_EPA_WQ_DDW_5',
-					label: 'Constituen',
-				},
-				{
-					fieldName: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
-					label: 'Sample_Dat',
-				},
-				{
-					fieldName: 'WellsRanThroughDEM_EPA_WQ_DDW_6',
-					label: 'Value_',
-				},
-				{
-					fieldName: 'WellsRanThroughDEM_EPA_WQ_DDW_9',
-					label: 'Unit_Stand',
-				},
-				{
-					fieldName: 'WellsRanThroughDEM_EPA_WQ_DD_17',
-					label: 'Primary__1',
-				},
-				{
-					fieldName: 'PerfsAndAquifersSummary_Max_INT ',
-					label: 'Maximum_INT_No',
-				},
-				{
-					fieldName: 'PerfsAndAquifersSummary_Min_TOI',
-					label: 'Minimum_TOI',
-				},
-				{
-					fieldName: 'PerfsAndAquifersSummary_Max_BOI',
-					label: 'Maximum_BOI',
-				},
-				{
-					fieldName: 'Constr_YYYYDate',
-					label: 'Constr_YYY',
-				},
-				{
-					fieldName: 'Destr_YYYYDate ',
-					label: 'Destr_YYYY',
-				},
-			],
-		},
-	],
-};
+// const wrdTemplate = {
+// 	title: 'WRD ID No. {WellsRanThroughDEM_WRD_CB_Wells}',
+// 	content: [
+// 		{
+// 			type: 'fields',
+// 			fieldInfos: [
+// 				{
+// 					fieldName: 'WellsRanThroughDEM_WRD_CB_Wells',
+// 					label: 'WRDID',
+// 				},
+// 				{
+// 					fieldName: 'WellsRanThroughDEM_WRD_CB_Wel_9',
+// 					label: 'State Source',
+// 				},
+// 				{
+// 					fieldName: 'WellsRanThroughDEM_WRD_CB_Wel_5',
+// 					label: 'Type',
+// 				},
+// 				{
+// 					fieldName: 'WellsRanThroughDEM_WRD_CB_We_13',
+// 					label: 'Agency_Lon',
+// 				},
+// 				{
+// 					fieldName: 'WellsRanThroughDEM_WRD_CB_We_11',
+// 					label: 'Short_Lbl',
+// 				},
+// 				{
+// 					fieldName: 'WellsRanThroughDEM_WRD_CB_We_15',
+// 					label: 'Status',
+// 				},
+// 				{
+// 					fieldName: 'WellsRanThroughDEM_EPA_WQ_DDW_5',
+// 					label: 'Constituen',
+// 				},
+// 				{
+// 					fieldName: 'WellsRanThroughDEM_EPA_WQ_DDW_3',
+// 					label: 'Sample_Dat',
+// 				},
+// 				{
+// 					fieldName: 'WellsRanThroughDEM_EPA_WQ_DDW_6',
+// 					label: 'Value_',
+// 				},
+// 				{
+// 					fieldName: 'WellsRanThroughDEM_EPA_WQ_DDW_9',
+// 					label: 'Unit_Stand',
+// 				},
+// 				{
+// 					fieldName: 'WellsRanThroughDEM_EPA_WQ_DD_17',
+// 					label: 'Primary__1',
+// 				},
+// 				{
+// 					fieldName: 'PerfsAndAquifersSummary_Max_INT ',
+// 					label: 'Maximum_INT_No',
+// 				},
+// 				{
+// 					fieldName: 'PerfsAndAquifersSummary_Min_TOI',
+// 					label: 'Minimum_TOI',
+// 				},
+// 				{
+// 					fieldName: 'PerfsAndAquifersSummary_Max_BOI',
+// 					label: 'Maximum_BOI',
+// 				},
+// 				{
+// 					fieldName: 'Constr_YYYYDate',
+// 					label: 'Constr_YYY',
+// 				},
+// 				{
+// 					fieldName: 'Destr_YYYYDate ',
+// 					label: 'Destr_YYYY',
+// 				},
+// 			],
+// 		},
+// 	],
+// };
 
-const gamaTemplate = {
-	title: 'WRD ID No. {WELL_ID}',
-	content: [
-		{
-			type: 'fields',
-			fieldInfos: [
-				{
-					fieldName: 'RESULTS',
-					label: 'Results',
-				},
-				{
-					fieldName: 'SOURCE_NAME',
-					label: 'Source Name',
-				},
-				{
-					fieldName: 'WELL_TYPE',
-					label: 'WELL_TYPE',
-				},
-				{
-					fieldName: 'CHEMICAL',
-					label: 'CHEMICAL',
-				},
-				{
-					fieldName: 'DATE',
-					label: 'Date',
-				},
-				{
-					fieldName: 'RESULTS',
-					label: 'Results',
-				},
-				{
-					fieldName: 'UNITS',
-					label: 'UNITS',
-				},
-				{
-					fieldName: 'WELL_DEPTH__FT_',
-					label: 'WELL DEPTH (FT)',
-				},
-			],
-		},
-	],
-};
+// const gamaTemplate = {
+// 	title: 'WRD ID No. {WELL_ID}',
+// 	content: [
+// 		{
+// 			type: 'fields',
+// 			fieldInfos: [
+// 				{
+// 					fieldName: 'RESULTS',
+// 					label: 'Results',
+// 				},
+// 				{
+// 					fieldName: 'SOURCE_NAME',
+// 					label: 'Source Name',
+// 				},
+// 				{
+// 					fieldName: 'WELL_TYPE',
+// 					label: 'WELL_TYPE',
+// 				},
+// 				{
+// 					fieldName: 'CHEMICAL',
+// 					label: 'CHEMICAL',
+// 				},
+// 				{
+// 					fieldName: 'DATE',
+// 					label: 'Date',
+// 				},
+// 				{
+// 					fieldName: 'RESULTS',
+// 					label: 'Results',
+// 				},
+// 				{
+// 					fieldName: 'UNITS',
+// 					label: 'UNITS',
+// 				},
+// 				{
+// 					fieldName: 'WELL_DEPTH__FT_',
+// 					label: 'WELL DEPTH (FT)',
+// 				},
+// 			],
+// 		},
+// 	],
+// };
 
-const testTemplate = {
+const AnalyteTemplate = {
 	title: '{GM_CHEMICAL_NAME}',
 	content: [
 		{
@@ -409,8 +411,8 @@ export const configDev = {
 		// webScene: '6e43620d338a418481c9702fe2a97f26',
 		// webScene: 'c6c5e203c3ab44058353f151ad967b59',
 
-		// webScene: 'c28d269394414b0cb55b2e3308816bb3', // 15
-		webScene: '9b7acd242d6d4ab99f2ee4880422c6a3',
+		// webScene: 'c28d269394414b0cb55b2e3308816bb3',
+		webScene: '9b7acd242d6d4ab99f2ee4880422c6a3', // 2.0
 
 		elevationUrl: '//elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer',
 	},
@@ -733,13 +735,13 @@ export const configDev = {
 			// },
 			{
 				parentTitle: "Displayed Analyte",
-				title2D: "Displayed Analyte",
-				title3D: "GAMA Wells",
+				title2D: displayedAnalyteTitle,
+				title3D: "All GAMA Wells",
 				label: "Displayed Analyte",
 				layerVar: "Displayed Analyte",
-				fields: testFields,
+				fields: AnalyteFields,
 				dateField: "GM_SAMP_COLLECTION_DATE",
-				template: testTemplate,
+				template: AnalyteTemplate,
 			},
 		],
 	},
