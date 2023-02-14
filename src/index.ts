@@ -47,6 +47,7 @@ export const chemicalLayer = new FeatureLayer({
 	},
 	visible: false,
 	title: "Displayed Analyte",
+	listMode: "hide"
 });
 
 // GamaWells_Location
@@ -96,7 +97,6 @@ view.when(removeGroup);
 
 function removeGroup() {
 	map.allLayers.forEach((layer) => {
-		console.log(layer.title, layer.id);
 		if (layer.id === "1860a30687c-layer-223") {
 			map.remove(layer);
 		}

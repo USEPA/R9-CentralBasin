@@ -28,11 +28,17 @@ import ClassBreaksRenderer from "@arcgis/core/renderers/ClassBreaksRenderer";
 import { chemicalLayer, allWells, displayedAnalyte } from '.';
 import "@esri/calcite-components";
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+import StatisticDefinition from "@arcgis/core/rest/support/StatisticDefinition";
+import TopFeaturesQuery from "@arcgis/core/rest/support/TopFeaturesQuery";
+import FeatureSet from "@arcgis/core/rest/support/FeatureSet";
+import FeatureFilter from '@arcgis/core/views/layers/support/FeatureFilter';
+import TopFilter from "@arcgis/core/rest/support/TopFilter";
 
 
 let appContainer: HTMLElement | null;
 let tableContainer: HTMLElement | null;
 let basemapDiv = document.getElementById("basemapGalleryDiv")?.parentElement;
+let addedLayers = [];
 
 // Get reference to div elements
 let labelText: HTMLElement | null;
@@ -257,7 +263,8 @@ export const initWidgets = (view: SceneView) => {
 					type: "size",
 					axis: "height",
 					field: "GM_BOTTOM_DEPTH_OF_SCREEN_FT",
-					valueUnit: "feet"
+					valueUnit: "feet",
+					minSize: 10
 				},
 				{
 					// @ts-ignore
@@ -441,7 +448,8 @@ export const initWidgets = (view: SceneView) => {
 		return Object.values(response)[0] as number;
 	}
 
-	combobox.addEventListener("calciteComboboxChange", calciteComboboxChangeEvt => {
+
+	combobox.addEventListener("calciteComboboxChange", async calciteComboboxChangeEvt => {
 		// @ts-ignore
 		selectedItem = calciteComboboxChangeEvt.target.value;
 		if (selectedItem == "Show all") {
@@ -451,23 +459,75 @@ export const initWidgets = (view: SceneView) => {
 			allWells.visible = true;
 			initTableWidget(view, [chemicalLayer], [chemicalLayer]);
 		} else {
-			chemicalLayer.definitionExpression = `GM_CHEMICAL_NAME = '${selectedItem}'`; // AND GM_SAMP_COLLECTION_DATE BETWEEN '${view.timeExtent.start}' AND '${view.timeExtent.end}'`;
+			chemicalLayer.definitionExpression = `GM_CHEMICAL_NAME = '${selectedItem}'`;
+			let fs = await queryMax(selectedItem);
+			let visLayer = await createLayer(fs);
 			getLegendValues(selectedItem).then(result => {
 				// Once legend values are ready use them for renderer
 				chemicalLayer.title = `GAMA Wells Containing ${selectedItem}`;
 				displayedAnalyteTitle = chemicalLayer.title;
 				displayedAnalyte.visible = true;
-				allWells.visible = true;
-				chemicalLayer.renderer = createRenderer(result, selectedItem);
-				chemicalLayer.visible = true;
+				displayedAnalyte.add(visLayer);
+				// allWells.visible = true;
+
+
+
+
+
+				// let edits = {
+				// 	updateFeatures: fs,
+				// }
+
+				// visLayer.applyEdits(edits);
+
+				visLayer.title = `GAMA Wells Containing ${selectedItem}`;
+				visLayer.renderer = createRenderer(result, selectedItem);
+
+
+				visLayer.load();
+				// map.add(visLayer);
+				// visLayer.renderer = createRenderer(result, selectedItem);
+				// chemicalLayer.visible = true;
 				// Refresh table widget for new selected analyte
 				initTableWidget(view, [chemicalLayer], [chemicalLayer]);
 				createValueAlert();
+
 			});
 
 		}
 	});
 
+	async function createLayer(feats) {
+		let layer = new FeatureLayer({
+			source: feats,
+			fields: chemicalLayer.fields,
+			geometryType: "point",
+			objectIdField: "OBJECTID",
+			spatialReference: chemicalLayer.spatialReference,
+		});
+
+		addedLayers.push(layer.id);
+
+		return layer;
+	}
+
+	async function queryMax(selectedItem) {
+		const query = new TopFeaturesQuery({
+			outFields: ["GM_RESULT", "GM_BOTTOM_DEPTH_OF_SCREEN_FT"],
+			returnGeometry: true,
+			returnM: true,
+			returnZ: true,
+			where: `GM_CHEMICAL_NAME = '${selectedItem}'`,
+			outSpatialReference: chemicalLayer.spatialReference,
+			topFilter: new TopFilter({
+				topCount: 1,
+				groupByFields: ["GM_WELL_ID"],
+				orderByFields: ["GM_RESULT"]
+			})
+		});
+		let result = await chemicalLayer.queryTopFeatures(query);
+		return result.features;
+	}
 
 	function createValueAlert() {
 		if (needsAlert) {
