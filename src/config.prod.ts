@@ -731,7 +731,7 @@ export const configProd = {
 				parentTitle: "Displayed Analyte",
 				title2D: displayedAnalyteTitle,
 				title3D: "All GAMA Wells",
-				label: "Displayed Analyte",
+				label: displayedAnalyteTitle,
 				layerVar: "Displayed Analyte",
 				fields: AnalyteFields,
 				dateField: "GM_SAMP_COLLECTION_DATE",

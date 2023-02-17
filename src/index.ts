@@ -31,10 +31,21 @@ IdentityManager.checkSignInStatus(info.portalUrl + '/sharing').catch(() => {
 	IdentityManager.getCredential(info.portalUrl + '/sharing');
 });
 
-const view = new SceneView({
+export const view = new SceneView({
 	container: 'viewDiv',
 	map,
 	qualityProfile: 'high',
+	alphaCompositingEnabled: true,
+	environment: {
+		background: {
+			type: "color", // autocasts as new ColorBackground()
+			color: [255, 252, 244, 0]
+		},
+		// disable stars
+		starsEnabled: false,
+		//disable atmosphere
+		atmosphereEnabled: false
+	}
 });
 view.popup.highlightEnabled = false;
 
@@ -69,7 +80,7 @@ let renderer = {
 			type: "object",  // autocasts as new ObjectSymbol3DLayer()
 			resource: { primitive: "cylinder" },
 			material: { color: [105, 104, 104, 0.5] },
-			width: 40,
+			width: 30,
 			tilt: 180
 		}]
 	},
@@ -85,7 +96,7 @@ let renderer = {
 			axis: "width-and-depth",
 			valueRepresentation: "diameter",
 			useSymbolValues: true,
-			minSize: 40,
+			minSize: 30,
 			valueUnit: "feet"
 		},
 	]
@@ -114,6 +125,10 @@ displayedAnalyte.addMany([allWells, chemicalLayer]);
 map.layers.add(displayedAnalyte, 1);
 
 view.popup.defaultPopupTemplateEnabled = true;
+view.when(() => {
+	const extent = view.extent.clone();
+	view.clippingArea = extent.expand(5);
+})
 
 // handle spinner for when layers are updating
 whenTrue(view, 'updating', () => {
@@ -227,7 +242,7 @@ const createTableElements = (layerViews: SceneLayerView[], tableLayersArr: Layer
 				// @ts-ignore
 				document.getElementById('tableDivs')?.appendChild(tableLayersArr[j].tableDiv);
 				// @ts-ignore
-				tableLayersArr[j].tab.onclick = () => changeTab(tableLayersArr[j]);
+				tableLayersArr[j].tab.onclick = () => changeTableTab(tableLayersArr[j]);
 			}
 		})
 	});
@@ -235,7 +250,7 @@ const createTableElements = (layerViews: SceneLayerView[], tableLayersArr: Layer
 };
 
 // manage table and tab elements when changing tabs
-export const changeTab = (layerInfo: LayerInfo) => {
+export const changeTableTab = (layerInfo: LayerInfo) => {
 	removeActive('calcite-tab', 'active-button');
 	removeActive('tab-content', 'active-content');
 	setActive(layerInfo);
@@ -250,8 +265,6 @@ const removeActive = (elementClass: string, activeClass: string) => {
 };
 
 const setActive = (layerInfo: LayerInfo) => {
-	// console.log(layerInfo);
-
 	layerInfo.tab?.classList.add('active-button');
 	layerInfo.tableDiv?.classList.add('active-content');
 };

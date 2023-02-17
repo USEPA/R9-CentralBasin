@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { initFeatureTable, initWidgets, toggleFeatureTable, initSlidesWidget } from './widgets';
-import { changeTab } from './index';
+import { changeTableTab } from './index';
 import { LayerInfo } from './tableLayers';
 
 jest.mock('@arcgis/core/widgets/LayerList');
@@ -131,7 +131,7 @@ describe('tabs', () => {
     });
     it('changes active feature table tab', () => {
         // const e = { checked: false } as any;
-        changeTab(layerInfo);
+        changeTableTab(layerInfo);
         expect(layerInfo.tab?.classList.contains('active-button')).toBeTruthy();
         expect(layerInfo.tableDiv?.classList.contains('active-content')).toBeTruthy();
     });

@@ -25,26 +25,50 @@ import ButtonMenuItem from '@arcgis/core/widgets/FeatureTable/Grid/support/Butto
 import Graphic from '@arcgis/core/Graphic';
 // Filter widget/render given chemical
 import ClassBreaksRenderer from "@arcgis/core/renderers/ClassBreaksRenderer";
-import { chemicalLayer, allWells, displayedAnalyte } from '.';
+import { chemicalLayer, allWells, displayedAnalyte, changeTableTab, view } from '.';
 import "@esri/calcite-components";
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
-import StatisticDefinition from "@arcgis/core/rest/support/StatisticDefinition";
 import TopFeaturesQuery from "@arcgis/core/rest/support/TopFeaturesQuery";
-import FeatureSet from "@arcgis/core/rest/support/FeatureSet";
-import FeatureFilter from '@arcgis/core/views/layers/support/FeatureFilter';
 import TopFilter from "@arcgis/core/rest/support/TopFilter";
+import { AnalyteFields, AnalyteTemplate, configDev } from './config.dev';
 
 
 let appContainer: HTMLElement | null;
 let tableContainer: HTMLElement | null;
 let basemapDiv = document.getElementById("basemapGalleryDiv")?.parentElement;
-let addedLayers = [];
+let addedLayers: string[] = [];
+let selectedItem: string = "";
+let needsAlert = false;
+let chemicalNames: string[] = [];
+let ready: boolean = true;
+
+// Check if query layer is ready before starting a new one
+async function checkReady() {
+	if (ready === false) {
+		window.setTimeout(checkReady, 100);
+	} else {
+		ready = false;
+		await removeQueryLayer();
+		await selectAnalyte();
+		createValueAlert();
+	}
+}
 
 // Get reference to div elements
 let labelText: HTMLElement | null;
 
-// Selected analyte for title for layer list and feature table
+// Selected analyte data for layer list and feature table
 export let displayedAnalyteTitle = "Displayed Analyte";
+let queryData = {
+	parentTitle: "Displayed Analyte",
+	title2D: "",
+	title3D: "All GAMA Wells",
+	label: `Max GM_RESULT`,
+	layerVar: "Query Result",
+	fields: AnalyteFields,
+	dateField: "GM_SAMP_COLLECTION_DATE",
+	template: AnalyteTemplate,
+};
 
 export const initWidgets = (view: SceneView) => {
 	const homeButton = new Home({ view });
@@ -226,8 +250,6 @@ export const initWidgets = (view: SceneView) => {
 	const filtersDiv: any = document.getElementById('filtersDiv');
 	const combobox = document.getElementById('combobox') as HTMLCalciteComboboxElement;
 
-	let chemicalNames: any = [];
-
 	const queryParams = chemicalLayer.createQuery();
 	queryParams.outFields = ["GM_CHEMICAL_NAME"];
 	queryParams.returnDistinctValues = true;
@@ -245,296 +267,19 @@ export const initWidgets = (view: SceneView) => {
 
 	})
 
-	let selectedItem: string;
-	let needsAlert = false;
-
-	// Creates a class break renderer, provide an array of 6 numbers for break values
-	function createRenderer(values: number[], name: string) {
-		let renderer = new ClassBreaksRenderer({
-			// @ts-ignore
-			type: "class-breaks",
-			field: "GM_RESULT",
-			legendOptions: {
-				title: `GM Result Values for ${name}`
-			},
-			visualVariables: [
-				{
-					// @ts-ignore
-					type: "size",
-					axis: "height",
-					field: "GM_BOTTOM_DEPTH_OF_SCREEN_FT",
-					valueUnit: "feet",
-					minSize: 10
-				},
-				{
-					// @ts-ignore
-					type: "size",
-					axis: "width-and-depth",
-					valueRepresentation: "diameter",
-					useSymbolValues: true,
-					minSize: 40,
-					valueUnit: "feet"
-				},
-			]
-		});
-		// All features with 0 values (wells without the analyte present)
-		renderer.addClassBreakInfo({
-			label: "0",
-			minValue: 0,
-			maxValue: 0,
-			symbol: {
-				type: "point-3d",  // autocasts as new PointSymbol3D()
-				symbolLayers: [{
-					type: "object",  // autocasts as new ObjectSymbol3DLayer()
-					resource: { primitive: "cylinder" },
-					material: { color: [105, 104, 104, 0.5] },
-					height: 140,
-					width: 40,
-					tilt: 180
-				}]
-			}
-		});
-		// All features with values between min and Legend1
-		renderer.addClassBreakInfo({
-			label: `${values[0]} - ${values[1]}`,
-			minValue: values[0],
-			maxValue: values[1],
-			symbol: {
-				type: "point-3d",  // autocasts as new PointSymbol3D()
-				symbolLayers: [{
-					type: "object",  // autocasts as new ObjectSymbol3DLayer()
-					resource: { primitive: "cylinder" },
-					material: { color: [0, 255, 0] },
-					height: 600,
-					width: 42,
-					tilt: 180
-				}]
-			}
-		});
-		// All features with values between Legend1 and Legend2
-		renderer.addClassBreakInfo({
-			label: `${values[1]} - ${values[2]}`,
-			minValue: values[1],
-			maxValue: values[2],
-			symbol: {
-				type: "point-3d",  // autocasts as new PointSymbol3D()
-				symbolLayers: [{
-					type: "object",  // autocasts as new ObjectSymbol3DLayer()
-					resource: { primitive: "cylinder" },
-					material: { color: [0, 180, 255] },
-					height: 800,
-					width: 44,
-					tilt: 180
-				}]
-			}
-		});
-		// All features with values between Legend2 and Legend3
-		renderer.addClassBreakInfo({
-			label: `${values[2]} - ${values[3]}`,
-			minValue: values[2],
-			maxValue: values[3],
-			symbol: {
-				type: "point-3d",  // autocasts as new PointSymbol3D()
-				symbolLayers: [{
-					type: "object",  // autocasts as new ObjectSymbol3DLayer()
-					resource: { primitive: "cylinder" },
-					material: { color: [255, 255, 0] },
-					height: 1200,
-					width: 46,
-					tilt: 180
-				}]
-			}
-		});
-		// All features with values between Legend3 and Legend4
-		renderer.addClassBreakInfo({
-			label: `${values[3]} - ${values[4]}`,
-			minValue: values[3],
-			maxValue: values[4],
-			symbol: {
-				type: "point-3d",  // autocasts as new PointSymbol3D()
-				symbolLayers: [{
-					type: "object",  // autocasts as new ObjectSymbol3DLayer()
-					resource: { primitive: "cylinder" },
-					material: { color: [255, 130, 0] },
-					height: 1500,
-					width: 48,
-					tilt: 180
-				}]
-			}
-		});
-		// All features with values between Legend4 and the max
-		renderer.addClassBreakInfo({
-			label: `${values[4]} - ${values[5]}`,
-			minValue: values[4],
-			maxValue: values[5],
-			symbol: {
-				type: "point-3d",  // autocasts as new PointSymbol3D()
-				symbolLayers: [{
-					type: "object",  // autocasts as new ObjectSymbol3DLayer()
-					resource: { primitive: "cylinder" },
-					material: { color: [255, 0, 0] },
-					height: 2000,
-					width: 50,
-					tilt: 180
-				}]
-			}
-		});
-		return renderer;
-	}
-
-	const LegendTable = new FeatureLayer({
-		url: "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ChemList_Voted4/FeatureServer",
-		outFields: ["from_Gama_lookup", "Legend1", "Legend2", "Legend3", "Legend4"],
-		listMode: "hide",
-	})
-
-	// Returns legend values for selected analyte from ChemList_Voted4 table
-	async function getLegendValues(chemName: String) {
-		LegendTable.definitionExpression = `from_Gama_lookup = '${chemName}'`;
-		const queryParams = LegendTable.createQuery();
-		queryParams.outFields = ["Legend1", "Legend2", "Legend3", "Legend4"];
-		// @ts-ignore
-		let legendVals: number[] = await LegendTable.queryFeatures(queryParams).then(async function (results) {
-			let features = results.features;
-			let data = features.map(feature => feature.attributes);
-			let vals;
-			let max: number = await getValue("max", chemicalLayer, "GM_RESULT");
-			let min: number = await getValue("min", chemicalLayer, "GM_RESULT");
-			let avg: number = await getValue("avg", chemicalLayer, "GM_RESULT");
-			try {
-				// Map legend values to array, or 0's if null
-				vals = Object.values(data[0]).map(i => i === null ? 0 : i);
-				needsAlert = false;
-
-				// If legend values are not present, generate values based on field stats
-				if (vals.every(item => item === 0)) {
-					// Create steps for generated legend values, round to 2 decimal places
-					let step = +(avg / 4).toFixed(2) / 5;
-					vals = [+(step).toFixed(2), +(step * 2).toFixed(2), +(step * 3).toFixed(2), +(step * 4).toFixed(2)];
-					needsAlert = true;
-				}
-			} catch (error) {
-				// If analyte is not in legend table, generate values based on field stats
-				// Create steps for generated legend values, round to 2 decimal places
-				let step = +(avg / 4).toFixed(2) / 5;
-				vals = [+(step).toFixed(2), +(step * 2).toFixed(2), +(step * 3).toFixed(2), +(step * 4).toFixed(2)];
-				needsAlert = true;
-			}
-			// Add max value to end of array
-			vals.push(max);
-
-			// Add min value to start of array
-			vals.unshift(min);
-
-			return vals;
-		});
-		return legendVals;
-	}
-
-	// Returns a stat (min, max, avg) given a stat, layer, and field to query
-	async function getValue(stat: String, layer: FeatureLayer, field: String): Promise<number> {
-		let val = {
-			onStatisticField: field,
-			outStatisticFieldName: field,
-			statisticType: stat
-		}
-		let query = layer.createQuery();
-		// @ts-ignore
-		query.outStatistics = [val];
-		let response = await layer.queryFeatures(query).then(function (response) {
-			let stats = response.features[0].attributes;
-			return stats;
-		});
-		return Object.values(response)[0] as number;
-	}
-
-
 	combobox.addEventListener("calciteComboboxChange", async calciteComboboxChangeEvt => {
 		// @ts-ignore
 		selectedItem = calciteComboboxChangeEvt.target.value;
 		if (selectedItem == "Show all") {
 			// Hide chemical layer instead, show all wells
 			displayedAnalyte.visible = true;
-			chemicalLayer.visible = false;
+			await removeQueryLayer();
 			allWells.visible = true;
 			initTableWidget(view, [chemicalLayer], [chemicalLayer]);
 		} else {
-			chemicalLayer.definitionExpression = `GM_CHEMICAL_NAME = '${selectedItem}'`;
-			let fs = await queryMax(selectedItem);
-			let visLayer = await createLayer(fs);
-			getLegendValues(selectedItem).then(result => {
-				// Once legend values are ready use them for renderer
-				chemicalLayer.title = `GAMA Wells Containing ${selectedItem}`;
-				displayedAnalyteTitle = chemicalLayer.title;
-				displayedAnalyte.visible = true;
-				displayedAnalyte.add(visLayer);
-				// allWells.visible = true;
-
-
-
-
-
-				// let edits = {
-				// 	updateFeatures: fs,
-				// }
-
-				// visLayer.applyEdits(edits);
-
-				visLayer.title = `GAMA Wells Containing ${selectedItem}`;
-				visLayer.renderer = createRenderer(result, selectedItem);
-
-
-				visLayer.load();
-				// map.add(visLayer);
-				// visLayer.renderer = createRenderer(result, selectedItem);
-				// chemicalLayer.visible = true;
-				// Refresh table widget for new selected analyte
-				initTableWidget(view, [chemicalLayer], [chemicalLayer]);
-				createValueAlert();
-
-			});
-
+			checkReady();
 		}
 	});
-
-	async function createLayer(feats) {
-		let layer = new FeatureLayer({
-			source: feats,
-			fields: chemicalLayer.fields,
-			geometryType: "point",
-			objectIdField: "OBJECTID",
-			spatialReference: chemicalLayer.spatialReference,
-		});
-
-		addedLayers.push(layer.id);
-
-		return layer;
-	}
-
-	async function queryMax(selectedItem) {
-		const query = new TopFeaturesQuery({
-			outFields: ["GM_RESULT", "GM_BOTTOM_DEPTH_OF_SCREEN_FT"],
-			returnGeometry: true,
-			returnM: true,
-			returnZ: true,
-			where: `GM_CHEMICAL_NAME = '${selectedItem}'`,
-			outSpatialReference: chemicalLayer.spatialReference,
-			topFilter: new TopFilter({
-				topCount: 1,
-				groupByFields: ["GM_WELL_ID"],
-				orderByFields: ["GM_RESULT"]
-			})
-		});
-		let result = await chemicalLayer.queryTopFeatures(query);
-		return result.features;
-	}
-
-	function createValueAlert() {
-		if (needsAlert) {
-			let alert = document.getElementById("valueAlert");
-			alert?.setAttribute("open", "true");
-		}
-	}
 
 	const filterExpand = new Expand({
 		view,
@@ -629,6 +374,301 @@ export const initWidgets = (view: SceneView) => {
 	return view;
 };
 
+// Creates a class break renderer, provide an array of 6 numbers for break values
+function createRenderer(values: number[], name: string) {
+	let renderer = new ClassBreaksRenderer({
+		// @ts-ignore
+		type: "class-breaks",
+		field: "GM_RESULT",
+		legendOptions: {
+			title: `GM Result Values for ${name}`
+		},
+		visualVariables: [
+			{
+				// @ts-ignore
+				type: "size",
+				axis: "height",
+				field: "GM_BOTTOM_DEPTH_OF_SCREEN_FT",
+				valueUnit: "feet",
+				minSize: 10
+			},
+			{
+				// @ts-ignore
+				type: "size",
+				axis: "width-and-depth",
+				valueRepresentation: "diameter",
+				useSymbolValues: true,
+				minSize: 40,
+				valueUnit: "feet"
+			},
+		]
+	});
+	// All features with 0 values (wells without the analyte present)
+	renderer.addClassBreakInfo({
+		label: "0",
+		minValue: 0,
+		maxValue: 0,
+		symbol: {
+			type: "point-3d",  // autocasts as new PointSymbol3D()
+			symbolLayers: [{
+				type: "object",  // autocasts as new ObjectSymbol3DLayer()
+				resource: { primitive: "cylinder" },
+				material: { color: [105, 104, 104, 0.5] },
+				height: 140,
+				width: 40,
+				tilt: 180
+			}]
+		}
+	});
+	// All features with values between min and Legend1
+	renderer.addClassBreakInfo({
+		label: `${values[0]} - ${values[1]}`,
+		minValue: values[0],
+		maxValue: values[1],
+		symbol: {
+			type: "point-3d",  // autocasts as new PointSymbol3D()
+			symbolLayers: [{
+				type: "object",  // autocasts as new ObjectSymbol3DLayer()
+				resource: { primitive: "cylinder" },
+				material: { color: [0, 255, 0] },
+				height: 600,
+				width: 42,
+				tilt: 180
+			}]
+		}
+	});
+	// All features with values between Legend1 and Legend2
+	renderer.addClassBreakInfo({
+		label: `${values[1]} - ${values[2]}`,
+		minValue: values[1],
+		maxValue: values[2],
+		symbol: {
+			type: "point-3d",  // autocasts as new PointSymbol3D()
+			symbolLayers: [{
+				type: "object",  // autocasts as new ObjectSymbol3DLayer()
+				resource: { primitive: "cylinder" },
+				material: { color: [0, 180, 255] },
+				height: 800,
+				width: 44,
+				tilt: 180
+			}]
+		}
+	});
+	// All features with values between Legend2 and Legend3
+	renderer.addClassBreakInfo({
+		label: `${values[2]} - ${values[3]}`,
+		minValue: values[2],
+		maxValue: values[3],
+		symbol: {
+			type: "point-3d",  // autocasts as new PointSymbol3D()
+			symbolLayers: [{
+				type: "object",  // autocasts as new ObjectSymbol3DLayer()
+				resource: { primitive: "cylinder" },
+				material: { color: [255, 255, 0] },
+				height: 1200,
+				width: 46,
+				tilt: 180
+			}]
+		}
+	});
+	// All features with values between Legend3 and Legend4
+	renderer.addClassBreakInfo({
+		label: `${values[3]} - ${values[4]}`,
+		minValue: values[3],
+		maxValue: values[4],
+		symbol: {
+			type: "point-3d",  // autocasts as new PointSymbol3D()
+			symbolLayers: [{
+				type: "object",  // autocasts as new ObjectSymbol3DLayer()
+				resource: { primitive: "cylinder" },
+				material: { color: [255, 130, 0] },
+				height: 1500,
+				width: 48,
+				tilt: 180
+			}]
+		}
+	});
+	// All features with values between Legend4 and the max
+	renderer.addClassBreakInfo({
+		label: `${values[4]} - ${values[5]}`,
+		minValue: values[4],
+		maxValue: values[5],
+		symbol: {
+			type: "point-3d",  // autocasts as new PointSymbol3D()
+			symbolLayers: [{
+				type: "object",  // autocasts as new ObjectSymbol3DLayer()
+				resource: { primitive: "cylinder" },
+				material: { color: [255, 0, 0] },
+				height: 2000,
+				width: 50,
+				tilt: 180
+			}]
+		}
+	});
+	return renderer;
+}
+
+const LegendTable = new FeatureLayer({
+	url: "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ChemList_Voted4/FeatureServer",
+	outFields: ["from_Gama_lookup", "Legend1", "Legend2", "Legend3", "Legend4"],
+	listMode: "hide",
+})
+
+// Returns legend values for selected analyte from ChemList_Voted4 table
+async function getLegendValues(chemName: String) {
+	LegendTable.definitionExpression = `from_Gama_lookup = '${chemName}'`;
+	const queryParams = LegendTable.createQuery();
+	queryParams.outFields = ["Legend1", "Legend2", "Legend3", "Legend4"];
+	// @ts-ignore
+	let legendVals: number[] = await LegendTable.queryFeatures(queryParams).then(async function (results) {
+		let features = results.features;
+		let data = features.map(feature => feature.attributes);
+		let vals;
+		let max: number = await getValue("max", chemicalLayer, "GM_RESULT");
+		let min: number = await getValue("min", chemicalLayer, "GM_RESULT");
+		let avg: number = await getValue("avg", chemicalLayer, "GM_RESULT");
+		try {
+			// Map legend values to array, or 0's if null
+			vals = Object.values(data[0]).map(i => i === null ? 0 : i);
+			needsAlert = false;
+
+			// If legend values are not present, generate values based on field stats
+			if (vals.every(item => item === 0)) {
+				// Create steps for generated legend values, round to 2 decimal places
+				let step = +(avg / 4).toFixed(2) / 5;
+				vals = [+(step).toFixed(2), +(step * 2).toFixed(2), +(step * 3).toFixed(2), +(step * 4).toFixed(2)];
+				needsAlert = true;
+			}
+		} catch (error) {
+			// If analyte is not in legend table, generate values based on field stats
+			// Create steps for generated legend values, round to 2 decimal places
+			let step = +(avg / 4).toFixed(2) / 5;
+			vals = [+(step).toFixed(2), +(step * 2).toFixed(2), +(step * 3).toFixed(2), +(step * 4).toFixed(2)];
+			needsAlert = true;
+		}
+		// Add max value to end of array
+		vals.push(max);
+
+		// Add min value to start of array
+		vals.unshift(min);
+
+		return vals;
+	});
+	return legendVals;
+}
+
+// Returns a stat (min, max, avg) given a stat, layer, and field to query
+async function getValue(stat: String, layer: FeatureLayer, field: String): Promise<number> {
+	let val = {
+		onStatisticField: field,
+		outStatisticFieldName: field,
+		statisticType: stat
+	}
+	let query = layer.createQuery();
+	// @ts-ignore
+	query.outStatistics = [val];
+	let response = await layer.queryFeatures(query).then(function (response) {
+		let stats = response.features[0].attributes;
+		return stats;
+	});
+	return Object.values(response)[0] as number;
+}
+
+async function selectAnalyte() {
+	chemicalLayer.definitionExpression = `GM_CHEMICAL_NAME = '${selectedItem}'`;
+	// @ts-ignore
+	document.getElementById('lds-roller2').style.visibility = 'visible';
+	let visLayer = await queryMax();
+	getLegendValues(selectedItem).then(result => {
+		// Once legend values are ready use them for renderer
+		chemicalLayer.title = `All GAMA Wells Containing ${selectedItem}`;
+		displayedAnalyteTitle = chemicalLayer.title;
+		displayedAnalyte.visible = true;
+		displayedAnalyte.add(visLayer);
+		allWells.visible = true;
+		visLayer.title = `GAMA Wells Containing ${selectedItem}`;
+		visLayer.popupTemplate = AnalyteTemplate;
+
+		queryData.title2D = `GAMA Wells Containing ${selectedItem}`;
+		queryData.layer2D = visLayer;
+		queryData.fields = AnalyteFields;
+		queryData.template = AnalyteTemplate;
+		queryData.sceneView = view;
+		queryData.tableDiv = document.createElement('DIV') as HTMLElement;
+		queryData?.tableDiv?.classList.add('tab-content');
+		queryData.tab = document.createElement('BUTTON');
+		queryData.tab.classList.add('calcite-tab', 'wells2d', 'esri-widget--button');
+		queryData.tab.innerHTML = queryData.label;
+		document.getElementById('tableTabs')?.appendChild(queryData.tab);
+		document.getElementById('tableDivs')?.appendChild(queryData.tableDiv);
+		queryData.tab.onclick = () => changeTableTab(queryData);
+		configDev.tableLayers.layers.push(queryData);
+
+		visLayer.renderer = createRenderer(result, selectedItem);
+		visLayer.load();
+		// @ts-ignore
+		document.getElementById('lds-roller2').style.visibility = 'hidden';
+		// Refresh table widget for new selected analyte
+		initTableWidget(view, [queryData], [view]);
+
+		ready = true;
+	});
+
+}
+
+// Remove feature table and related tab, remove old query layer.
+async function removeQueryLayer() {
+	if (queryData.tab) {
+		changeTableTab(configDev.tableLayers.layers[1]);
+		queryData.tab.remove();
+		queryData.tableDiv.remove();
+	}
+
+	if (addedLayers.length > 0) {
+		displayedAnalyte.remove(map.findLayerById(addedLayers[0]));
+		addedLayers.pop();
+	}
+
+}
+
+// Queries for top GM_RESULT for selected analyte, using time extent, returns new layer
+async function queryMax() {
+	const query = new TopFeaturesQuery({
+		outFields: ["GM_RESULT", "GM_BOTTOM_DEPTH_OF_SCREEN_FT", "GM_WELL_ID", "GM_RESULT_UNITS", "GM_WELL_CATEGORY", "GM_SAMP_COLLECTION_DATE", "GM_CHEMICAL_NAME"],
+		timeExtent: timeSlider.timeExtent,
+		returnGeometry: true,
+		returnZ: true,
+		where: `GM_CHEMICAL_NAME = '${selectedItem}'`,
+		outSpatialReference: chemicalLayer.spatialReference,
+		topFilter: new TopFilter({
+			topCount: 1,
+			groupByFields: ["GM_WELL_ID"],
+			orderByFields: ["GM_RESULT DESC"]
+		})
+	});
+	let result = await chemicalLayer.queryTopFeatures(query);
+	// return result.features;
+	let layer = new FeatureLayer({
+		source: result.features,
+		fields: chemicalLayer.fields,
+		geometryType: "point",
+		objectIdField: "OBJECTID",
+		spatialReference: chemicalLayer.spatialReference,
+	});
+
+	addedLayers.push(layer.id);
+
+	return layer;
+}
+
+// Shows calcite alert if needed (analyte without legend values)
+function createValueAlert() {
+	if (needsAlert) {
+		let alert = document.getElementById("valueAlert");
+		alert?.setAttribute("open", "true");
+	}
+}
+
 export const initFeatureTable = (view: SceneView) => {
 	// Get references to div elements for toggling table visibility
 	appContainer = document.getElementById('appContainer');
@@ -663,26 +703,39 @@ export const toggleFeatureTable = (checkboxEle: HTMLElement) => {
 	}
 };
 
-export const initTimeSlider = (view: SceneView) => {
-	const timeInterval = new TimeInterval({ value: 1, unit: 'months' });
-	const timeSlider = new TimeSlider({
-		container: 'timeSlider',
-		view: view,
-		mode: 'time-window',
-		fullTimeExtent: {
-			start: new Date(1984, 0, 23),
-			end: new Date(2021, 0, 6),
-		},
-		// Set default time extent to full extent
-		timeExtent: {
-			start: new Date(1984, 0, 23),
-			end: new Date(2021, 0, 6),
-		},
-		stops: {
-			interval: timeInterval,
-		},
-	});
+const timeInterval = new TimeInterval({ value: 1, unit: 'months' });
+const timeSlider = new TimeSlider({
+	container: 'timeSlider',
+	view: view,
+	mode: 'time-window',
+	fullTimeExtent: {
+		start: new Date(1984, 0, 23),
+		end: new Date(2021, 0, 6),
+	},
+	// Set default time extent to full extent
+	timeExtent: {
+		start: new Date(1984, 0, 23),
+		end: new Date(2021, 0, 6),
+	},
+	stops: {
+		interval: timeInterval,
+	},
+});
 
+// Use watch for time extent change, using short timeout to wait for user to
+// likely be done changing time extent. Await the removal of old query layer for
+// selected analyte to avoid duplicate layers.
+let timeTimeout: any;
+timeSlider.watch("timeExtent", async () => {
+	clearTimeout(timeTimeout);
+	timeTimeout = setTimeout(async function () {
+		if (chemicalNames.includes(selectedItem)) {
+			checkReady();
+		}
+	}, 2000)
+});
+
+export const initTimeSlider = (view: SceneView) => {
 	const timeSliderExpand = new Expand({
 		view,
 		content: timeSlider.container,

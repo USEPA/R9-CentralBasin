@@ -54,7 +54,15 @@
     </header>
     <div id="viewDiv">
       <div id="timeSlider" style="width: 80vw;"></div>
+      <!-- Load roller for view updating -->
       <div id="lds-roller" class="lds-roller">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <!-- Load roller for awaiting promise -->
+      <div id="lds-roller2" class="lds-roller">
         <div></div>
         <div></div>
         <div></div>
@@ -107,7 +115,8 @@
     <calcite-alert icon="question" label="Legend values alert" auto-close auto-close-duration="slow" kind="info"
       scale="m" id="valueAlert">
       <div slot="title">Legend values not available </div>
-      <div slot="message">Legend values are not available for the selected analyte. Values will be generated based on
+      <div slot="message">Legend values are not available for the selected analyte. Values
+        will be generated based on
         statistics for field 'GM_RESULT'.</div>
       <calcite-link
         href="https://epa.maps.arcgis.com/home/item.html?id=b589f46083ea42058136088689a84bfd&view=list&sortOrder=desc&sortField=defaultFSOrder&showFilters=false#data"

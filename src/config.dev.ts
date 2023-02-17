@@ -144,7 +144,7 @@ const wellsFields = [
 // 	},
 // ];
 
-const AnalyteFields = [
+export const AnalyteFields = [
 	{
 		name: 'GM_WELL_ID',
 		label: 'WELL_ID',
@@ -160,7 +160,7 @@ const AnalyteFields = [
 	},
 	{
 		name: 'GM_SAMP_COLLECTION_DATE',
-		label: 'Date',
+		label: 'Collection Date',
 	},
 	{
 		name: 'GM_RESULT',
@@ -369,12 +369,16 @@ const wellsTemplate = {
 // 	],
 // };
 
-const AnalyteTemplate = {
-	title: '{GM_CHEMICAL_NAME}',
+export const AnalyteTemplate = {
+	title: '{GM_WELL_ID}',
 	content: [
 		{
 			type: 'fields',
 			fieldInfos: [
+				{
+					fieldName: "GM_WELL_ID",
+					label: "Well ID"
+				},
 				{
 					fieldName: 'GM_RESULT',
 					label: 'Results',
@@ -389,11 +393,11 @@ const AnalyteTemplate = {
 				},
 				{
 					fieldName: 'GM_SAMP_COLLECTION_DATE',
-					label: 'Date',
+					label: 'Collection Date',
 				},
 				{
 					fieldName: 'GM_BOTTOM_DEPTH_OF_SCREEN_FT',
-					label: 'WELL DEPTH (FT)',
+					label: 'Well Depth (Feet)',
 				},
 			],
 		},
@@ -737,7 +741,7 @@ export const configDev = {
 				parentTitle: "Displayed Analyte",
 				title2D: displayedAnalyteTitle,
 				title3D: "All GAMA Wells",
-				label: "Displayed Analyte",
+				label: displayedAnalyteTitle,
 				layerVar: "Displayed Analyte",
 				fields: AnalyteFields,
 				dateField: "GM_SAMP_COLLECTION_DATE",
