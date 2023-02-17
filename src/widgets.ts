@@ -1,4 +1,4 @@
-import { map, mapProperties } from './data/app';
+import { config, map, mapProperties } from './data/app';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -30,7 +30,7 @@ import "@esri/calcite-components";
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import TopFeaturesQuery from "@arcgis/core/rest/support/TopFeaturesQuery";
 import TopFilter from "@arcgis/core/rest/support/TopFilter";
-import { AnalyteFields, AnalyteTemplate, configDev } from './config.dev';
+import { AnalyteFields, AnalyteTemplate } from './config.dev';
 
 
 let appContainer: HTMLElement | null;
@@ -602,7 +602,8 @@ async function selectAnalyte() {
 		document.getElementById('tableTabs')?.appendChild(queryData.tab);
 		document.getElementById('tableDivs')?.appendChild(queryData.tableDiv);
 		queryData.tab.onclick = () => changeTableTab(queryData);
-		configDev.tableLayers.layers.push(queryData);
+		changeTableTab(queryData);
+		config.tableLayers.layers.push(queryData);
 
 		visLayer.renderer = createRenderer(result, selectedItem);
 		visLayer.load();
@@ -619,7 +620,7 @@ async function selectAnalyte() {
 // Remove feature table and related tab, remove old query layer.
 async function removeQueryLayer() {
 	if (queryData.tab) {
-		changeTableTab(configDev.tableLayers.layers[1]);
+		changeTableTab(config.tableLayers.layers[1]);
 		queryData.tab.remove();
 		queryData.tableDiv.remove();
 	}
