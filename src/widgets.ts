@@ -50,7 +50,6 @@ async function checkReady() {
 		ready = false;
 		await removeQueryLayer();
 		await selectAnalyte();
-		createValueAlert();
 	}
 }
 
@@ -389,8 +388,9 @@ function createRenderer(values: number[], name: string) {
 				type: "size",
 				axis: "height",
 				field: "GM_BOTTOM_DEPTH_OF_SCREEN_FT",
+				useSymbolValues: true,
 				valueUnit: "feet",
-				minSize: 10
+				minSize: 4
 			},
 			{
 				// @ts-ignore
@@ -398,27 +398,10 @@ function createRenderer(values: number[], name: string) {
 				axis: "width-and-depth",
 				valueRepresentation: "diameter",
 				useSymbolValues: true,
-				minSize: 40,
+				minSize: 8,
 				valueUnit: "feet"
-			},
+			}
 		]
-	});
-	// All features with 0 values (wells without the analyte present)
-	renderer.addClassBreakInfo({
-		label: "0",
-		minValue: 0,
-		maxValue: 0,
-		symbol: {
-			type: "point-3d",  // autocasts as new PointSymbol3D()
-			symbolLayers: [{
-				type: "object",  // autocasts as new ObjectSymbol3DLayer()
-				resource: { primitive: "cylinder" },
-				material: { color: [105, 104, 104, 0.5] },
-				height: 140,
-				width: 40,
-				tilt: 180
-			}]
-		}
 	});
 	// All features with values between min and Legend1
 	renderer.addClassBreakInfo({
@@ -427,14 +410,19 @@ function createRenderer(values: number[], name: string) {
 		maxValue: values[1],
 		symbol: {
 			type: "point-3d",  // autocasts as new PointSymbol3D()
-			symbolLayers: [{
-				type: "object",  // autocasts as new ObjectSymbol3DLayer()
-				resource: { primitive: "cylinder" },
-				material: { color: [0, 255, 0] },
-				height: 600,
-				width: 42,
-				tilt: 180
-			}]
+			symbolLayers: [
+				{
+					type: "icon",
+					size: 8,
+					resource: { primitive: "circle" },
+					material: { color: [206, 255, 255] }
+				},
+				{
+					type: "object",  // autocasts as new ObjectSymbol3DLayer()
+					resource: { primitive: "cylinder" },
+					material: { color: [206, 255, 255] },
+					tilt: 180
+				}]
 		}
 	});
 	// All features with values between Legend1 and Legend2
@@ -444,14 +432,19 @@ function createRenderer(values: number[], name: string) {
 		maxValue: values[2],
 		symbol: {
 			type: "point-3d",  // autocasts as new PointSymbol3D()
-			symbolLayers: [{
-				type: "object",  // autocasts as new ObjectSymbol3DLayer()
-				resource: { primitive: "cylinder" },
-				material: { color: [0, 180, 255] },
-				height: 800,
-				width: 44,
-				tilt: 180
-			}]
+			symbolLayers: [
+				{
+					type: "icon",
+					size: 8,
+					resource: { primitive: "circle" },
+					material: { color: [162, 244, 155] }
+				},
+				{
+					type: "object",  // autocasts as new ObjectSymbol3DLayer()
+					resource: { primitive: "cylinder" },
+					material: { color: [162, 244, 155] },
+					tilt: 180
+				}]
 		}
 	});
 	// All features with values between Legend2 and Legend3
@@ -461,14 +454,19 @@ function createRenderer(values: number[], name: string) {
 		maxValue: values[3],
 		symbol: {
 			type: "point-3d",  // autocasts as new PointSymbol3D()
-			symbolLayers: [{
-				type: "object",  // autocasts as new ObjectSymbol3DLayer()
-				resource: { primitive: "cylinder" },
-				material: { color: [255, 255, 0] },
-				height: 1200,
-				width: 46,
-				tilt: 180
-			}]
+			symbolLayers: [
+				{
+					type: "icon",
+					size: 8,
+					resource: { primitive: "circle" },
+					material: { color: [213, 206, 4] }
+				},
+				{
+					type: "object",  // autocasts as new ObjectSymbol3DLayer()
+					resource: { primitive: "cylinder" },
+					material: { color: [213, 206, 4] },
+					tilt: 180
+				}]
 		}
 	});
 	// All features with values between Legend3 and Legend4
@@ -478,14 +476,19 @@ function createRenderer(values: number[], name: string) {
 		maxValue: values[4],
 		symbol: {
 			type: "point-3d",  // autocasts as new PointSymbol3D()
-			symbolLayers: [{
-				type: "object",  // autocasts as new ObjectSymbol3DLayer()
-				resource: { primitive: "cylinder" },
-				material: { color: [255, 130, 0] },
-				height: 1500,
-				width: 48,
-				tilt: 180
-			}]
+			symbolLayers: [
+				{
+					type: "icon",
+					size: 8,
+					resource: { primitive: "circle" },
+					material: { color: [241, 153, 3] }
+				},
+				{
+					type: "object",  // autocasts as new ObjectSymbol3DLayer()
+					resource: { primitive: "cylinder" },
+					material: { color: [241, 153, 3] },
+					tilt: 180
+				}]
 		}
 	});
 	// All features with values between Legend4 and the max
@@ -495,14 +498,19 @@ function createRenderer(values: number[], name: string) {
 		maxValue: values[5],
 		symbol: {
 			type: "point-3d",  // autocasts as new PointSymbol3D()
-			symbolLayers: [{
-				type: "object",  // autocasts as new ObjectSymbol3DLayer()
-				resource: { primitive: "cylinder" },
-				material: { color: [255, 0, 0] },
-				height: 2000,
-				width: 50,
-				tilt: 180
-			}]
+			symbolLayers: [
+				{
+					type: "icon",
+					size: 8,
+					resource: { primitive: "circle" },
+					material: { color: [249, 73, 2] }
+				},
+				{
+					type: "object",  // autocasts as new ObjectSymbol3DLayer()
+					resource: { primitive: "cylinder" },
+					material: { color: [249, 73, 2] },
+					tilt: 180
+				}]
 		}
 	});
 	return renderer;
@@ -611,6 +619,7 @@ async function selectAnalyte() {
 		document.getElementById('lds-roller2').style.visibility = 'hidden';
 		// Refresh table widget for new selected analyte
 		initTableWidget(view, [queryData], [view]);
+		createValueAlert();
 
 		ready = true;
 	});
@@ -648,13 +657,15 @@ async function queryMax() {
 		})
 	});
 	let result = await chemicalLayer.queryTopFeatures(query);
-	// return result.features;
 	let layer = new FeatureLayer({
 		source: result.features,
 		fields: chemicalLayer.fields,
 		geometryType: "point",
 		objectIdField: "OBJECTID",
 		spatialReference: chemicalLayer.spatialReference,
+		elevationInfo: {
+			mode: "on-the-ground"
+		}
 	});
 
 	addedLayers.push(layer.id);
@@ -691,7 +702,8 @@ export const toggleFeatureTable = (checkboxEle: HTMLElement) => {
 	// @ts-ignore
 	if (!checkboxEle.checked) {
 		// @ts-ignore
-		appContainer.removeChild(tableContainer);
+		// appContainer.removeChild(tableContainer);
+		tableContainer.style.display = "none";
 		// @ts-ignore
 		labelText.innerHTML = 'Show Feature Table';
 	} else {
@@ -711,12 +723,12 @@ const timeSlider = new TimeSlider({
 	mode: 'time-window',
 	fullTimeExtent: {
 		start: new Date(1984, 0, 23),
-		end: new Date(2021, 0, 6),
+		end: new Date(2022, 3, 15),
 	},
 	// Set default time extent to full extent
 	timeExtent: {
 		start: new Date(1984, 0, 23),
-		end: new Date(2021, 0, 6),
+		end: new Date(2022, 3, 15),
 	},
 	stops: {
 		interval: timeInterval,

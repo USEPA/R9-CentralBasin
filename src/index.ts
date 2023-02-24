@@ -69,6 +69,9 @@ export const allWells = new FeatureLayer({
 	},
 	visible: false,
 	title: "All GAMA Wells",
+	elevationInfo: {
+		mode: "on-the-ground"
+	}
 })
 
 let renderer = {
@@ -79,8 +82,8 @@ let renderer = {
 		symbolLayers: [{
 			type: "object",  // autocasts as new ObjectSymbol3DLayer()
 			resource: { primitive: "cylinder" },
-			material: { color: [105, 104, 104, 0.5] },
-			width: 30,
+			material: { color: [136, 136, 136, 0.5] },
+			width: 7,
 			tilt: 180
 		}]
 	},
@@ -89,19 +92,20 @@ let renderer = {
 			type: "size",
 			axis: "height",
 			field: "GM_BOTTOM_DEPTH_OF_SCREEN_FT",
-			valueUnit: "feet"
+			useSymbolValues: true,
+			valueUnit: "feet",
+			minSize: 2
 		},
 		{
 			type: "size",
 			axis: "width-and-depth",
 			valueRepresentation: "diameter",
 			useSymbolValues: true,
-			minSize: 30,
+			minSize: 7,
 			valueUnit: "feet"
 		},
 	]
 };
-
 
 
 view.when(removeGroup);

@@ -398,3 +398,9 @@ input:checked+.slider:before {
   height: fit-content;
   margin-bottom: 10px;
 }
+
+/* Hide play button on time slider */
+.esri-time-slider__animation {
+  visibility: hidden !important;
+  width: 0 !important;
+}
