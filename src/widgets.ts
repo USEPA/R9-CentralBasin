@@ -398,7 +398,7 @@ function createRenderer(values: number[], name: string) {
 				axis: "width-and-depth",
 				valueRepresentation: "diameter",
 				useSymbolValues: true,
-				minSize: 8,
+				minSize: 4,
 				valueUnit: "feet"
 			}
 		]
@@ -413,7 +413,7 @@ function createRenderer(values: number[], name: string) {
 			symbolLayers: [
 				{
 					type: "icon",
-					size: 8,
+					size: 4,
 					resource: { primitive: "circle" },
 					material: { color: [206, 255, 255] }
 				},
@@ -435,7 +435,7 @@ function createRenderer(values: number[], name: string) {
 			symbolLayers: [
 				{
 					type: "icon",
-					size: 8,
+					size: 4,
 					resource: { primitive: "circle" },
 					material: { color: [162, 244, 155] }
 				},
@@ -457,7 +457,7 @@ function createRenderer(values: number[], name: string) {
 			symbolLayers: [
 				{
 					type: "icon",
-					size: 8,
+					size: 4,
 					resource: { primitive: "circle" },
 					material: { color: [213, 206, 4] }
 				},
@@ -479,7 +479,7 @@ function createRenderer(values: number[], name: string) {
 			symbolLayers: [
 				{
 					type: "icon",
-					size: 8,
+					size: 4,
 					resource: { primitive: "circle" },
 					material: { color: [241, 153, 3] }
 				},
@@ -501,7 +501,7 @@ function createRenderer(values: number[], name: string) {
 			symbolLayers: [
 				{
 					type: "icon",
-					size: 8,
+					size: 4,
 					resource: { primitive: "circle" },
 					material: { color: [249, 73, 2] }
 				},

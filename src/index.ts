@@ -83,7 +83,7 @@ let renderer = {
 			type: "object",  // autocasts as new ObjectSymbol3DLayer()
 			resource: { primitive: "cylinder" },
 			material: { color: [136, 136, 136, 0.5] },
-			width: 7,
+			width: 3,
 			tilt: 180
 		}]
 	},
@@ -101,7 +101,7 @@ let renderer = {
 			axis: "width-and-depth",
 			valueRepresentation: "diameter",
 			useSymbolValues: true,
-			minSize: 7,
+			minSize: 3,
 			valueUnit: "feet"
 		},
 	]
