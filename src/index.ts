@@ -18,6 +18,9 @@ import { LayerInfo, WellsInfo } from './tableLayers';
 // add calcite components
 import '@esri/calcite-components/dist/index.js';
 
+// import EPA logo image
+let image = import("./assets/EPAStoryMapLogo-White.png");
+
 const appTitle = document.getElementById('appTitle');
 if (appTitle) appTitle.innerHTML = config.appTitle;
 
@@ -82,7 +85,7 @@ let renderer = {
 		symbolLayers: [{
 			type: "object",  // autocasts as new ObjectSymbol3DLayer()
 			resource: { primitive: "cylinder" },
-			material: { color: [136, 136, 136, 0.5] },
+			material: { color: [187, 187, 187, 0.5] },
 			width: 3,
 			tilt: 180
 		}]

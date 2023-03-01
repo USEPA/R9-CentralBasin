@@ -40,6 +40,7 @@ let addedLayers: string[] = [];
 let selectedItem: string = "";
 let needsAlert = false;
 let chemicalNames: string[] = [];
+let units: string;
 let ready: boolean = true;
 
 // Check if query layer is ready before starting a new one
@@ -380,7 +381,7 @@ function createRenderer(values: number[], name: string) {
 		type: "class-breaks",
 		field: "GM_RESULT",
 		legendOptions: {
-			title: `GM Result Values for ${name}`
+			title: `GM Result Values for ${name} (${units})`
 		},
 		visualVariables: [
 			{
@@ -415,12 +416,12 @@ function createRenderer(values: number[], name: string) {
 					type: "icon",
 					size: 4,
 					resource: { primitive: "circle" },
-					material: { color: [206, 255, 255] }
+					material: { color: [102, 204, 238] }
 				},
 				{
 					type: "object",  // autocasts as new ObjectSymbol3DLayer()
 					resource: { primitive: "cylinder" },
-					material: { color: [206, 255, 255] },
+					material: { color: [102, 204, 238] },
 					tilt: 180
 				}]
 		}
@@ -437,12 +438,12 @@ function createRenderer(values: number[], name: string) {
 					type: "icon",
 					size: 4,
 					resource: { primitive: "circle" },
-					material: { color: [162, 244, 155] }
+					material: { color: [204, 187, 68] }
 				},
 				{
 					type: "object",  // autocasts as new ObjectSymbol3DLayer()
 					resource: { primitive: "cylinder" },
-					material: { color: [162, 244, 155] },
+					material: { color: [204, 187, 68] },
 					tilt: 180
 				}]
 		}
@@ -459,12 +460,12 @@ function createRenderer(values: number[], name: string) {
 					type: "icon",
 					size: 4,
 					resource: { primitive: "circle" },
-					material: { color: [213, 206, 4] }
+					material: { color: [170, 51, 119] }
 				},
 				{
 					type: "object",  // autocasts as new ObjectSymbol3DLayer()
 					resource: { primitive: "cylinder" },
-					material: { color: [213, 206, 4] },
+					material: { color: [170, 51, 119] },
 					tilt: 180
 				}]
 		}
@@ -481,12 +482,12 @@ function createRenderer(values: number[], name: string) {
 					type: "icon",
 					size: 4,
 					resource: { primitive: "circle" },
-					material: { color: [241, 153, 3] }
+					material: { color: [68, 119, 170] }
 				},
 				{
 					type: "object",  // autocasts as new ObjectSymbol3DLayer()
 					resource: { primitive: "cylinder" },
-					material: { color: [241, 153, 3] },
+					material: { color: [68, 119, 170] },
 					tilt: 180
 				}]
 		}
@@ -503,12 +504,12 @@ function createRenderer(values: number[], name: string) {
 					type: "icon",
 					size: 4,
 					resource: { primitive: "circle" },
-					material: { color: [249, 73, 2] }
+					material: { color: [34, 136, 51] }
 				},
 				{
 					type: "object",  // autocasts as new ObjectSymbol3DLayer()
 					resource: { primitive: "cylinder" },
-					material: { color: [249, 73, 2] },
+					material: { color: [34, 136, 51] },
 					tilt: 180
 				}]
 		}
@@ -657,6 +658,9 @@ async function queryMax() {
 		})
 	});
 	let result = await chemicalLayer.queryTopFeatures(query);
+
+	units = result.features[0].getAttribute("GM_RESULT_UNITS");
+
 	let layer = new FeatureLayer({
 		source: result.features,
 		fields: chemicalLayer.fields,

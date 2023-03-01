@@ -28,8 +28,25 @@ body {
   font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+.header-left {
+  padding: 8px;
+  display: flex;
+  align-items: center;
+}
+
 .heading {
-  padding-left: 0.75rem;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: 24px;
+}
+
+#header-logo {
+  height: 36%;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-left: 8px;
+  vertical-align: middle;
 }
 
 .app-container {
