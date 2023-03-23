@@ -377,8 +377,6 @@ export const initWidgets = (view: SceneView) => {
 // Creates a class break renderer, provide an array of 6 numbers for break values
 function createRenderer(values: number[], name: string) {
 	let renderer = new ClassBreaksRenderer({
-		// @ts-ignore
-		type: "class-breaks",
 		field: "GM_RESULT",
 		legendOptions: {
 			title: `GM Result Values for ${name} (${units})`
@@ -416,12 +414,12 @@ function createRenderer(values: number[], name: string) {
 					type: "icon",
 					size: 4,
 					resource: { primitive: "circle" },
-					material: { color: [102, 204, 238] }
+					material: { color: [198, 247, 214] }
 				},
 				{
 					type: "object",  // autocasts as new ObjectSymbol3DLayer()
 					resource: { primitive: "cylinder" },
-					material: { color: [102, 204, 238] },
+					material: { color: [198, 247, 214] },
 					tilt: 180
 				}]
 		}
@@ -438,12 +436,12 @@ function createRenderer(values: number[], name: string) {
 					type: "icon",
 					size: 4,
 					resource: { primitive: "circle" },
-					material: { color: [204, 187, 68] }
+					material: { color: [187, 228, 83] }
 				},
 				{
 					type: "object",  // autocasts as new ObjectSymbol3DLayer()
 					resource: { primitive: "cylinder" },
-					material: { color: [204, 187, 68] },
+					material: { color: [187, 228, 83] },
 					tilt: 180
 				}]
 		}
@@ -460,12 +458,12 @@ function createRenderer(values: number[], name: string) {
 					type: "icon",
 					size: 4,
 					resource: { primitive: "circle" },
-					material: { color: [170, 51, 119] }
+					material: { color: [231, 181, 3] }
 				},
 				{
 					type: "object",  // autocasts as new ObjectSymbol3DLayer()
 					resource: { primitive: "cylinder" },
-					material: { color: [170, 51, 119] },
+					material: { color: [231, 181, 3] },
 					tilt: 180
 				}]
 		}
@@ -482,12 +480,12 @@ function createRenderer(values: number[], name: string) {
 					type: "icon",
 					size: 4,
 					resource: { primitive: "circle" },
-					material: { color: [68, 119, 170] }
+					material: { color: [246, 121, 11] }
 				},
 				{
 					type: "object",  // autocasts as new ObjectSymbol3DLayer()
 					resource: { primitive: "cylinder" },
-					material: { color: [68, 119, 170] },
+					material: { color: [246, 121, 11] },
 					tilt: 180
 				}]
 		}
@@ -504,12 +502,12 @@ function createRenderer(values: number[], name: string) {
 					type: "icon",
 					size: 4,
 					resource: { primitive: "circle" },
-					material: { color: [34, 136, 51] }
+					material: { color: [228, 5, 21] }
 				},
 				{
 					type: "object",  // autocasts as new ObjectSymbol3DLayer()
 					resource: { primitive: "cylinder" },
-					material: { color: [34, 136, 51] },
+					material: { color: [228, 5, 21] },
 					tilt: 180
 				}]
 		}

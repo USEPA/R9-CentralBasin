@@ -134,7 +134,7 @@ map.layers.add(displayedAnalyte, 1);
 view.popup.defaultPopupTemplateEnabled = true;
 view.when(() => {
 	const extent = view.extent.clone();
-	view.clippingArea = extent.expand(5);
+	view.clippingArea = extent.expand(2);
 })
 
 // handle spinner for when layers are updating
