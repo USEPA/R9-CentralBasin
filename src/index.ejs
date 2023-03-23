@@ -49,11 +49,15 @@
       </div>
 
       <div id="toggleDiv">
-        <label class="switch">
+        <label class="switch" title="Toggle feature table">
           <input id="checkboxId" type="checkbox">
           <span class="slider round"></span>
         </label>
         <label class="labelText" id="labelText">Show feature table</label>
+
+        <button id="helpBtn" title="Help">
+          <calcite-icon icon="question" scale="l" />
+        </button>
       </div>
     </header>
     <div id="viewDiv">
@@ -126,6 +130,85 @@
         target="_blank" slot="link">Analytes with predefined class break values</calcite-link>
     </calcite-alert>
   </div>
+
+  <calcite-modal aria-labelledby="modal-title" id="helpModal">
+    <div slot="header" id="modal-title">
+      Help
+    </div>
+    <div slot="content">
+      <calcite-label scale="l">
+        Help videos are available for the following topics:
+
+        <br>
+        <calcite-link
+          href="https://r9data.response.epa.gov/CentralBasinHelpVideos/Measure%20Tool/01_CB_SettingUp&LineMeasurement.mp4"
+          target="_blank">
+          Initial set up & using the line measurement tool
+        </calcite-link>
+
+        <calcite-link
+          href="https://r9data.response.epa.gov/CentralBasinHelpVideos/Measure%20Tool/02_CB_UsingAreaMeasurement.mp4"
+          target="_blank">
+          Using the area measurement tool
+        </calcite-link>
+
+        <calcite-link
+          href="https://r9data.response.epa.gov/CentralBasinHelpVideos/Slice%20Tool/01_CB_OpenApp_AquiferSlide.mp4"
+          target="_blank">
+          Preparing to use the application, introduction to slides and the slice tool
+        </calcite-link>
+
+        <calcite-link
+          href="https://r9data.response.epa.gov/CentralBasinHelpVideos/Slice%20Tool/02_CB_ActivatingSlice_ExcludeLayers.mp4"
+          target="_blank">
+          Activating the slice tool, creating a lateral slice
+        </calcite-link>
+
+        <calcite-link
+          href="https://r9data.response.epa.gov/CentralBasinHelpVideos/Slice%20Tool/03_CB_Slice_TopDownSegment.mp4"
+          target="_blank">
+          Using the slice tool for top-down slices
+        </calcite-link>
+
+        <calcite-link
+          href="https://r9data.response.epa.gov/CentralBasinHelpVideos/Slice%20Tool/04_CB_TroubleshootingExclusionsDemo.mp4"
+          target="_blank">
+          Troubleshooting the layer exclusions
+        </calcite-link>
+      </calcite-label>
+
+      <br>
+      <calcite-label scale="l">
+        <div id="moreInfo">
+          For layer information and more information about the web scene, <calcite-link
+            href="https://epa.maps.arcgis.com/home/item.html?id=c6c5e203c3ab44058353f151ad967b59" target="_blank">
+            view the web scene overview
+          </calcite-link>
+        </div>
+      </calcite-label>
+
+      <calcite-label>
+        <div id="helpContact">
+          For application feedback and questions, <calcite-link
+            href="mailto:r9tc@epa.gov?subject=R9 Central Basin 3D Application" target="_blank">
+            contact us
+          </calcite-link>
+        </div>
+      </calcite-label>
+
+    </div>
+
+  </calcite-modal>
+
+  <script>
+    const button = document.getElementById("helpBtn");
+    const modal = document.getElementById("helpModal");
+
+    button.addEventListener("click", function () {
+      modal.open = true;
+    });
+  </script>
+
 </body>
 
 </html>

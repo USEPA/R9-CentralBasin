@@ -26,6 +26,27 @@ body {
   display: flex;
   justify-content: space-between;
   font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  white-space: nowrap;
+}
+
+#helpBtn {
+  background-color: var(--blue);
+  color: var(--white);
+  padding: 12px;
+  border: none;
+}
+
+#helpBtn:hover {
+  cursor: pointer;
+}
+
+#moreInfo {
+  white-space: nowrap;
+}
+
+#helpContact {
+  white-space: nowrap;
+  text-align: center;
 }
 
 .header-left {
@@ -115,6 +136,7 @@ body {
   padding: 8px;
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .switch {
@@ -184,6 +206,7 @@ input:checked+.slider:before {
 .labelText {
   padding-left: 5px;
   font-size: 15px;
+  white-space: nowrap;
 }
 
 /* loader from https://loading.io/css/ */
