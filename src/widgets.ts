@@ -582,6 +582,7 @@ async function getValue(stat: String, layer: FeatureLayer, field: String): Promi
 }
 
 async function selectAnalyte() {
+	// test commit
 	chemicalLayer.definitionExpression = `GM_CHEMICAL_NAME = '${selectedItem}'`;
 	// @ts-ignore
 	document.getElementById('lds-roller2').style.visibility = 'visible';
