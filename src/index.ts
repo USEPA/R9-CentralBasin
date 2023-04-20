@@ -15,6 +15,12 @@ import GroupLayer from "@arcgis/core/layers/GroupLayer";
 import { whenFalse, whenTrue } from '@arcgis/core/core/watchUtils';
 import { LayerInfo, WellsInfo } from './tableLayers';
 
+import Map from "@arcgis/core/Map.js";
+import MapView from "@arcgis/core/views/MapView.js";
+import Graphic from "@arcgis/core/Graphic.js";
+import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js";
+import * as promiseUtils from "@arcgis/core/core/promiseUtils.js";
+
 // add calcite components
 import '@esri/calcite-components/dist/index.js';
 
@@ -51,6 +57,87 @@ export const view = new SceneView({
 	}
 });
 view.popup.highlightEnabled = false;
+
+export const overviewMap = new Map({
+	basemap: "topo-vector"
+});
+
+const overmapDiv: any = document.getElementById('overmapDiv');
+
+export const overviewMapview = new MapView({
+	container: overmapDiv,
+	map: overviewMap,
+	constraints: {
+		rotationEnabled: false
+	}
+})
+
+// Remove the default widgets from overview map
+overviewMapview.ui.components = []; //["compass"];
+
+overviewMapview.when(() => {
+	view.when(() => {
+		setup();
+	});
+});
+
+const extentDebouncer = promiseUtils.debounce(async () => {
+	if (view.stationary) {
+		await overviewMapview.goTo({
+			center: view.center,
+			scale:
+				view.scale *
+				2 *
+				Math.max(
+					view.width / overviewMapview.width,
+					view.height / overviewMapview.height
+				),
+			rotation: view.camera.heading,
+		});
+	}
+
+	// This makes the inset map rotation match the sceneView camera heading
+	// if (overviewMapview.rotation != view.camera.heading) {
+	// 	await overviewMapview.goTo({
+	// 		center: view.center,
+	// 		scale:
+	// 			view.scale *
+	// 			2 *
+	// 			Math.max(
+	// 				view.width / overviewMapview.width,
+	// 				view.height / overviewMapview.height
+	// 			),
+	// 		rotation: view.camera.heading,
+	// 	});
+	// }
+});
+
+function setup() {
+	const extent3Dgraphic = new Graphic({
+		geometry: null,
+		symbol: {
+			type: "simple-fill",
+			color: [0, 0, 0, 0.5],
+			outline: null
+		},
+	});
+	overviewMapview.graphics.add(extent3Dgraphic);
+
+	reactiveUtils.watch(
+		() => view.extent,
+		(extent) => {
+			// Sync the overview map location
+			// whenever the 3d view is stationary
+			extentDebouncer().then(() => {
+				extent3Dgraphic.geometry = extent;
+			});
+		},
+		{
+			initial: true
+		}
+	);
+
+}
 
 map.layers.splice(0, 0, wellsLayer);
 
@@ -134,7 +221,7 @@ map.layers.add(displayedAnalyte, 1);
 view.popup.defaultPopupTemplateEnabled = true;
 view.when(() => {
 	const extent = view.extent.clone();
-	view.clippingArea = extent.expand(2);
+	view.clippingArea = extent.expand(4);
 })
 
 // handle spinner for when layers are updating
