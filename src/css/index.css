@@ -444,3 +444,31 @@ input:checked+.slider:before {
   visibility: hidden !important;
   width: 0 !important;
 }
+
+/* Allow other widgets to display over the overview map */
+#overmapDiv {
+  min-width: 300px;
+  min-height: 300px;
+  position: relative;
+  z-index: 1;
+}
+
+#layerLegendDiv {
+  position: relative;
+  z-index: 2;
+}
+
+.esri-ui-bottom-right {
+  position: absolute;
+  z-index: 1;
+}
+
+.esri-ui-top-right {
+  position: absolute;
+  z-index: 2;
+}
+
+.esri-ui-bottom-left {
+  position: absolute;
+  z-index: 2;
+}

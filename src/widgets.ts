@@ -244,6 +244,18 @@ export const initWidgets = (view: SceneView) => {
 		expanded: true,
 	});
 
+	const overmapDiv: any = document.getElementById('overmapDiv');
+
+	const overmapExpand = new Expand({
+		view: view,
+		content: overmapDiv,
+		expandIconClass: 'esri-icon-maps',
+		autoCollapse: false,
+		group: 'bottom-right',
+		expandTooltip: 'Overview Map',
+		expanded: false,
+	});
+
 	// Filter widget added to expand, query feature layer for unique chemicals and add them
 	// to calcite combobox. Selecting a combobox item applies definition expression to
 	// the layer to show only that chemical
@@ -358,6 +370,8 @@ export const initWidgets = (view: SceneView) => {
 	// Add widget to the bottom left corner of the view
 	const featureSearch = document.getElementById('featureSearchDiv');
 	// @ts-ignore
+	view.ui.add(overmapExpand, 'bottom-right');
+
 	view.ui.add(featureSearch, 'top-right', 0);
 	view.ui.add(searchWidget, 'top-right');
 
@@ -389,7 +403,7 @@ function createRenderer(values: number[], name: string) {
 				field: "GM_BOTTOM_DEPTH_OF_SCREEN_FT",
 				useSymbolValues: true,
 				valueUnit: "feet",
-				minSize: 4
+				minSize: 5
 			},
 			{
 				// @ts-ignore
@@ -397,7 +411,7 @@ function createRenderer(values: number[], name: string) {
 				axis: "width-and-depth",
 				valueRepresentation: "diameter",
 				useSymbolValues: true,
-				minSize: 4,
+				minSize: 5,
 				valueUnit: "feet"
 			}
 		]
@@ -412,7 +426,7 @@ function createRenderer(values: number[], name: string) {
 			symbolLayers: [
 				{
 					type: "icon",
-					size: 4,
+					size: 5,
 					resource: { primitive: "circle" },
 					material: { color: [198, 247, 214] }
 				},
@@ -434,7 +448,7 @@ function createRenderer(values: number[], name: string) {
 			symbolLayers: [
 				{
 					type: "icon",
-					size: 4,
+					size: 5,
 					resource: { primitive: "circle" },
 					material: { color: [187, 228, 83] }
 				},
@@ -456,7 +470,7 @@ function createRenderer(values: number[], name: string) {
 			symbolLayers: [
 				{
 					type: "icon",
-					size: 4,
+					size: 5,
 					resource: { primitive: "circle" },
 					material: { color: [231, 181, 3] }
 				},
@@ -478,7 +492,7 @@ function createRenderer(values: number[], name: string) {
 			symbolLayers: [
 				{
 					type: "icon",
-					size: 4,
+					size: 5,
 					resource: { primitive: "circle" },
 					material: { color: [246, 121, 11] }
 				},
@@ -500,7 +514,7 @@ function createRenderer(values: number[], name: string) {
 			symbolLayers: [
 				{
 					type: "icon",
-					size: 4,
+					size: 5,
 					resource: { primitive: "circle" },
 					material: { color: [228, 5, 21] }
 				},
