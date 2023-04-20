@@ -372,6 +372,8 @@ export const initWidgets = (view: SceneView) => {
 
 	view.ui.add(overmapExpand, 'bottom-right');
 	// @ts-ignore
+	view.ui.add(overmapExpand, 'bottom-right');
+
 	view.ui.add(featureSearch, 'top-right', 0);
 	view.ui.add(searchWidget, 'top-right');
 
