@@ -117,9 +117,76 @@
 
 
     <div id="filtersDiv">
-      <calcite-combobox selection-mode="single" id="combobox" placeholder="- Select one -">
-        <calcite-combobox-item value="Show all" text-label="Show all wells"></calcite-combobox-item>
-      </calcite-combobox>
+      <calcite-label scale="l" class="filtered">
+        Chemical
+        <calcite-combobox selection-mode="single" id="combobox" placeholder="- Select One -">
+          <calcite-combobox-item value="Show all" text-label="Show all wells"></calcite-combobox-item>
+        </calcite-combobox>
+      </calcite-label>
+
+      <calcite-label scale="l" class="filterChk">
+        Well Category
+        <!-- <calcite-checkbox>
+          Domestic
+        </calcite-checkbox>
+        <calcite-checkbox>
+          Irrigaton/Industrial
+        </calcite-checkbox>
+        <calcite-checkbox>
+          Monitoring
+        </calcite-checkbox>
+        <calcite-checkbox>
+          Municipal
+        </calcite-checkbox>
+        <calcite-checkbox>
+          Water Supply
+        </calcite-checkbox> -->
+
+        <calcite-label layout="inline" scale="s" class="filterChk">
+          <calcite-checkbox id="DOMESTIC"></calcite-checkbox>
+          Domestic
+        </calcite-label>
+
+        <calcite-label layout="inline" scale="s" class="filterChk">
+          <calcite-checkbox id="IRRIGATION / INDUSTRIAL"></calcite-checkbox>
+          Irrigation/Industrial
+        </calcite-label>
+
+        <calcite-label layout="inline" scale="s" class="filterChk">
+          <calcite-checkbox id="MONITORING"></calcite-checkbox>
+          Monitoring
+        </calcite-label>
+
+        <calcite-label layout="inline" scale="s" class="filterChk">
+          <calcite-checkbox id="MUNICIPAL"></calcite-checkbox>
+          Municipal
+        </calcite-label>
+
+        <calcite-label layout="inline" scale="s" class="filterChk">
+          <calcite-checkbox id="WATER SUPPLY, OTHER"></calcite-checkbox>
+          Water Supply
+        </calcite-label>
+      </calcite-label>
+
+
+      <!-- <calcite-dropdown width="m" close-on-select-disabled type="click">
+        <calcite-button slot="trigger" scale="m" kind="neutral" appearance="outline-fill" icon-start="" id="wellBtn">
+          Well Category
+        </calcite-button>
+        <calcite-dropdown-group selection-mode="multiple" group-title="">
+          <calcite-dropdown-item>Domestic</calcite-dropdown-item>
+          <calcite-dropdown-item>Irrigation/Industrial</calcite-dropdown-item>
+          <calcite-dropdown-item>Monitoring</calcite-dropdown-item>
+          <calcite-dropdown-item>Municipal</calcite-dropdown-item>
+          <calcite-dropdown-item>Water Supply, Other</calcite-dropdown-item>
+        </calcite-dropdown-group>
+      </calcite-dropdown> -->
+
+      <calcite-button slot="trigger" scale="m" kind="neutral" appearance="outline-fill" icon-start="" id="filterBtn"
+        alignment="end">
+        Filter
+      </calcite-button>
+
     </div>
 
     <calcite-alert icon="question" label="Legend values alert" auto-close auto-close-duration="slow" kind="info"

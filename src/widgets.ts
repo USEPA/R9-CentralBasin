@@ -239,7 +239,7 @@ export const initWidgets = (view: SceneView) => {
 		content: llDiv,
 		expandIconClass: 'esri-icon-layers',
 		autoCollapse: true,
-		group: 'top-left',
+		group: 'top-right',
 		expandTooltip: 'Legend and Layer List',
 		expanded: true,
 	});
@@ -289,7 +289,7 @@ export const initWidgets = (view: SceneView) => {
 			allWells.visible = true;
 			initTableWidget(view, [chemicalLayer], [chemicalLayer]);
 		} else {
-			checkReady();
+			// checkReady();
 		}
 	});
 
@@ -298,7 +298,7 @@ export const initWidgets = (view: SceneView) => {
 		content: filtersDiv,
 		expandIconClass: 'esri-icon-filter',
 		autoCollapse: true,
-		group: 'top-left',
+		group: 'top-right',
 		expandTooltip: 'Display an analyte',
 	})
 
@@ -597,11 +597,58 @@ async function getValue(stat: String, layer: FeatureLayer, field: String): Promi
 	return Object.values(response)[0] as number;
 }
 
+let sWellType: string = "";
+let chkID: string[] = ["DOMESTIC", "IRRIGATION / INDUSTRIAL", "MONITORING", "MUNICIPAL", "WATER SUPPLY, OTHER"];
+
+// If chk is checked, append AND WellType = 'wellType'
+
+let filterBtn: HTMLCalciteButtonElement = document.getElementById("filterBtn");
+filterBtn?.addEventListener("click", function (event) {
+	console.log("clicked");
+	runFilter();
+});
+
+
+function runFilter() {
+	let count = 0;
+	chkID.forEach(i => {
+		let element = document.getElementById(i) as HTMLCalciteCheckboxElement;
+		console.log(element);
+		if (element.checked) {
+			if (count === 0) {
+				sWellType = ` AND (GM_WELL_CATEGORY = '${i}')`
+				count++;
+				console.log(sWellType);
+			} else {
+				sWellType = sWellType.slice(0, -1);
+				// concat issue
+				sWellType = sWellType + ` OR GM_WELL_CATEGORY = '${i}')`;
+				count++;
+				console.log(sWellType);
+			}
+		}
+	});
+
+	console.log(selectedItem);
+	console.log(sWellType);
+
+	checkReady();
+
+}
+
+
+
 async function selectAnalyte() {
-	chemicalLayer.definitionExpression = `GM_CHEMICAL_NAME = '${selectedItem}'`;
+	let where;
+	if (sWellType === "") {
+		where = `GM_CHEMICAL_NAME = '${selectedItem}'`;
+	} else {
+		where = `GM_CHEMICAL_NAME = '${selectedItem}'${sWellType}`;
+	}
+	console.log(chemicalLayer.definitionExpression);
 	// @ts-ignore
 	document.getElementById('lds-roller2').style.visibility = 'visible';
-	let visLayer = await queryMax();
+	let visLayer = await queryMax(where);
 	getLegendValues(selectedItem).then(result => {
 		// Once legend values are ready use them for renderer
 		chemicalLayer.title = `All GAMA Wells Containing ${selectedItem}`;
@@ -657,13 +704,13 @@ async function removeQueryLayer() {
 }
 
 // Queries for top GM_RESULT for selected analyte, using time extent, returns new layer
-async function queryMax() {
+async function queryMax(where) {
 	const query = new TopFeaturesQuery({
 		outFields: ["GM_RESULT", "GM_BOTTOM_DEPTH_OF_SCREEN_FT", "GM_WELL_ID", "GM_RESULT_UNITS", "GM_WELL_CATEGORY", "GM_SAMP_COLLECTION_DATE", "GM_CHEMICAL_NAME"],
 		timeExtent: timeSlider.timeExtent,
 		returnGeometry: true,
 		returnZ: true,
-		where: `GM_CHEMICAL_NAME = '${selectedItem}'`,
+		where: where,// `GM_CHEMICAL_NAME = '${selectedItem}'`,
 		outSpatialReference: chemicalLayer.spatialReference,
 		topFilter: new TopFilter({
 			topCount: 1,

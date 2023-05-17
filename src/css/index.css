@@ -374,12 +374,25 @@ input:checked+.slider:before {
 }
 
 #filtersDiv {
-  width: 200px;
-  height: 32px;
+  width: 300px;
+  height: 320px;
+  background-color: #f3f3f3;
+}
+
+.filtered {
+  padding: 5px;
+}
+
+.filterChk {
+  padding-left: 5px;
+}
+
+#filterBtn {
+  padding-left: 5px;
 }
 
 #combobox {
-  width: 200px;
+  width: 290px;
   height: 32px;
   margin: auto;
 }
@@ -450,25 +463,25 @@ input:checked+.slider:before {
   min-width: 300px;
   min-height: 300px;
   position: relative;
-  z-index: 1;
+  z-index: 2 !important;
 }
 
 #layerLegendDiv {
   position: relative;
-  z-index: 2;
+  z-index: 1 !important;
 }
 
 .esri-ui-bottom-right {
   position: absolute;
-  z-index: 1;
+  z-index: 2 !important;
 }
 
 .esri-ui-top-right {
   position: absolute;
-  z-index: 2;
+  z-index: 1 !important;
 }
 
 .esri-ui-bottom-left {
   position: absolute;
-  z-index: 2;
+  z-index: 1 !important;
 }
