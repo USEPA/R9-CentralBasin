@@ -144,7 +144,8 @@ map.layers.splice(0, 0, wellsLayer);
 // GamaWellsRanThroughDEMclp
 export const chemicalLayer = new FeatureLayer({
 	portalItem: {
-		id: "b2465d9640c848e7b5de175f48c31376"
+		// id: "b2465d9640c848e7b5de175f48c31376"
+		id: "0ebf8c956de54e44b73281b31a20dac5"
 	},
 	visible: false,
 	title: "Displayed Analyte",
