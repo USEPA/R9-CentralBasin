@@ -40,6 +40,113 @@ const wellsFields = [
 	},
 ];
 
+export const AnalyteFields = [
+	{
+		name: 'GM_WELL_ID',
+		label: 'WELL_ID',
+		direction: 'asc',
+	},
+	{
+		name: 'GM_WELL_CATEGORY',
+		label: 'WELL_TYPE',
+	},
+	{
+		name: 'GM_CHEMICAL_NAME',
+		label: 'CHEMICAL',
+	},
+	{
+		name: 'GM_SAMP_COLLECTION_DATE',
+		label: 'Collection Date',
+	},
+	{
+		name: 'GM_RESULT',
+		label: 'Results',
+	},
+	{
+		name: 'GM_RESULT_UNITS',
+		label: 'UNITS',
+	},
+	{
+		name: 'GM_BOTTOM_DEPTH_OF_SCREEN_FT',
+		label: 'WELL DEPTH (FT)',
+	},
+];
+
+const wellsTemplate = {
+	title: 'WRD ID No. {WellsRanThroughDEM2_WRDID}',
+	content: [
+		{
+			type: 'fields',
+			fieldInfos: [
+				{
+					fieldName: 'WellsRanThroughDEM2_Type',
+					label: 'Type',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_Common_Nam',
+					label: 'Common Name',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_Status',
+					label: 'Well Status',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_WRDID',
+					label: 'WRD ID No.',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_STATE_SOUR',
+					label: 'State Well No.',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_Agency_Lon',
+					label: 'Purveyor',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_Owner_No',
+					label: 'Purveyor Well No.',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_Constr_YYY',
+					label: 'Construction Year',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_Destr_YYYY',
+					label: 'Destruction Year',
+				},
+				{
+					fieldName: 'PerfsAndAquifersSummary_Max_INT',
+					label: 'No. of Perforations',
+				},
+				{
+					fieldName: 'PerfsAndAquifersSummary_Min_TOI',
+					label: 'Top of Perforation',
+				},
+				{
+					fieldName: 'PerfsAndAquifersSummary_Max_BOI',
+					label: 'Bottom of Perforation',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_SN_LONG',
+					label: 'DWR Well No.',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_Log_Avail',
+					label: 'Well Log Available',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_City',
+					label: 'City',
+				},
+				{
+					fieldName: 'WellsRanThroughDEM2_Basin',
+					label: 'Basin',
+				},
+			],
+		},
+	],
+};
+
 export const AnalyteTemplate = {
 	title: '{GM_WELL_ID}',
 	content: [
