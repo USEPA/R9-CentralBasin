@@ -183,7 +183,7 @@ export const AnalyteTemplate = {
 };
 
 export const configDev = {
-	appTitle: 'Central Basin Map - v2.0 beta',
+	appTitle: 'Central Basin Map v2.0',
 	portalEnv: {
 		appId: 'ZtlpDht9ywRCA4Iq',
 		portalUrl: 'https://epa.maps.arcgis.com',
