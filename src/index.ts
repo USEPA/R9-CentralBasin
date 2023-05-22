@@ -11,11 +11,21 @@ import SceneView from '@arcgis/core/views/SceneView';
 import SceneLayer from '@arcgis/core/layers/SceneLayer';
 import SceneLayerView from '@arcgis/core/views/layers/SceneLayerView';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+import GroupLayer from "@arcgis/core/layers/GroupLayer";
 import { whenFalse, whenTrue } from '@arcgis/core/core/watchUtils';
 import { LayerInfo, WellsInfo } from './tableLayers';
 
+import Map from "@arcgis/core/Map.js";
+import MapView from "@arcgis/core/views/MapView.js";
+import Graphic from "@arcgis/core/Graphic.js";
+import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js";
+import * as promiseUtils from "@arcgis/core/core/promiseUtils.js";
+
 // add calcite components
 import '@esri/calcite-components/dist/index.js';
+
+// import EPA logo image
+let image = import("./assets/EPAStoryMapLogo-White.png");
 
 const appTitle = document.getElementById('appTitle');
 if (appTitle) appTitle.innerHTML = config.appTitle;
@@ -30,16 +40,190 @@ IdentityManager.checkSignInStatus(info.portalUrl + '/sharing').catch(() => {
 	IdentityManager.getCredential(info.portalUrl + '/sharing');
 });
 
-const view = new SceneView({
+export const view = new SceneView({
 	container: 'viewDiv',
 	map,
 	qualityProfile: 'high',
+	alphaCompositingEnabled: true,
+	environment: {
+		background: {
+			type: "color", // autocasts as new ColorBackground()
+			color: [255, 252, 244, 0]
+		},
+		// disable stars
+		starsEnabled: false,
+		//disable atmosphere
+		atmosphereEnabled: false
+	}
 });
 view.popup.highlightEnabled = false;
 
+export const overviewMap = new Map({
+	basemap: "topo-vector"
+});
+
+const overmapDiv: any = document.getElementById('overmapDiv');
+
+export const overviewMapview = new MapView({
+	container: overmapDiv,
+	map: overviewMap,
+	constraints: {
+		rotationEnabled: false
+	}
+})
+
+// Remove the default widgets from overview map
+overviewMapview.ui.components = []; //["compass"];
+
+overviewMapview.when(() => {
+	view.when(() => {
+		setup();
+	});
+});
+
+const extentDebouncer = promiseUtils.debounce(async () => {
+	if (view.stationary) {
+		await overviewMapview.goTo({
+			center: view.center,
+			scale:
+				view.scale *
+				2 *
+				Math.max(
+					view.width / overviewMapview.width,
+					view.height / overviewMapview.height
+				),
+			rotation: view.camera.heading,
+		});
+	}
+
+	// This makes the inset map rotation match the sceneView camera heading
+	// if (overviewMapview.rotation != view.camera.heading) {
+	// 	await overviewMapview.goTo({
+	// 		center: view.center,
+	// 		scale:
+	// 			view.scale *
+	// 			2 *
+	// 			Math.max(
+	// 				view.width / overviewMapview.width,
+	// 				view.height / overviewMapview.height
+	// 			),
+	// 		rotation: view.camera.heading,
+	// 	});
+	// }
+});
+
+function setup() {
+	const extent3Dgraphic = new Graphic({
+		geometry: null,
+		symbol: {
+			type: "simple-fill",
+			color: [0, 0, 0, 0.5],
+			outline: null
+		},
+	});
+	overviewMapview.graphics.add(extent3Dgraphic);
+
+	reactiveUtils.watch(
+		() => view.extent,
+		(extent) => {
+			// Sync the overview map location
+			// whenever the 3d view is stationary
+			extentDebouncer().then(() => {
+				extent3Dgraphic.geometry = extent;
+			});
+		},
+		{
+			initial: true
+		}
+	);
+
+}
+
 map.layers.splice(0, 0, wellsLayer);
 
+// GamaWellsRanThroughDEMclp
+export const chemicalLayer = new FeatureLayer({
+	portalItem: {
+		// id: "b2465d9640c848e7b5de175f48c31376"
+		id: "0ebf8c956de54e44b73281b31a20dac5"
+	},
+	visible: false,
+	title: "Displayed Analyte",
+	listMode: "hide"
+});
+
+// GamaWells_Location
+export const allWells = new FeatureLayer({
+	portalItem: {
+		// id: "89aa45e4bb2446aeaf692011d4b59483"
+		id: "58c259ccfd5e4115a4b4644d1ffdf4c9"
+	},
+	visible: false,
+	title: "All GAMA Wells",
+	elevationInfo: {
+		mode: "on-the-ground"
+	}
+})
+
+let renderer = {
+	type: "simple",
+	symbol:
+	{
+		type: "point-3d",
+		symbolLayers: [{
+			type: "object",  // autocasts as new ObjectSymbol3DLayer()
+			resource: { primitive: "cylinder" },
+			material: { color: [187, 187, 187, 0.5] },
+			width: 3,
+			tilt: 180
+		}]
+	},
+	visualVariables: [
+		{
+			type: "size",
+			axis: "height",
+			field: "GM_BOTTOM_DEPTH_OF_SCREEN_FT",
+			useSymbolValues: true,
+			valueUnit: "feet",
+			minSize: 2
+		},
+		{
+			type: "size",
+			axis: "width-and-depth",
+			valueRepresentation: "diameter",
+			useSymbolValues: true,
+			minSize: 3,
+			valueUnit: "feet"
+		},
+	]
+};
+
+
+view.when(removeGroup);
+
+function removeGroup() {
+	map.allLayers.forEach((layer) => {
+		if (layer.id === "1860a30687c-layer-223") {
+			map.remove(layer);
+		}
+	})
+}
+
+
+allWells.renderer = renderer;
+
+export let displayedAnalyte = new GroupLayer;
+displayedAnalyte.title = "Displayed Analyte";
+displayedAnalyte.visible = false;
+
+displayedAnalyte.addMany([allWells, chemicalLayer]);
+map.layers.add(displayedAnalyte, 1);
+
 view.popup.defaultPopupTemplateEnabled = true;
+view.when(() => {
+	const extent = view.extent.clone();
+	view.clippingArea = extent.expand(4);
+})
 
 // handle spinner for when layers are updating
 whenTrue(view, 'updating', () => {
@@ -113,7 +297,7 @@ view.when(initTimeSlider).then((timePieces) => {
 
 	// execute after layers loaded
 	Promise.all(promiseArr).then((layerViews) => {
-		console.log(layerViews);
+		// console.log(layerViews);
 
 		tableLayersArr = createTableElements(layerViews, tableLayersArr);
 		initTableWidget(view, tableLayersArr, layerViews);
@@ -130,7 +314,7 @@ const createTableElements = (layerViews: SceneLayerView[], tableLayersArr: Layer
 		tableLayersArr.forEach((tableLayer, j) => {
 			// add scene view, html elements to array
 			if (tableLayer.id3D === layerView.layer.id) {
-				console.log(tableLayer);
+				// console.log(tableLayer);
 				tableLayersArr[j].sceneView = layerView;
 
 				tableLayersArr[j].tableDiv = document.createElement('DIV') as HTMLElement;
@@ -153,7 +337,7 @@ const createTableElements = (layerViews: SceneLayerView[], tableLayersArr: Layer
 				// @ts-ignore
 				document.getElementById('tableDivs')?.appendChild(tableLayersArr[j].tableDiv);
 				// @ts-ignore
-				tableLayersArr[j].tab.onclick = () => changeTab(tableLayersArr[j]);
+				tableLayersArr[j].tab.onclick = () => changeTableTab(tableLayersArr[j]);
 			}
 		})
 	});
@@ -161,7 +345,7 @@ const createTableElements = (layerViews: SceneLayerView[], tableLayersArr: Layer
 };
 
 // manage table and tab elements when changing tabs
-export const changeTab = (layerInfo: LayerInfo) => {
+export const changeTableTab = (layerInfo: LayerInfo) => {
 	removeActive('calcite-tab', 'active-button');
 	removeActive('tab-content', 'active-content');
 	setActive(layerInfo);
@@ -176,8 +360,6 @@ const removeActive = (elementClass: string, activeClass: string) => {
 };
 
 const setActive = (layerInfo: LayerInfo) => {
-	console.log(layerInfo);
-
 	layerInfo.tab?.classList.add('active-button');
 	layerInfo.tableDiv?.classList.add('active-content');
 };

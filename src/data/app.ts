@@ -9,7 +9,7 @@ import OAuthInfo from '@arcgis/core/identity/OAuthInfo';
 import WebScene from '@arcgis/core/WebScene';
 import ElevationLayer from '@arcgis/core/layers/ElevationLayer';
 import SceneView from '@arcgis/core/views/SceneView';
-import FeatureFilter from '@arcgis/core/views/layers/support/FeatureFilter';
+import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter.js";
 import moment from 'moment';
 import { whenNotOnce } from '@arcgis/core/core/watchUtils';
 import TimeSlider from '@arcgis/core/widgets/TimeSlider';

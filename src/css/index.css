@@ -1,4 +1,5 @@
 @import '~@arcgis/core/assets/esri/themes/light/main.css';
+
 :root {
   --blue: #2196F3;
   --gray: #efefef;
@@ -6,7 +7,8 @@
   --orange: #f97d1a
 }
 
-html, body {
+html,
+body {
   height: 100%;
   width: 100%;
   margin: 0;
@@ -14,7 +16,7 @@ html, body {
 }
 
 body {
-  background-color: var(--gray);
+  background-image: linear-gradient(rgba(188, 225, 250, 0.7), rgba(1, 51, 104, 0.7));
   font-family: Avenir Next W01, Avenir Next W00, Avenir Next, Avenir, Helvetica Neue, sans-serif;
 }
 
@@ -24,10 +26,48 @@ body {
   display: flex;
   justify-content: space-between;
   font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  white-space: nowrap;
+}
+
+#helpBtn {
+  background-color: var(--blue);
+  color: var(--white);
+  padding: 12px;
+  border: none;
+}
+
+#helpBtn:hover {
+  cursor: pointer;
+}
+
+#moreInfo {
+  white-space: nowrap;
+}
+
+#helpContact {
+  white-space: nowrap;
+  text-align: center;
+}
+
+.header-left {
+  padding: 8px;
+  display: flex;
+  align-items: center;
 }
 
 .heading {
-  padding-left: 0.75rem;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: 24px;
+}
+
+#header-logo {
+  height: 36%;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-left: 8px;
+  vertical-align: middle;
 }
 
 .app-container {
@@ -96,6 +136,7 @@ body {
   padding: 8px;
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .switch {
@@ -165,6 +206,7 @@ input:checked+.slider:before {
 .labelText {
   padding-left: 5px;
   font-size: 15px;
+  white-space: nowrap;
 }
 
 /* loader from https://loading.io/css/ */
@@ -270,6 +312,7 @@ input:checked+.slider:before {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -324,4 +367,108 @@ input:checked+.slider:before {
 
 .esri-feature-table__content {
   height: 400px;
+}
+
+#tableTabs.calcite-tabs {
+  background-color: var(--gray) !important;
+}
+
+#filtersDiv {
+  width: 200px;
+  height: 32px;
+}
+
+#combobox {
+  width: 200px;
+  height: 32px;
+  margin: auto;
+}
+
+.esri-slider {
+  min-width: 240px;
+}
+
+#opacLabel {
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 12px;
+}
+
+.esri-slider__tick.sliderQuarterTicks {
+  height: 7px;
+}
+
+.esri-slider__tick.sliderQuarterTicks:hover {
+  cursor: pointer;
+}
+
+.esri-slider__tick-label.sliderQuarterLabels {
+  font-size: 9px;
+}
+
+.esri-slider__tick-label.sliderQuarterLabels:hover {
+  cursor: pointer;
+}
+
+.esri-slider__tick.sliderSmallTicks {
+  height: 3px;
+}
+
+.esri-slider__tick.sliderSmallTicks:hover {
+  cursor: pointer;
+}
+
+#basemapGalleryDiv {
+  min-width: 280px;
+  max-height: 400px;
+}
+
+#basemap-gallery-footer-container {
+  height: auto;
+  border-top: 1px #a9a9a9 solid;
+  margin-top: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0px 30px 30px 30px;
+}
+
+#basemap-gallery-footer {
+  height: fit-content;
+  margin-bottom: 10px;
+}
+
+/* Hide play button on time slider */
+.esri-time-slider__animation {
+  visibility: hidden !important;
+  width: 0 !important;
+}
+
+/* Allow other widgets to display over the overview map */
+#overmapDiv {
+  min-width: 300px;
+  min-height: 300px;
+  position: relative;
+  z-index: 1;
+}
+
+#layerLegendDiv {
+  position: relative;
+  z-index: 2;
+}
+
+.esri-ui-bottom-right {
+  position: absolute;
+  z-index: 1;
+}
+
+.esri-ui-top-right {
+  position: absolute;
+  z-index: 2;
+}
+
+.esri-ui-bottom-left {
+  position: absolute;
+  z-index: 2;
 }

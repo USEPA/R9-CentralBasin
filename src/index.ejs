@@ -7,51 +7,70 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="mobile-web-app-capable" content="yes">
   <title>Central Basin Map</title>
-  <% if (htmlWebpackPlugin.options.mode === 'production') { %>
-  <script>
-    // Check that service workers are registered
-    if ('serviceWorker' in navigator) {
-      // Use the window load event to keep the page load performant
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("./service-worker.js")
-          .catch(() => {
-            console.log("Service Worker not loaded");
-          });
-      });
-    }
+  <script type="module" src="https://unpkg.com/@esri/calcite-components/dist/calcite/calcite.esm.js">
   </script>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src=https://www.googletagmanager.com/gtag/js?id=UA-32633028-1></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-    gtag('config', 'UA-32633028-1');
-  </script>
-  <% } %>
-  <% 
-  
-  %>
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/@esri/calcite-components/dist/calcite/calcite.css" />
+
+  <% if (htmlWebpackPlugin.options.mode==='production' ) { %>
+    <script>
+      // Check that service workers are registered
+      if ('serviceWorker' in navigator) {
+        // Use the window load event to keep the page load performant
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("./service-worker.js")
+            .catch(() => {
+              console.log("Service Worker not loaded");
+            });
+        });
+      }
+    </script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src=https://www.googletagmanager.com/gtag/js?id=UA-32633028-1></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'UA-32633028-1');
+    </script>
+    <% } %>
+      <% %>
 </head>
 
 <body>
+
   <noscript> JavaScript is required in order to use this app </noscript>
   <div id="appContainer" class="app-container">
     <header class="header">
-      <h2 id='appTitle' class="heading"></h2>
+      <div id="header-left"><img src="1d0c74f55729db0f3eb13d31f0d1434b.png" alt="EPAStoryMapLogo-White"
+          id="header-logo">
+        <h2 id='appTitle' class="heading"></h2>
+      </div>
+
       <div id="toggleDiv">
-        <label class="switch">
+        <label class="switch" title="Toggle feature table">
           <input id="checkboxId" type="checkbox">
           <span class="slider round"></span>
         </label>
         <label class="labelText" id="labelText">Show feature table</label>
+
+        <button id="helpBtn" title="Help">
+          <calcite-icon icon="question" scale="l" />
+        </button>
       </div>
     </header>
     <div id="viewDiv">
       <div id="timeSlider" style="width: 80vw;"></div>
+      <!-- Load roller for view updating -->
       <div id="lds-roller" class="lds-roller">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <!-- Load roller for awaiting promise -->
+      <div id="lds-roller2" class="lds-roller">
         <div></div>
         <div></div>
         <div></div>
@@ -61,14 +80,28 @@
 
     <div id="layerLegendDiv" class="esri-widget">
       <div id="llTabs" class="calcite-tabs" layout="inline" position="above">
-        <button id="layers-button" class="calcite-tab wells2d esri-widget--button active-button" onclick="toggleLLTab()">Layers</button>
-        <button id="legend-button" class="calcite-tab wells2d esri-widget--button" onclick="toggleLLTab()">Legend</button>
+        <button id="layers-button" class="calcite-tab wells2d esri-widget--button active-button"
+          onclick="toggleLLTab()">Layers</button>
+        <button id="legend-button" class="calcite-tab wells2d esri-widget--button"
+          onclick="toggleLLTab()">Legend</button>
       </div>
       <div id="llDivs" class="tableDivs">
         <div id="layers-content" class="tab-content active-div esri-widget active-content"></div>
         <div id="legend-content" class="tab-content active-div esri-widget"></div>
       </div>
-    </div> 
+    </div>
+
+    <div id="overmapDiv" class="esri-widget"></div>
+
+    <div id="basemapDiv" class="esri-widget">
+      <div id="basemapGalleryDiv" class="esri-widget"></div>
+      <div id="basemap-gallery-footer-container">
+        <h4 id="opacLabel">Ground transparency</h4>
+        <div id="basemap-gallery-footer">
+          <div id="opacitySliderDiv" class="esri-widget"></div>
+        </div>
+      </div>
+    </div>
 
     <div id="featureSearchDiv" class="esri-widget">
       <input type="text" id="featureSearch" class="esri-input esri-feature-form__input"
@@ -81,7 +114,103 @@
       <div id="tableDivs" class="tableDivs">
       </div>
     </div>
+
+
+    <div id="filtersDiv">
+      <calcite-combobox selection-mode="single" id="combobox" placeholder="- Select one -">
+        <calcite-combobox-item value="Show all" text-label="Show all wells"></calcite-combobox-item>
+      </calcite-combobox>
+    </div>
+
+    <calcite-alert icon="question" label="Legend values alert" auto-close auto-close-duration="slow" kind="info"
+      scale="m" id="valueAlert">
+      <div slot="title">Class break values not available </div>
+      <div slot="message">Class break values have not been set for the selected analyte. Values
+        will be generated based on statistics for field 'GM_RESULT'.</div>
+      <calcite-link
+        href="https://epa.maps.arcgis.com/home/item.html?id=b589f46083ea42058136088689a84bfd&view=list&sortOrder=desc&sortField=defaultFSOrder&showFilters=false#data"
+        target="_blank" slot="link">Analytes with predefined class break values</calcite-link>
+    </calcite-alert>
   </div>
+
+  <calcite-modal aria-labelledby="modal-title" id="helpModal">
+    <div slot="header" id="modal-title">
+      Help
+    </div>
+    <div slot="content">
+      <calcite-label scale="l">
+        Help videos are available for the following topics:
+
+        <br>
+        <calcite-link
+          href="https://r9data.response.epa.gov/CentralBasinHelpVideos/Measure%20Tool/01_CB_SettingUp&LineMeasurement.mp4"
+          target="_blank">
+          Initial set up & using the line measurement tool
+        </calcite-link>
+
+        <calcite-link
+          href="https://r9data.response.epa.gov/CentralBasinHelpVideos/Measure%20Tool/02_CB_UsingAreaMeasurement.mp4"
+          target="_blank">
+          Using the area measurement tool
+        </calcite-link>
+
+        <calcite-link
+          href="https://r9data.response.epa.gov/CentralBasinHelpVideos/Slice%20Tool/01_CB_OpenApp_AquiferSlide.mp4"
+          target="_blank">
+          Preparing to use the application, introduction to slides and the slice tool
+        </calcite-link>
+
+        <calcite-link
+          href="https://r9data.response.epa.gov/CentralBasinHelpVideos/Slice%20Tool/02_CB_ActivatingSlice_ExcludeLayers.mp4"
+          target="_blank">
+          Activating the slice tool, creating a lateral slice
+        </calcite-link>
+
+        <calcite-link
+          href="https://r9data.response.epa.gov/CentralBasinHelpVideos/Slice%20Tool/03_CB_Slice_TopDownSegment.mp4"
+          target="_blank">
+          Using the slice tool for top-down slices
+        </calcite-link>
+
+        <calcite-link
+          href="https://r9data.response.epa.gov/CentralBasinHelpVideos/Slice%20Tool/04_CB_TroubleshootingExclusionsDemo.mp4"
+          target="_blank">
+          Troubleshooting the layer exclusions
+        </calcite-link>
+      </calcite-label>
+
+      <br>
+      <calcite-label scale="l">
+        <div id="moreInfo">
+          For layer information and more information about the web scene, <calcite-link
+            href="https://epa.maps.arcgis.com/home/item.html?id=c6c5e203c3ab44058353f151ad967b59" target="_blank">
+            view the web scene overview
+          </calcite-link>
+        </div>
+      </calcite-label>
+
+      <calcite-label>
+        <div id="helpContact">
+          For application feedback and questions, <calcite-link
+            href="mailto:r9tc@epa.gov?subject=R9 Central Basin 3D Application" target="_blank">
+            contact us
+          </calcite-link>
+        </div>
+      </calcite-label>
+
+    </div>
+
+  </calcite-modal>
+
+  <script>
+    const button = document.getElementById("helpBtn");
+    const modal = document.getElementById("helpModal");
+
+    button.addEventListener("click", function () {
+      modal.open = true;
+    });
+  </script>
+
 </body>
 
 </html>
