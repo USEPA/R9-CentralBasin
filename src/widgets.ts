@@ -361,7 +361,6 @@ export const initWidgets = (view: SceneView) => {
 	});
 
 	sliceExpand.viewModel.watch('expanded', (value) => {
-		// console.log(value);
 		if (!value) {
 			slice.viewModel.clear();
 		}
@@ -874,7 +873,6 @@ export const initTableWidget = (view: SceneView, layersInfo: any[], layerViews: 
 			label: 'Zoom to feature(s)',
 			iconClass: 'esri-icon-zoom-in-magnifying-glass',
 			clickFunction: (evt) => {
-				// console.log(evt);
 				zoomToSelectedFeature();
 			},
 		});
