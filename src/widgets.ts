@@ -849,7 +849,8 @@ async function queryMax(where) {
 	}
 	else {
 		createAlert("No Records Found", "No results for selected chemical and well categories", "question");
-		resetForm();
+		removeQueryLayer();
+		// resetForm();
 	}
 
 	let layer = new FeatureLayer({
