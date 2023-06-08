@@ -1,0 +1,23 @@
+Before running one needs to open ArcGIS Pro and login...
+
+
+WRD Dataset Code:
+
+D:\R9Data\CentralBasin3D\Automate\Automate2-1.py 
+- used to create new combined all chemicals for WRD data and chemicals
+- the above script takes about 132+ minutes to run
+- the above script is only needed for the initial compiling of the base WRD wells and WRD Chemicals
+- This likely needs to be ran about twice a year when they give us new data
+- to run this use this in the cmd prompt: "D:\Program Files\ArcGIS\Pro\bin\Python\envs\arcgispro-py3\python.exe" automate2-1.py
+
+D:\R9Data\CentralBasin3D\Automate\subset2-1.py - used to create subset of just a given chemical for WRD dataset
+- works on D:\R9Data\CentralBasin3D\Automate\AutomateResults.gdb\WRDWellsWithChemicals
+- to run this put this in cmd prompt: "D:\Program Files\ArcGIS\Pro\bin\Python\envs\arcgispro-py3\python.exe" subset2-1.py
+- takes about 1 minute to run (for three chemicals)
+
+
+GAMA Dataset Code:
+
+D:\R9Data\CentralBasin3D\Gama\subgama2-1.py - used to create subset (D:/R9Data/CentralBasin3D/Gama/gama.gdb/gama_all_losangeles2020_05_06WM2) of just a given chemical for GAMA dataset
+- to run this put this in cmd prompt: "D:\Program Files\ArcGIS\Pro\bin\Python\envs\arcgispro-py3\python.exe" subgama2-1.py
+- takes about 18 minute to run (for three chemicals)
