@@ -114,23 +114,28 @@
       <div id="tableDivs" class="tableDivs">
       </div>
     </div>
-
-
     <div id="filtersDiv">
-      <calcite-combobox selection-mode="single" id="combobox" placeholder="- Select one -">
-        <calcite-combobox-item value="Show all" text-label="Show all wells"></calcite-combobox-item>
-      </calcite-combobox>
-    </div>
+      <calcite-label scale="l" class="filtered">
+        Chemical
+        <calcite-combobox selection-mode="single" id="combobox" placeholder="- Select One -">
+          <!-- <calcite-combobox-item value="Show all" text-label="Show all wells"></calcite-combobox-item> -->
+        </calcite-combobox>
+      </calcite-label>
 
-    <calcite-alert icon="question" label="Legend values alert" auto-close auto-close-duration="slow" kind="info"
-      scale="m" id="valueAlert">
-      <div slot="title">Class break values not available </div>
-      <div slot="message">Class break values have not been set for the selected analyte. Values
-        will be generated based on statistics for field 'GM_RESULT'.</div>
-      <calcite-link
-        href="https://epa.maps.arcgis.com/home/item.html?id=b589f46083ea42058136088689a84bfd&view=list&sortOrder=desc&sortField=defaultFSOrder&showFilters=false#data"
-        target="_blank" slot="link">Analytes with predefined class break values</calcite-link>
-    </calcite-alert>
+      <calcite-label scale="l" class="wellCategoryLbl" id="chkList">
+        Well Category
+      </calcite-label>
+
+      <calcite-button slot="trigger" scale="m" kind="danger" appearance="outline-fill" icon-start="" id="resetBtn"
+        alignment="end">
+        Reset
+      </calcite-button>
+
+      <calcite-button slot="trigger" scale="m" kind="brand" appearance="outline-fill" icon-start="" id="filterBtn"
+        alignment="end">
+        Filter
+      </calcite-button>
+    </div>
   </div>
 
   <calcite-modal aria-labelledby="modal-title" id="helpModal">
@@ -179,6 +184,12 @@
         </calcite-link>
       </calcite-label>
 
+      <calcite-link
+        href="https://water.ca.gov/Programs/Groundwater-Management/Wells/Well-Standards/Combined-Well-Standards/Water-General"
+        target="_blank">
+        Well category information
+      </calcite-link>
+      <br>
       <br>
       <calcite-label scale="l">
         <div id="moreInfo">

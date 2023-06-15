@@ -32,6 +32,8 @@ import TopFeaturesQuery from "@arcgis/core/rest/support/TopFeaturesQuery";
 import TopFilter from "@arcgis/core/rest/support/TopFilter";
 import { AnalyteFields, AnalyteTemplate } from './config.dev';
 
+import uniqueValues from "@arcgis/core/smartMapping/statistics/uniqueValues";
+
 
 let appContainer: HTMLElement | null;
 let tableContainer: HTMLElement | null;
@@ -39,9 +41,20 @@ let basemapDiv = document.getElementById("basemapGalleryDiv")?.parentElement;
 let addedLayers: string[] = [];
 let selectedItem: string = "";
 let needsAlert = false;
+let noResult = false;
 let chemicalNames: string[] = [];
-let units: string;
+let units: string = "";
 let ready: boolean = true;
+
+const filtersDiv: any = document.getElementById('filtersDiv');
+const combobox = document.getElementById('combobox') as HTMLCalciteComboboxElement;
+
+let sWellType: string = "";
+type WellType = {
+	id: string,
+	checked: boolean
+}
+let chkArray: WellType[] = [];
 
 // Check if query layer is ready before starting a new one
 async function checkReady() {
@@ -239,7 +252,7 @@ export const initWidgets = (view: SceneView) => {
 		content: llDiv,
 		expandIconClass: 'esri-icon-layers',
 		autoCollapse: true,
-		group: 'top-left',
+		group: 'top-right',
 		expandTooltip: 'Legend and Layer List',
 		expanded: true,
 	});
@@ -256,49 +269,98 @@ export const initWidgets = (view: SceneView) => {
 		expanded: false,
 	});
 
-	// Filter widget added to expand, query feature layer for unique chemicals and add them
-	// to calcite combobox. Selecting a combobox item applies definition expression to
-	// the layer to show only that chemical
-	const filtersDiv: any = document.getElementById('filtersDiv');
-	const combobox = document.getElementById('combobox') as HTMLCalciteComboboxElement;
-
-	const queryParams = chemicalLayer.createQuery();
-	queryParams.outFields = ["GM_CHEMICAL_NAME"];
-	queryParams.returnDistinctValues = true;
-	chemicalLayer.queryFeatures(queryParams).then(function (results) {
-
-		results.features.forEach(i => {
-			if (!chemicalNames.includes(i.attributes["GM_CHEMICAL_NAME"])) {
-				chemicalNames.push(i.attributes["GM_CHEMICAL_NAME"]);
+	// Query feature layer for unique chemicals and add them to calcite combobox.
+	try {
+		uniqueValues({
+			layer: chemicalLayer,
+			field: "GM_CHEMICAL_NAME"
+		}).then(function (response) {
+			let infos = response.uniqueValueInfos;
+			infos.forEach(function (info) {
+				if (!chemicalNames.includes(info.value)) {
+					chemicalNames.push(info.value);
+				}
+			});
+			chemicalNames.sort();
+			chemicalNames.forEach(function (i) {
 				const comboItem = document.createElement('calcite-combobox-item');
-				comboItem.setAttribute('value', i.attributes["GM_CHEMICAL_NAME"]);
-				comboItem.setAttribute('text-label', i.attributes["GM_CHEMICAL_NAME"]);
+				comboItem.setAttribute('value', i);
+				comboItem.setAttribute('text-label', i);
 				combobox.appendChild(comboItem);
-			}
-		});
+			})
+		})
+	} catch (error) {
+		console.log(error);
+	}
 
-	})
+	// Format well strings - first letter uppercase
+	function formatString(str: string) {
+		return str
+			.replace(/(\B)[^ ]*/g, match => (match.toLowerCase()))
+			.replace(/^[^ ]/g, match => (match.toUpperCase()));
+	}
 
-	combobox.addEventListener("calciteComboboxChange", async calciteComboboxChangeEvt => {
-		// @ts-ignore
-		selectedItem = calciteComboboxChangeEvt.target.value;
-		if (selectedItem == "Show all") {
-			// Hide chemical layer instead, show all wells
-			displayedAnalyte.visible = true;
-			await removeQueryLayer();
-			allWells.visible = true;
-			initTableWidget(view, [chemicalLayer], [chemicalLayer]);
-		} else {
-			checkReady();
-		}
-	});
+	// Get unique well types for filtering checkboxes, create checkboxes & labels
+	try {
+		uniqueValues({
+			layer: chemicalLayer,
+			field: "GM_WELL_CATEGORY"
+		}).then(function (response) {
+			let infos = response.uniqueValueInfos;
+			infos.forEach(function (info) {
+				let chkID = {} as WellType;
+				chkID['id'] = info.value.toString();
+				chkID['id'] = formatString(chkID["id"]);
+				chkID['checked'] = false;
+				if (!chkArray.some(item => item.id === info.value.toString())) {
+					chkArray.push(chkID);
+				}
+			});
+			let chkList = document.getElementById("chkList");
+			chkArray.forEach(function (item) {
+				let chkLabel = document.createElement('calcite-label');
+				chkLabel.setAttribute("scale", "s");
+				chkLabel.setAttribute("class", "filterChk");
+				chkLabel.setAttribute("alignment", "start");
+				chkLabel.setAttribute("layout", "inline");
+				let textSpan = document.createElement('span');
+				textSpan.setAttribute("class", "chkLabelSpan");
+				let labelText = document.createTextNode(item.id);
+				textSpan.appendChild(labelText);
+				let chkBox = document.createElement('calcite-checkbox');
+				chkBox.setAttribute("id", "chk" + item.id);
+				chkBox.setAttribute("class", "chkBox");
+				chkLabel.appendChild(chkBox);
+				chkLabel.appendChild(textSpan);
+				chkList?.appendChild(chkLabel);
+			})
+		})
+	} catch (error) {
+		console.log(error);
+	}
+
+
+	// Do we need a show all wells option??
+	// combobox.addEventListener("calciteComboboxChange", async calciteComboboxChangeEvt => {
+	// 	// @ts-ignore
+	// 	selectedItem = calciteComboboxChangeEvt.target.value;
+	// 	if (selectedItem == "Show all") {
+	// 		// Hide chemical layer instead, show all wells
+	// 		displayedAnalyte.visible = true;
+	// 		await removeQueryLayer();
+	// 		allWells.visible = true;
+	// 		initTableWidget(view, [chemicalLayer], [chemicalLayer]);
+	// 	} else {
+	// 		// checkReady();
+	// 	}
+	// });
 
 	const filterExpand = new Expand({
 		view,
 		content: filtersDiv,
 		expandIconClass: 'esri-icon-filter',
 		autoCollapse: true,
-		group: 'top-left',
+		group: 'top-right',
 		expandTooltip: 'Display an analyte',
 	})
 
@@ -596,11 +658,73 @@ async function getValue(stat: String, layer: FeatureLayer, field: String): Promi
 	return Object.values(response)[0] as number;
 }
 
+let filterBtn = document.getElementById("filterBtn") as HTMLCalciteButtonElement;
+filterBtn.addEventListener("click", function (event) {
+	runFilter();
+});
+
+let resetBtn = document.getElementById("resetBtn") as HTMLCalciteButtonElement;
+resetBtn.addEventListener("click", function (event) {
+	resetForm();
+	removeQueryLayer();
+});
+
+document.addEventListener("calciteCheckboxChange", event => {
+	chkArray.forEach(i => {
+		if (i.id == event.target.id.substring(3)) {
+			i.checked = event.target.checked;
+		}
+	})
+});
+
+document.addEventListener("calciteComboboxChange", event => {
+	if (event.target.value === undefined || event.target.value === null) {
+		selectedItem = ""
+	} else {
+		selectedItem = event.target.value;
+	}
+});
+
+
+function runFilter() {
+	sWellType = "";
+	let count = 0;
+	chkArray.forEach(i => {
+		if (i.checked) {
+			if (count === 0) {
+				sWellType = ` AND (GM_WELL_CATEGORY = '${i.id}')`
+				count++;
+			} else {
+				sWellType = sWellType.slice(0, -1);
+				sWellType = sWellType + ` OR GM_WELL_CATEGORY = '${i.id}')`;
+				count++;
+			}
+		}
+	});
+
+	if (selectedItem == "- Select One -" || selectedItem == "Show all wells" || selectedItem == "") {
+		createAlert("Select a chemical", "You must select a chemical and at least one well category in order to filter.", "question");
+	} else {
+		if (sWellType == "") {
+			createAlert("Select a well category", "You must select a chemical and at least one well category in order to filter.", "question");
+		} else {
+			checkReady();
+		}
+	}
+}
+
+
+
 async function selectAnalyte() {
-	chemicalLayer.definitionExpression = `GM_CHEMICAL_NAME = '${selectedItem}'`;
+	let where;
+	// if (sWellType === "") {
+	// 	where = `GM_CHEMICAL_NAME = '${selectedItem}'`;
+	// } else {
+	where = `GM_CHEMICAL_NAME = '${selectedItem}'${sWellType}`;
+	// }
 	// @ts-ignore
 	document.getElementById('lds-roller2').style.visibility = 'visible';
-	let visLayer = await queryMax();
+	let visLayer = await queryMax(where);
 	getLegendValues(selectedItem).then(result => {
 		// Once legend values are ready use them for renderer
 		chemicalLayer.title = `All GAMA Wells Containing ${selectedItem}`;
@@ -633,7 +757,16 @@ async function selectAnalyte() {
 		document.getElementById('lds-roller2').style.visibility = 'hidden';
 		// Refresh table widget for new selected analyte
 		initTableWidget(view, [queryData], [view]);
-		createValueAlert();
+
+		if (needsAlert) {
+			let title = "Class break values not available";
+			let text = "Class break values have not been set for the selected analyte. Values will be generated based on statistics for field 'GM_RESULT'.";
+			createAlert(title, text, "question");
+		}
+
+		if (noResult) {
+			removeQueryLayer();
+		}
 
 		ready = true;
 	});
@@ -655,15 +788,53 @@ async function removeQueryLayer() {
 
 }
 
+function resetForm() {
+	selectedItem = "- Select One -"
+	combobox.selectedItems = [];
+	chkArray.forEach(i => {
+		let chk = document.getElementById("chk" + i.id) as HTMLCalciteCheckboxElement;
+		chk.checked = false;
+		i.checked = false;
+	})
+	sWellType = "";
+}
+
+function createAlert(title: string, text: string, icon: string) {
+	let myalert = document.createElement('calcite-alert') as HTMLCalciteAlertElement;
+	let titleDiv = document.createElement('div');
+	titleDiv.slot = "title";
+	titleDiv.innerText = title;
+	let msg = document.createElement("div");
+	msg.slot = "message";
+	msg.innerText = text;
+	myalert.appendChild(titleDiv);
+	myalert.appendChild(msg);
+
+	myalert.setAttribute("icon", icon);
+	myalert.setAttribute("label", "Alert");
+	myalert.setAttribute("auto-close", "true");
+	myalert.setAttribute("auto-close-duration", "slow");
+	myalert.setAttribute("kind", "info");
+	myalert.setAttribute("scale", "m");
+	myalert.setAttribute("open", "true");
+
+	document.body.appendChild(myalert);
+
+	document.addEventListener("calciteAlertClose", event => {
+		myalert.remove();
+	})
+}
+
 // Queries for top GM_RESULT for selected analyte, using time extent, returns new layer
-async function queryMax() {
+async function queryMax(where) {
 	const query = new TopFeaturesQuery({
 		outFields: ["GM_RESULT", "GM_BOTTOM_DEPTH_OF_SCREEN_FT", "GM_WELL_ID", "GM_RESULT_UNITS", "GM_WELL_CATEGORY", "GM_SAMP_COLLECTION_DATE", "GM_CHEMICAL_NAME"],
 		timeExtent: timeSlider.timeExtent,
 		returnGeometry: true,
 		returnZ: true,
-		where: `GM_CHEMICAL_NAME = '${selectedItem}'`,
+		where: where,// `GM_CHEMICAL_NAME = '${selectedItem}'`,
 		outSpatialReference: chemicalLayer.spatialReference,
+		num: 8000,
 		topFilter: new TopFilter({
 			topCount: 1,
 			groupByFields: ["GM_WELL_ID"],
@@ -672,7 +843,15 @@ async function queryMax() {
 	});
 	let result = await chemicalLayer.queryTopFeatures(query);
 
-	units = result.features[0].getAttribute("GM_RESULT_UNITS");
+	if (result.features.length > 0) {
+		noResult = false;
+		units = result.features[0].getAttribute("GM_RESULT_UNITS");
+	}
+	else {
+		createAlert("No Records Found", "No results for selected chemical and well categories", "question");
+		noResult = true;
+		// resetForm();
+	}
 
 	let layer = new FeatureLayer({
 		source: result.features,
@@ -688,14 +867,6 @@ async function queryMax() {
 	addedLayers.push(layer.id);
 
 	return layer;
-}
-
-// Shows calcite alert if needed (analyte without legend values)
-function createValueAlert() {
-	if (needsAlert) {
-		let alert = document.getElementById("valueAlert");
-		alert?.setAttribute("open", "true");
-	}
 }
 
 export const initFeatureTable = (view: SceneView) => {
