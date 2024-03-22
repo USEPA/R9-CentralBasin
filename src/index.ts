@@ -155,8 +155,7 @@ export const chemicalLayer = new FeatureLayer({
 // GamaWells_Location
 export const allWells = new FeatureLayer({
 	portalItem: {
-		// id: "89aa45e4bb2446aeaf692011d4b59483"
-		id: "58c259ccfd5e4115a4b4644d1ffdf4c9"
+		id: "9c0009423bd04bf1be47d2328d2fe59c"
 	},
 	visible: false,
 	title: "All GAMA Wells",
