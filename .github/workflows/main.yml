@@ -51,4 +51,4 @@ jobs:
             Remove-Item -Recurse -Force \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test
           }
           echo "${{ github.workspace }}\*"
-          Copy-Item -Source ${{ github.workspace }}\* -Destination \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test -Recurse -Force
+          Copy-Item -Source ${{ github.workspace }} -Destination \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test -Recurse -Force
