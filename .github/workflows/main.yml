@@ -7,13 +7,12 @@ name: Build App
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
 
     steps:
       - uses: actions/checkout@v1
-
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
       - name: Cache node modules
         uses: actions/cache@v1
         with:
@@ -35,7 +34,9 @@ jobs:
             name: build
             path: "dist/*"
 
-  deploy:
+
+  step:
+    name: Deploy
     runs-on: self-hosted
     steps:
       - name: Download Build
@@ -46,4 +47,4 @@ jobs:
       - name: Deploy to Server
         run: |
           echo "Deploying to server"
-          cp -r dist/* \\${{ vars.LOCATION }}\R9Apps\staging\centralbasin-test
+          cp -r dist\* \\${{ vars.LOCATION }}\R9Apps\staging\centralbasin-test
