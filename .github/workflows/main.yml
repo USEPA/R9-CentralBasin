@@ -39,7 +39,7 @@ jobs:
     runs-on: self-hosted
     environment: NEW_ER_CLOUD
     outputs:
-      build_id: ${{ steps.set_env.outputs.destination }}
+      destination: ${{ steps.set_env.outputs.destination }}
     steps:
       - name: Set Environment Variables
         id: set_env
