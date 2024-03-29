@@ -34,11 +34,21 @@ jobs:
             name: build
             path: "dist/*"
 
+  set_env:
+    runs-on: self-hosted
+    environment: NEW_ER_CLOUD
+    steps:
+      - name: Set Environment Variables
+        run: |
+          if (${{ github.ref_name }} -eq 'master') {
+           echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test" >> $GITHUB_OUTPUT
+          } else {
+           echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          }
 
   deploy:
     needs: build
     runs-on: self-hosted
-    environment: NEW_ER_CLOUD
     steps:
       - name: Download Build
         uses: actions/download-artifact@v2
@@ -47,8 +57,8 @@ jobs:
       - name: Deploy to Server
         run: |
           echo "Deploying to server"
-          if (Test-Path \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test) {
-            Remove-Item -Recurse -Force \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test
+          if (Test-Path ${{ set_env.outputs.destination }}) {
+            Remove-Item -Recurse -Force ${{ set_env.outputs.destination }}
           }
-          New-Item -Path \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test -ItemType directory
-          Copy-Item -Path ${{ github.workspace }}\* -Destination \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test -Recurse -Force
+          New-Item -Path ${{ set_env.outputs.destination }} -ItemType directory
+          Copy-Item -Path ${{ github.workspace }}\* -Destination ${{ set_env.outputs.destination }}
