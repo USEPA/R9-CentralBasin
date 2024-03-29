@@ -1,4 +1,8 @@
-on: push
+on:
+  push:
+    branches:
+      - master
+
 name: Build App
 jobs:
   build:
@@ -28,4 +32,18 @@ jobs:
       - name: Push Build to Releases
         uses: actions/upload-artifact@v2
         with:
-          path: "dist/*"
+            name: build
+            path: "dist/*"
+
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Download Build
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+
+      - name: Deploy to Server
+        run: |
+          echo "Deploying to server"
+          cp -r dist/* \\${{ vars.LOCATION }}\R9Apps\staging\centralbasin-test
