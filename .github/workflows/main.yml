@@ -47,5 +47,5 @@ jobs:
       - name: Deploy to Server
         run: |
           echo "Deploying to server"
-          Remove-Item -Recurse -Force \\${{ vars.LOCATION }}\R9Apps\staging\centralbasin-test
-          Copy-Item -Source dist\* -Destination \\${{ vars.LOCATION }}\R9Apps\staging\centralbasin-test -Recurse -Force
+          Remove-Item -Recurse -Force \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test
+          Copy-Item -Source dist\* -Destination \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test -Recurse -Force
