@@ -51,4 +51,4 @@ jobs:
           if (Test-Path \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test) {
             Remove-Item -Recurse -Force \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test
           }
-          Copy-Item -Source ${{GITHUB_WORKSPACE}}\* -Destination \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test -Recurse -Force
+          Copy-Item -Source ${{ github.workspace }}\* -Destination \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test -Recurse -Force
