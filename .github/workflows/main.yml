@@ -35,8 +35,8 @@ jobs:
             path: "dist/*"
 
 
-  step:
-    name: Deploy
+  deploy:
+    needs: build
     runs-on: self-hosted
     steps:
       - name: Download Build
