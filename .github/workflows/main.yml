@@ -38,6 +38,7 @@ jobs:
   deploy:
     needs: build
     runs-on: self-hosted
+    environment: NEW_ER_CLOUD
     steps:
       - name: Download Build
         uses: actions/download-artifact@v2
