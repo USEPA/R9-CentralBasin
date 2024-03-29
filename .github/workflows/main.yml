@@ -39,10 +39,10 @@ jobs:
     runs-on: self-hosted
     environment: NEW_ER_CLOUD
     outputs:
-      destination: ${{ steps.set_env.outputs.destination }}
+      destination: ${{ steps.set_destination.outputs.destination }}
     steps:
       - name: Set Environment Variables
-        id: set_env
+        id: set_destination
         run: |
           $branch = '${{ github.ref_name }}'
           if ($branch -eq 'master') {
@@ -62,7 +62,7 @@ jobs:
       - name: Deploy to Server
         run: |
           echo "Deploying to server"
-          if (Test-Path ${{ needs.set_env.outputs.destination }}) {
+          if (Test-Path "${{ needs.set_env.outputs.destination }}") {
             Remove-Item -Recurse -Force ${{ needs.set_env.outputs.destination }}
           }
           New-Item -Path ${{ needs.set_env.outputs.destination }} -ItemType directory
