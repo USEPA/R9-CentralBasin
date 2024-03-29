@@ -38,14 +38,17 @@ jobs:
     needs: build
     runs-on: self-hosted
     environment: NEW_ER_CLOUD
+    outputs:
+      build_id: ${{ steps.set_env.outputs.destination }}
     steps:
       - name: Set Environment Variables
+        id: set_env
         run: |
           $branch = '${{ github.ref_name }}'
           if ($branch -eq 'master') {
-           echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test" >> $GITHUB_OUTPUT
+           echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test" >> "$GITHUB_OUTPUT"
           } else {
-           echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.ref_name }}" >> $GITHUB_OUTPUT
+           echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
           }
 
   deploy:
