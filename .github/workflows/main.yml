@@ -43,8 +43,9 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: build
-
+          path: dist
       - name: Deploy to Server
         run: |
           echo "Deploying to server"
-          cp -r dist\* \\${{ vars.LOCATION }}\R9Apps\staging\centralbasin-test
+          Remove-Item -Recurse -Force \\${{ vars.LOCATION }}\R9Apps\staging\centralbasin-test
+          Copy-Item -Source dist\* -Destination \\${{ vars.LOCATION }}\R9Apps\staging\centralbasin-test -Recurse -Force
