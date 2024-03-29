@@ -46,9 +46,9 @@ jobs:
         run: |
           $branch = '${{ github.ref_name }}'
           if ($branch -eq 'master') {
-           echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test" >> $GITHUB_OUTPUT
+           echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test" >> "$GITHUB_OUTPUT"
           } else {
-           echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.ref_name }}" >> $GITHUB_OUTPUT
+           echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
           }
 
   deploy:
