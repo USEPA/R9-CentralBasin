@@ -18,7 +18,7 @@ jobs:
       - name: Set Environment Variables
         id: set_destination
         run: |
-          echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ context.issue.number }}" >> $env:GITHUB_OUTPUT
+          echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.event.number }}" >> $env:GITHUB_OUTPUT
       - name: Download Build
         uses: actions/download-artifact@v2
         with:
@@ -45,5 +45,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Deployed to https://${{ vars.WEB_DOMAIN }}/apps/staging/centralbasin/${{ context.issue.number }}'
+              body: 'Deployed to https://${{ vars.WEB_DOMAIN }}/apps/staging/centralbasin/${{ github.event.number }}'
             })
