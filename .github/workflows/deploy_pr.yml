@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Set Destination
         run: |
-          echo "\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.event.number }}" >> GITHUB_OUTPUT
+          echo "\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.event.number }}" >> $GITHUB_OUTPUT
 
   deploy:
     needs: set_destination
