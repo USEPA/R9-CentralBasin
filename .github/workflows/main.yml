@@ -34,10 +34,10 @@ jobs:
             name: build
             path: "dist/*"
 
-  set_env:
+  deploy:
+    environment: NEW_ER_CLOUD
     needs: build
     runs-on: self-hosted
-    environment: NEW_ER_CLOUD
     outputs:
       destination: ${{ steps.set_destination.outputs.destination }}
     steps:
@@ -50,11 +50,6 @@ jobs:
           } else {
            echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
           }
-
-  deploy:
-    needs: set_env
-    runs-on: self-hosted
-    steps:
       - name: Download Build
         uses: actions/download-artifact@v2
         with:
