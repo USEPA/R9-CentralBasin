@@ -9,9 +9,11 @@ jobs:
     uses: ./.github/workflows/build.yml
 
   deploy:
+    needs: build
     uses: ./.github/workflows/deploy.yml
     with:
-      destination: \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.event.number }}
+      environment: NEW_ER_CLOUD
+      destination: "\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.event.number }}"
 
   notify:
     runs-on: ubuntu-latest
