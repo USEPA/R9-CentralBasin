@@ -18,7 +18,7 @@ jobs:
       - name: Set Environment Variables
         id: set_destination
         run: |
-          echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.ref_name }}" >> $env:GITHUB_OUTPUT
+          echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ GITHUB_HEAD_REF }}" >> $env:GITHUB_OUTPUT
       - name: Download Build
         uses: actions/download-artifact@v2
         with:
@@ -40,7 +40,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
