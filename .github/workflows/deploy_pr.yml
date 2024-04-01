@@ -9,27 +9,9 @@ jobs:
     uses: ./.github/workflows/build.yml
 
   deploy:
-    environment: NEW_ER_CLOUD
-    needs: build
-    runs-on: self-hosted
-    outputs:
-      destination: ${{ steps.set_destination.outputs.destination }}
-    steps:
-      - name: Set Environment Variables
-        id: set_destination
-        run: |
-          echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.event.number }}" >> $env:GITHUB_OUTPUT
-      - name: Download Build
-        uses: actions/download-artifact@v2
-        with:
-          name: build
-      - name: Deploy to Server
-        run: |
-          if (Test-Path "${{ steps.set_destination.outputs.destination }}") {
-            Remove-Item -Recurse -Force ${{ steps.set_destination.outputs.destination }}
-          }
-          New-Item -Path ${{ steps.set_destination.outputs.destination }} -ItemType directory
-          Copy-Item -Path ${{ github.workspace }}\* -Destination ${{ steps.set_destination.outputs.destination }} -Recurse
+    uses: ./.github/workflows/deploy.yml
+    with:
+      destination: \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.event.number }}
 
   notify:
     runs-on: ubuntu-latest

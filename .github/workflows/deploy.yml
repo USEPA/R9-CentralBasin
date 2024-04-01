@@ -1,0 +1,25 @@
+on:
+  workflow_call:
+    inputs:
+      destination:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    environment: NEW_ER_CLOUD
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Download Build
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+      - name: Deploy to Server
+        run: |
+          if (Test-Path "${{ inputs.destination }}") {
+            Remove-Item -Recurse -Force ${{ inputs.destination }}
+          }
+          New-Item -Path ${{ inputs.destination }} -ItemType directory
+          Copy-Item -Path ${{ github.workspace }}\* -Destination ${{ inputs.destination }} -Recurse
+
