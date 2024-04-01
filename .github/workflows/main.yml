@@ -3,62 +3,26 @@ on:
     branches:
       - master
 
+
 name: Build App
 jobs:
   build:
+    uses: ./.github/workflows/build.yml
+
+  set_destination:
     runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Cache node modules
-        uses: actions/cache@v1
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - name: Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: npm install and npm run build
-        run: |
-          npm ci
-          npm run build
-      - name: Push Build to Releases
-        uses: actions/upload-artifact@v2
-        with:
-            name: build
-            path: "dist/*"
-
-  deploy:
     environment: NEW_ER_CLOUD
     needs: build
-    runs-on: self-hosted
     outputs:
-      destination: ${{ steps.set_destination.outputs.destination }}
+        destination: ${{ steps.set_destination.outputs.destination }}
     steps:
-      - name: Set Environment Variables
+      - name: Set Destination
         id: set_destination
         run: |
-          $branch = '${{ github.ref_name }}'
-          if ($branch -eq 'master') {
-           echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test" >> $env:GITHUB_OUTPUT
-          } else {
-           echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.ref_name }}" >> $env:GITHUB_OUTPUT
-          }
-      - name: Download Build
-        uses: actions/download-artifact@v2
-        with:
-          name: build
-      - name: Deploy to Server
-        run: |
-          echo "Deploying to server"
-          if (Test-Path "${{ steps.set_destination.outputs.destination }}") {
-            Remove-Item -Recurse -Force ${{ steps.set_destination.outputs.destination }}
-          }
-          New-Item -Path ${{ steps.set_destination.outputs.destination }} -ItemType directory
-          Copy-Item -Path ${{ github.workspace }}\* -Destination ${{ steps.set_destination.outputs.destination }}
+          echo "destination=\\\${{ vars.WEB_HOST }}\R9Apps\centralbasin" >> $GITHUB_OUTPUT
+
+  deploy:
+    needs: set_destination
+    uses: ./.github/workflows/deploy.yml
+    with:
+      destination: ${{ needs.set_destination.outputs.destination }}
