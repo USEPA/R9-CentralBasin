@@ -7,7 +7,6 @@ on:
 
 jobs:
   deploy:
-    environment: NEW_ER_CLOUD
     runs-on: self-hosted
     steps:
       - name: Download Build
