@@ -57,8 +57,8 @@ jobs:
       - name: Deploy to Server
         run: |
           echo "Deploying to server"
-          if (Test-Path "${{ needs.set_env.outputs.destination }}") {
+          if (Test-Path "${{ steps.set_destination.outputs.destination }}") {
             Remove-Item -Recurse -Force ${{ needs.set_env.outputs.destination }}
           }
-          New-Item -Path ${{ needs.set_env.outputs.destination }} -ItemType directory
+          New-Item -Path ${{ steps.set_destination.outputs.destination }} -ItemType directory
           Copy-Item -Path ${{ github.workspace }}\* -Destination ${{ needs.set_env.outputs.destination }}
