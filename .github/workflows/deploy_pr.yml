@@ -12,7 +12,6 @@ jobs:
     needs: build
     uses: ./.github/workflows/deploy.yml
     with:
-      environment: NEW_ER_CLOUD
       destination: \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.event.number }}
 
   notify:
