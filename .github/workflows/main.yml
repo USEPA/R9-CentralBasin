@@ -58,4 +58,4 @@ jobs:
             Remove-Item -Recurse -Force ${{ steps.set_destination.outputs.destination }}
           }
           New-Item -Path ${{ steps.set_destination.outputs.destination }} -ItemType directory
-          Copy-Item -Path ${{ github.workspace }}\* -Destination ${{ steps.set_destination.outputs.destination }}
+          Copy-Item -Path ${{ github.workspace }}\* -Destination ${{ steps.set_destination.outputs.destination }} -Recurse
