@@ -16,6 +16,7 @@ jobs:
         destination: ${{ steps.set_destination.outputs.destination }}
     steps:
       - name: Set Destination
+        id: set_destination
         run: |
           echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.event.number }}" >> $GITHUB_OUTPUT
 
