@@ -8,14 +8,22 @@ jobs:
   build:
     uses: ./.github/workflows/build.yml
 
-  deploy:
-    runs-on: self-hosted
+  set_destination:
+    runs-on: ubuntu-latest
     environment: NEW_ER_CLOUD
     needs: build
+    outputs:
+        destination: ${{ steps.set_destination.outputs.destination }}
     steps:
-      - uses: ./.github/workflows/deploy.yml
-        with:
-          destination: \\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.event.number }}
+      - name: Set Destination
+        run: |
+          echo "\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.event.number }}" >> GITHUB_OUTPUT
+
+  deploy:
+    needs: set_destination
+    uses: ./.github/workflows/deploy.yml
+    with:
+      destination: ${{ needs.set_destination.outputs.destination }}
 
   notify:
     runs-on: ubuntu-latest
