@@ -33,6 +33,7 @@ jobs:
 
   notify:
     runs-on: ubuntu-latest
+    environment: NEW_ER_CLOUD
     needs: deploy
     steps:
       - name: comment to PR
@@ -44,5 +45,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Deployed to https://r9data.response.epa.gov/apps/staging/centralbasin/${{ context.issue.number }}'
+              body: 'Deployed to https://${{ vars.WEB_DOMAIN }}/apps/staging/centralbasin/${{ context.issue.number }}'
             })
