@@ -3,11 +3,11 @@ on:
     branches:
       - master
 
+
 name: Build App
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v4
@@ -28,6 +28,9 @@ jobs:
         run: |
           npm ci
           npm run build
+      - name: copy web.config
+        run: |
+          cp web.config dist/
       - name: Push Build to Releases
         uses: actions/upload-artifact@v2
         with:
@@ -46,7 +49,7 @@ jobs:
         run: |
           $branch = '${{ github.ref_name }}'
           if ($branch -eq 'master') {
-           echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin-test" >> $env:GITHUB_OUTPUT
+           echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\centralbasin" >> $env:GITHUB_OUTPUT
           } else {
            echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.ref_name }}" >> $env:GITHUB_OUTPUT
           }
@@ -56,9 +59,24 @@ jobs:
           name: build
       - name: Deploy to Server
         run: |
-          echo "Deploying to server"
           if (Test-Path "${{ steps.set_destination.outputs.destination }}") {
             Remove-Item -Recurse -Force ${{ steps.set_destination.outputs.destination }}
           }
           New-Item -Path ${{ steps.set_destination.outputs.destination }} -ItemType directory
           Copy-Item -Path ${{ github.workspace }}\* -Destination ${{ steps.set_destination.outputs.destination }}
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: comment to PR
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Deployed to ${{ steps.set_destination.outputs.destination }}'
+            })
