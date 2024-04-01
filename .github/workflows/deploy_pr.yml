@@ -18,7 +18,7 @@ jobs:
       - name: Set Environment Variables
         id: set_destination
         run: |
-          echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.head_ref }}" >> $env:GITHUB_OUTPUT
+          echo "destination=\\${{ vars.WEB_HOST }}\R9Apps\staging\centralbasin\${{ github.ref }}" >> $env:GITHUB_OUTPUT
       - name: Download Build
         uses: actions/download-artifact@v2
         with:
